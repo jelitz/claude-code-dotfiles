@@ -1,0 +1,21 @@
+{
+  "_comment": "Claude Desktop MCP 서버 설정. Windows: %APPDATA%\\Claude\\claude_desktop_config.json 에 복사",
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  },
+  "preferences": {
+    "localAgentModeTrustedFolders": [
+      "C:\\Users\\YOUR_USERNAME\\Documents\\GitHub"
+    ],
+    "coworkScheduledTasksEnabled": true,
+    "ccdScheduledTasksEnabled": true,
+    "sidebarMode": "code",
+    "coworkWebSearchEnabled": true,
+    "keepAwakeEnabled": false
+  }
+}
