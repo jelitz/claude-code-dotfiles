@@ -107,14 +107,26 @@ if [ -z "$SKIP_PLUGINS" ]; then
 fi
 
 # ──────────────────────────────────────────────
+# 5. BMAD Method 설치 (글로벌 Claude Code 스킬)
+# ──────────────────────────────────────────────
+echo "[5/6] BMAD Method 설치..."
+
+if ! command -v npx &>/dev/null; then
+  echo "  ⚠ npx 가 없습니다. Node.js v20+ 설치 후 다시 실행하세요."
+else
+  # --directory ~/.claude 로 Claude Code 전역 스킬 디렉토리에 설치
+  npx bmad-method install --directory "$CLAUDE_DIR" --modules bmm --tools claude-code --yes \
+    && echo "  ✓ BMAD Method 설치 완료" \
+    || echo "  ⚠ BMAD Method 설치 실패 — 수동으로 실행: npx bmad-method install"
+fi
+
+# ──────────────────────────────────────────────
 # 완료
 # ──────────────────────────────────────────────
 echo ""
-echo "[5/5] 완료!"
+echo "[6/6] 완료!"
 echo ""
 echo "다음 단계:"
 echo "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인"
 echo "  2. mcp/claude_desktop_config.json 의 localAgentModeTrustedFolders 경로 확인"
 echo "  3. Claude Code 재시작"
-echo ""
-echo "BMAD 스킬은 superpowers 플러그인 설치 시 자동으로 포함됩니다."

@@ -60,6 +60,30 @@ cd claude-code-setup
 
 ---
 
+## BMAD Method
+
+[BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) — AI 기반 애자일 개발 프레임워크. PM·아키텍트·개발자·UX 등 12개 이상의 전문 AI 에이전트와 브레인스토밍→설계→구현→회고까지 전체 개발 사이클을 지원합니다.
+
+설치 스크립트에서 자동으로 아래 명령을 실행합니다:
+
+```bash
+npx bmad-method install --directory ~/.claude --modules bmm --tools claude-code --yes
+```
+
+`--directory ~/.claude` 로 설치하면 모든 프로젝트에서 공통으로 BMAD 스킬을 사용할 수 있습니다.
+
+**포함되는 주요 스킬 (51개):**
+- `bmad-help` — 현재 상황에 맞는 다음 단계 안내
+- `bmad-create-prd`, `bmad-create-architecture`, `bmad-create-ux-design` — 설계 문서 작성
+- `bmad-dev-story`, `bmad-quick-dev` — 스토리 기반 구현
+- `bmad-code-review`, `bmad-qa-generate-e2e-tests` — 코드 리뷰 및 테스트
+- `bmad-sprint-planning`, `bmad-sprint-status`, `bmad-retrospective` — 스프린트 관리
+- `bmad-party-mode` — 복수 AI 에이전트 협업 세션
+
+> 수동 설치: `npx bmad-method install` (대화형 설치 마법사 실행)
+
+---
+
 ## 설치되는 플러그인
 
 | 플러그인 | 마켓플레이스 | 설명 |
@@ -125,6 +149,9 @@ claude plugin install pyright-lsp@claude-plugins-official
 claude plugin install playwright@claude-plugins-official
 claude plugin install exa-core@exa-skills
 claude plugin install claude-memory@Claudest
+
+# 5. BMAD Method 설치
+npx bmad-method install --directory ~/.claude --modules bmm --tools claude-code --yes
 ```
 
 ---
