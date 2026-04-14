@@ -1,0 +1,22 @@
+# 민감 정보 - 절대 커밋 금지
+.credentials.json
+*.credentials.json
+
+# Claude Code 런타임 데이터
+history.jsonl
+stats-cache.json
+session-env/
+sessions/
+transcripts/
+debug/
+backups/
+file-history/
+agent-memory/
+plans/
+tasks/
+shell-snapshots/
+telemetry/
+
+# OS
+.DS_Store
+Thumbs.db
