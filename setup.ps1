@@ -112,14 +112,29 @@ foreach ($plugin in $plugins) {
 }
 
 # ──────────────────────────────────────────────
+# 5. BMAD Method 설치 (글로벌 Claude Code 스킬)
+# ──────────────────────────────────────────────
+Write-Host "[5/6] BMAD Method 설치..." -ForegroundColor Yellow
+
+$npxCmd = Get-Command npx -ErrorAction SilentlyContinue
+if (-not $npxCmd) {
+    Write-Host "  ⚠ npx 가 없습니다. Node.js v20+ 설치 후 다시 실행하세요." -ForegroundColor Red
+} else {
+    try {
+        npx bmad-method install --directory $ClaudeDir --modules bmm --tools claude-code --yes
+        Write-Host "  ✓ BMAD Method 설치 완료" -ForegroundColor Green
+    } catch {
+        Write-Host "  ⚠ BMAD Method 설치 실패 — 수동으로 실행: npx bmad-method install" -ForegroundColor Red
+    }
+}
+
+# ──────────────────────────────────────────────
 # 완료
 # ──────────────────────────────────────────────
 Write-Host ""
-Write-Host "[5/5] 완료!" -ForegroundColor Cyan
+Write-Host "[6/6] 완료!" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "다음 단계:"
 Write-Host "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인"
 Write-Host "  2. mcp\claude_desktop_config.json 의 localAgentModeTrustedFolders 경로 확인"
 Write-Host "  3. Claude Code 재시작"
-Write-Host ""
-Write-Host "BMAD 스킬은 superpowers 플러그인 설치 시 자동으로 포함됩니다."
