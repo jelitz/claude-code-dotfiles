@@ -12,6 +12,7 @@ claude-code-setup/
 ├── settings.json                    # 메인 설정 → ~/.claude/settings.json
 ├── settings.local.json.template     # 로컬 권한 설정 템플릿
 ├── CLAUDE.md                        # 전역 AI 지시사항 → ~/.claude/CLAUDE.md
+├── statusline-bash.sh               # 커스텀 statusline 스크립트 → ~/.claude/statusline-bash.sh
 ├── plugins/
 │   ├── installed_plugins.json       # 설치된 플러그인 목록 (설명 포함)
 │   └── known_marketplaces.json      # 등록된 마켓플레이스 목록
@@ -97,6 +98,32 @@ npx bmad-method install --directory ~/.claude --modules bmm --tools claude-code 
 | `claude-memory` | Claudest | 대화 간 기억 지속 (extract-learnings 등) |
 
 > `codex@openai-codex` 는 설치되어 있으나 비활성화 상태입니다.
+
+---
+
+## Statusline
+
+터미널 하단에 세션 정보를 실시간으로 표시합니다.
+
+**출력 형태:**
+```
+⎇ main │ ◈ Sonnet 4.6 │ ctx ████░░░░ 45% │ $0.23 │ high │ 5h ████░░░░ 23% ↻ 1h30m  v1.2.3
+```
+
+| 항목 | 설명 |
+|---|---|
+| `⎇ branch` | 현재 git 브랜치 (cyan) |
+| `◈ model` | 모델명 (blue, "Claude " 접두어 생략) |
+| `ctx bar %` | 컨텍스트 윈도우 사용률 progress bar |
+| `$cost` | 세션 누적 비용 (dim/$1↑노랑/$5↑빨강) |
+| `effort` | 작업 노력 수준 (magenta) |
+| `5h bar % ↻ left` | 5시간 rate limit + 리셋까지 남은 시간 |
+| `7d bar %` | 7일 rate limit (10% 미만이면 생략) |
+| `v버전` | Claude Code 버전 (dim) |
+
+설정 파일 위치:
+- 스크립트: `~/.claude/statusline-bash.sh`
+- 활성화: `settings.json` → `statusLine.command`
 
 ---
 

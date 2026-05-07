@@ -38,6 +38,10 @@
       }
     }
   },
+  "statusLine": {
+    "type": "command",
+    "command": "/c/Users/YOUR_USERNAME/.claude/statusline-bash.sh"
+  },
   "effortLevel": "medium",
   "autoUpdatesChannel": "latest",
   "autoDreamEnabled": true,
