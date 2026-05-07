@@ -23,15 +23,17 @@ New-Item -ItemType Directory -Force -Path "$ClaudeDir\plugins" | Out-Null
 # ──────────────────────────────────────────────
 Write-Host "[1/5] 설정 파일 복사..." -ForegroundColor Yellow
 
-# settings.json
+# settings.json (YOUR_USERNAME → 실제 사용자명 치환)
+$settingsContent = Get-Content "$ScriptDir\settings.json" -Raw
+$settingsContent = $settingsContent -replace 'YOUR_USERNAME', $env:USERNAME
 if (Test-Path "$ClaudeDir\settings.json") {
     $answer = Read-Host "  settings.json 이 이미 존재합니다. 덮어쓰시겠습니까? (y/N)"
     if ($answer -match '^[Yy]$') {
-        Copy-Item "$ScriptDir\settings.json" "$ClaudeDir\settings.json" -Force
+        Set-Content "$ClaudeDir\settings.json" $settingsContent -Encoding UTF8
         Write-Host "  ✓ settings.json 덮어씀" -ForegroundColor Green
     }
 } else {
-    Copy-Item "$ScriptDir\settings.json" "$ClaudeDir\settings.json"
+    Set-Content "$ClaudeDir\settings.json" $settingsContent -Encoding UTF8
     Write-Host "  ✓ settings.json 복사 완료" -ForegroundColor Green
 }
 
@@ -42,6 +44,10 @@ if (-not (Test-Path "$ClaudeDir\settings.local.json")) {
 } else {
     Write-Host "  - settings.local.json 은 이미 존재하므로 건너뜀"
 }
+
+# statusline-bash.sh
+Copy-Item "$ScriptDir\statusline-bash.sh" "$ClaudeDir\statusline-bash.sh" -Force
+Write-Host "  ✓ statusline-bash.sh 복사 완료" -ForegroundColor Green
 
 # CLAUDE.md
 if (-not (Test-Path "$ClaudeDir\CLAUDE.md")) {

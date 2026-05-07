@@ -26,9 +26,12 @@ echo "[1/5] 설정 파일 복사..."
 if [ -f "$CLAUDE_DIR/settings.json" ]; then
   echo "  ⚠ settings.json 이 이미 존재합니다. 덮어쓰시겠습니까? (y/N)"
   read -r answer
-  [[ "$answer" =~ ^[Yy]$ ]] && cp "$SCRIPT_DIR/settings.json" "$CLAUDE_DIR/settings.json" && echo "  ✓ settings.json 덮어씀"
+  if [[ "$answer" =~ ^[Yy]$ ]]; then
+    sed "s/YOUR_USERNAME/$(whoami)/g" "$SCRIPT_DIR/settings.json" > "$CLAUDE_DIR/settings.json"
+    echo "  ✓ settings.json 덮어씀"
+  fi
 else
-  cp "$SCRIPT_DIR/settings.json" "$CLAUDE_DIR/settings.json"
+  sed "s/YOUR_USERNAME/$(whoami)/g" "$SCRIPT_DIR/settings.json" > "$CLAUDE_DIR/settings.json"
   echo "  ✓ settings.json 복사 완료"
 fi
 
@@ -39,6 +42,11 @@ if [ ! -f "$CLAUDE_DIR/settings.local.json" ]; then
 else
   echo "  - settings.local.json 은 이미 존재하므로 건너뜀"
 fi
+
+# statusline-bash.sh
+cp "$SCRIPT_DIR/statusline-bash.sh" "$CLAUDE_DIR/statusline-bash.sh"
+chmod +x "$CLAUDE_DIR/statusline-bash.sh"
+echo "  ✓ statusline-bash.sh 복사 완료"
 
 # CLAUDE.md
 if [ ! -f "$CLAUDE_DIR/CLAUDE.md" ]; then
