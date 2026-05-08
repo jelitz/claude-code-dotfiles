@@ -1,4 +1,4 @@
-# claude-code-setup
+# claude-code-dotfiles
 
 jsmoon의 Claude Code 설정 백업 레포.  
 새 환경에서 Claude Code를 설치하거나 기존 설정을 복원할 때 사용합니다.
@@ -8,7 +8,7 @@ jsmoon의 Claude Code 설정 백업 레포.
 ## 파일 구조
 
 ```
-claude-code-setup/
+claude-code-dotfiles/
 ├── settings.json                    # 메인 설정 → ~/.claude/settings.json
 ├── settings.local.json.template     # 로컬 권한 설정 템플릿
 ├── CLAUDE.md                        # 전역 AI 지시사항 → ~/.claude/CLAUDE.md
@@ -39,16 +39,16 @@ npm install -g @anthropic-ai/claude-code
 ### Git Bash (Windows) / macOS / Linux
 
 ```bash
-git clone https://github.com/jelly35/claude-code-setup.git
-cd claude-code-setup
+git clone https://github.com/jelly35/claude-code-dotfiles.git
+cd claude-code-dotfiles
 bash setup.sh
 ```
 
 ### PowerShell (Windows)
 
 ```powershell
-git clone https://github.com/jelly35/claude-code-setup.git
-cd claude-code-setup
+git clone https://github.com/jelly35/claude-code-dotfiles.git
+cd claude-code-dotfiles
 .\setup.ps1
 ```
 
