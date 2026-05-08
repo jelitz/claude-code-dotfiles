@@ -1,59 +1,47 @@
 {
-  "_comment": "등록된 플러그인 마켓플레이스 목록. setup.sh 가 claude plugin marketplace add 명령으로 등록합니다.",
+  "_comment": "등록할 플러그인 마켓플레이스 목록. setup 스크립트가 'claude plugin marketplace add' 명령으로 등록.",
   "marketplaces": [
     {
       "id": "claude-plugins-official",
       "source": "github",
       "repo": "anthropics/claude-plugins-official",
-      "description": "Anthropic 공식 플러그인 마켓플레이스 (기본 등록됨, 별도 추가 불필요)"
+      "description": "Anthropic 공식 마켓플레이스 (CC 기본 등록, 별도 add 불필요)"
+    },
+    {
+      "id": "anthropic-agent-skills",
+      "source": "github",
+      "repo": "anthropics/skills",
+      "description": "Anthropic 공식 에이전트 스킬 마켓플레이스 (document-skills 제공)"
     },
     {
       "id": "exa-skills",
       "source": "github",
       "repo": "benjaminjackson/exa-skills",
-      "description": "Exa AI 검색 스킬 마켓플레이스"
-    },
-    {
-      "id": "Claudest",
-      "source": "github",
-      "repo": "gupsammy/claudest",
-      "description": "claude-memory 플러그인 제공 마켓플레이스"
+      "description": "Exa AI 검색 스킬 마켓플레이스 (exa-core 제공)"
     },
     {
       "id": "openai-codex",
       "source": "github",
       "repo": "openai/codex-plugin-cc",
-      "description": "OpenAI Codex 플러그인 마켓플레이스 (codex는 현재 비활성화)"
-    },
-    {
-      "id": "ui-ux-pro-max-skill",
-      "source": "github",
-      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "description": "UI/UX Pro Max 스킬 마켓플레이스"
-    },
-    {
-      "id": "agent-browser",
-      "source": "github",
-      "repo": "vercel-labs/agent-browser",
-      "description": "Vercel Agent Browser 플러그인"
-    },
-    {
-      "id": "ecc",
-      "source": "github",
-      "repo": "affaan-m/everything-claude-code",
-      "description": "Everything Claude Code 마켓플레이스"
-    },
-    {
-      "id": "omc",
-      "source": "git",
-      "url": "https://github.com/Yeachan-Heo/oh-my-claudecode.git",
-      "description": "Oh My Claude Code (HUD, 상태바 등)"
+      "description": "OpenAI Codex 플러그인 마켓플레이스 (codex 제공)"
     },
     {
       "id": "thedotmack",
       "source": "github",
       "repo": "thedotmack/claude-mem",
-      "description": "claude-mem 플러그인 마켓플레이스"
+      "description": "claude-mem (영속 메모리) 마켓플레이스"
+    },
+    {
+      "id": "korean-law-marketplace",
+      "source": "github",
+      "repo": "chrisryugj/korean-law-mcp",
+      "description": "한국 법령 검색 MCP 마켓플레이스 (옵션)"
+    },
+    {
+      "id": "lazyweb",
+      "source": "git",
+      "url": "https://github.com/aboul3ata/lazyweb-skill.git",
+      "description": "LazyWeb 마켓플레이스 (옵션)"
     }
   ]
 }

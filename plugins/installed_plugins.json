@@ -1,69 +1,110 @@
 {
-  "_comment": "설치된 플러그인 목록. setup.sh 가 이 파일을 참고하여 플러그인을 설치합니다.",
+  "_comment": "설치/활성화 대상 플러그인 목록. setup.sh / setup.ps1 가 enabled=true 인 항목만 install 실행.",
   "plugins": [
     {
       "id": "superpowers@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "superpowers",
       "enabled": true,
-      "version": "5.0.7",
-      "description": "브레인스토밍, 플래닝, TDD, 디버깅 등 개발 워크플로 스킬 모음"
+      "description": "브레인스토밍·플래닝·TDD·디버깅 등 개발 워크플로 스킬 모음"
     },
     {
       "id": "context7@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "context7",
       "enabled": true,
-      "version": "latest",
-      "description": "라이브러리/프레임워크 최신 문서를 대화 중 실시간으로 조회"
-    },
-    {
-      "id": "frontend-design@claude-plugins-official",
-      "marketplace": "claude-plugins-official",
-      "name": "frontend-design",
-      "enabled": true,
-      "version": "latest",
-      "description": "고품질 프론트엔드 UI 생성 스킬"
+      "description": "라이브러리/프레임워크 최신 문서를 대화 중 실시간으로 조회 (MCP 기반)"
     },
     {
       "id": "pyright-lsp@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "pyright-lsp",
       "enabled": true,
-      "version": "1.0.0",
       "description": "Python LSP 지원 (타입 체크, 자동완성 등)"
     },
     {
-      "id": "playwright@claude-plugins-official",
+      "id": "ralph-loop@claude-plugins-official",
       "marketplace": "claude-plugins-official",
-      "name": "playwright",
+      "name": "ralph-loop",
       "enabled": true,
-      "version": "latest",
-      "description": "브라우저 자동화 (MCP 기반)"
+      "description": "Ralph Loop 반복 실행 워크플로 (/ralph-loop)"
+    },
+    {
+      "id": "claude-code-setup@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "claude-code-setup",
+      "enabled": true,
+      "description": "Claude Code 자동화 추천·설정 헬퍼 스킬"
+    },
+    {
+      "id": "playground@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "playground",
+      "enabled": true,
+      "description": "단일 HTML playground/explorer 생성 스킬"
+    },
+    {
+      "id": "codex@openai-codex",
+      "marketplace": "openai-codex",
+      "name": "codex",
+      "enabled": true,
+      "description": "OpenAI Codex 서브에이전트 (rescue, setup)"
     },
     {
       "id": "exa-core@exa-skills",
       "marketplace": "exa-skills",
       "name": "exa-core",
       "enabled": true,
-      "version": "latest",
       "description": "Exa AI 웹 검색 스킬 (search, context, get-contents, answer, find-similar)"
     },
     {
-      "id": "claude-memory@Claudest",
-      "marketplace": "Claudest",
-      "name": "claude-memory",
+      "id": "document-skills@anthropic-agent-skills",
+      "marketplace": "anthropic-agent-skills",
+      "name": "document-skills",
       "enabled": true,
-      "version": "0.8.76",
-      "description": "대화 간 기억 지속 (extract-learnings, recall-conversations 등)"
+      "description": "Anthropic 공식 문서 작업 스킬 (PDF, DOCX, XLSX, PPTX, frontend-design 등)"
     },
     {
-      "id": "codex@openai-codex",
-      "marketplace": "openai-codex",
-      "name": "codex",
+      "id": "claude-mem@thedotmack",
+      "marketplace": "thedotmack",
+      "name": "claude-mem",
+      "enabled": true,
+      "description": "세션 간 영속 메모리 (mem-search, timeline-report, smart-explore 등)"
+    },
+    {
+      "id": "frontend-design@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "frontend-design",
       "enabled": false,
-      "version": "1.0.3",
-      "description": "OpenAI Codex 서브에이전트 (비활성화 상태)"
+      "description": "고품질 프론트엔드 UI 생성 스킬 (document-skills 와 중복되어 비활성)"
+    },
+    {
+      "id": "playwright@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "playwright",
+      "enabled": false,
+      "description": "Playwright 기반 브라우저 자동화 (claude-in-chrome 우선 사용으로 비활성)"
+    },
+    {
+      "id": "korean-law@korean-law-marketplace",
+      "marketplace": "korean-law-marketplace",
+      "name": "korean-law",
+      "enabled": false,
+      "description": "한국 법령 검색 MCP (개인 OC ID 필요)"
+    },
+    {
+      "id": "lazyweb@lazyweb",
+      "marketplace": "lazyweb",
+      "name": "lazyweb",
+      "enabled": false,
+      "description": "LazyWeb 스킬 마켓플레이스 통합 (옵션)"
+    },
+    {
+      "id": "cloudflare@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "cloudflare",
+      "enabled": false,
+      "description": "Cloudflare 리소스 관리 (필요시 활성화)"
     }
   ]
 }
