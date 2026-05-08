@@ -1,7 +1,22 @@
 #!/usr/bin/env bash
-# Claude Code statusLine: ⎇ branch │ ◈ model │ bar ctx% │ $cost │ effort │ bar 5h% ↻ left │ [bar 7d%] │ vX.Y.Z
+# Claude Code statusLine (2 lines):
+#   row 1 (identity): ⎇ branch │ ◈ model │ effort │ ⚖ advisor: <model>
+#   row 2 (usage):    ctx bar% │ $cost │ 5h bar% ↻ left │ [7d bar%] │ vX.Y.Z
 
 input=$(cat)
+
+# read advisorModel from ~/.claude/settings.json (independent of stdin payload)
+advisor=$(python -c "
+import json, os
+try:
+    p = os.path.expanduser('~/.claude/settings.json')
+    with open(p, 'r', encoding='utf-8') as f:
+        s = json.load(f)
+    v = s.get('advisorModel')
+    print(v if v else '')
+except Exception:
+    print('')
+" 2>/dev/null)
 
 read_json=$(printf '%s' "$input" | python -c "
 import json, sys, time
@@ -104,34 +119,47 @@ effort_sym() {
   esac
 }
 
-# append with │ separator
-out=""
-add() { [ -n "$out" ] && out+=" ${DIM}│${RESET} "; out+="$1"; }
+# append with │ separator (one helper per row)
+row1=""
+row2=""
+add1() { [ -n "$row1" ] && row1+=" ${DIM}│${RESET} "; row1+="$1"; }
+add2() { [ -n "$row2" ] && row2+=" ${DIM}│${RESET} "; row2+="$1"; }
+
+# === row 1: identity (branch / model / effort / advisor) ===
 
 # ⎇ branch
-[ -n "$branch" ] && add "${CYAN}⎇ ${branch}${RESET}"
+[ -n "$branch" ] && add1 "${CYAN}⎇ ${branch}${RESET}"
 
 # ◈ model  (strip leading "Claude ")
 if [ -n "$model" ]; then
   short_model="${model#Claude }"
-  add "${BLUE}◈ ${short_model}${RESET}"
+  add1 "${BLUE}◈ ${short_model}${RESET}"
 fi
+
+# effort as text
+if [ -n "$effort" ]; then
+  add1 "${MAGENTA}effort: ${effort}${RESET}"
+fi
+
+# ⚖ advisor model (from settings.json) — show "(unset)" when no value
+if [ -n "$advisor" ]; then
+  add1 "${YELLOW}⚖ advisor: ${advisor}${RESET}"
+else
+  add1 "${DIM}⚖ advisor: (unset)${RESET}"
+fi
+
+# === row 2: usage (ctx / cost / rate limits / version) ===
 
 # ctx progress bar
 if [ -n "$ctx_pct" ]; then
   col=$(pct_color "$ctx_pct")
-  add "${DIM}ctx${RESET} ${col}$(bar "$ctx_pct") ${ctx_pct}%${RESET}"
+  add2 "${DIM}ctx${RESET} ${col}$(bar "$ctx_pct") ${ctx_pct}%${RESET}"
 fi
 
 # $cost
 if [ -n "$cost_usd" ]; then
   col=$(cost_color "$cost_usd")
-  add "${col}\$${cost_usd}${RESET}"
-fi
-
-# effort as text
-if [ -n "$effort" ]; then
-  add "${MAGENTA}${effort}${RESET}"
+  add2 "${col}\$${cost_usd}${RESET}"
 fi
 
 # 5h rate limit: bar + % + ↻ reset time
@@ -139,7 +167,7 @@ if [ -n "$five_hour" ]; then
   col=$(pct_color "$five_hour")
   fh_str="${DIM}5h${RESET} ${col}$(bar "$five_hour") ${five_hour}%${RESET}"
   [ -n "$fh_left" ] && fh_str+="${DIM} ↻ ${fh_left}${RESET}"
-  add "$fh_str"
+  add2 "$fh_str"
 fi
 
 # 7d rate limit: only when ≥ 10%
@@ -147,11 +175,12 @@ if [ -n "$seven_day" ]; then
   sd_val=${seven_day%.*}
   if [[ ${sd_val:-0} -ge 10 ]]; then
     col=$(pct_color "$seven_day")
-    add "${DIM}7d${RESET} ${col}$(bar "$seven_day") ${seven_day}%${RESET}"
+    add2 "${DIM}7d${RESET} ${col}$(bar "$seven_day") ${seven_day}%${RESET}"
   fi
 fi
 
-# version (dim, no separator — appended at end)
-[ -n "$version" ] && out+="  ${DIM}v${version}${RESET}"
+# version (dim, no separator — appended at end of row 2)
+[ -n "$version" ] && row2+="  ${DIM}v${version}${RESET}"
 
-printf '%s\n' "$out"
+printf '%s\n' "$row1"
+printf '%s\n' "$row2"
