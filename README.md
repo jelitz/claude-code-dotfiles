@@ -103,23 +103,37 @@ npx bmad-method install --directory ~/.claude --modules bmm --tools claude-code 
 
 ## Statusline
 
-터미널 하단에 세션 정보를 실시간으로 표시합니다.
+터미널 하단에 세션 정보를 두 줄로 표시합니다.
 
 **출력 형태:**
 ```
-⎇ main │ ◈ Sonnet 4.6 │ ctx ████░░░░ 45% │ $0.23 │ high │ 5h ████░░░░ 23% ↻ 1h30m  v1.2.3
+⎇ main │ ◈ Sonnet 4.6 │ effort: high │ ⚖ advisor: opus
+ctx ████░░░░ 45% │ $0.23 │ 5h ████░░░░ 23% ↻ 1h30m │ 7d ░░░░░░░░ 13%  v2.1.90
 ```
+
+**Row 1 — identity (현재 작동 환경)**
 
 | 항목 | 설명 |
 |---|---|
 | `⎇ branch` | 현재 git 브랜치 (cyan) |
 | `◈ model` | 모델명 (blue, "Claude " 접두어 생략) |
+| `effort: <lvl>` | 작업 노력 수준 (magenta) |
+| `⚖ advisor: <model>` | `/advisor`로 설정된 보조 리뷰어 모델 (yellow); 미설정 시 `(unset)` (dim) |
+
+**Row 2 — usage (자원 소비)**
+
+| 항목 | 설명 |
+|---|---|
 | `ctx bar %` | 컨텍스트 윈도우 사용률 progress bar |
-| `$cost` | 세션 누적 비용 (dim/$1↑노랑/$5↑빨강) |
-| `effort` | 작업 노력 수준 (magenta) |
+| `$cost` | 세션 누적 비용 (dim / $1↑노랑 / $5↑빨강) |
 | `5h bar % ↻ left` | 5시간 rate limit + 리셋까지 남은 시간 |
 | `7d bar %` | 7일 rate limit (10% 미만이면 생략) |
 | `v버전` | Claude Code 버전 (dim) |
+
+**구현 메모**
+
+- advisor 값은 stdin JSON에 포함되지 않아 스크립트가 `~/.claude/settings.json`의 `advisorModel` 키를 직접 읽음
+- 줄 분리는 `printf '%s\n'`을 두 번 호출 → 각 호출이 별도 행으로 렌더링됨 (Claude Code 다중 줄 statusline 사양)
 
 설정 파일 위치:
 - 스크립트: `~/.claude/statusline-bash.sh`
@@ -138,6 +152,7 @@ npx bmad-method install --directory ~/.claude --modules bmm --tools claude-code 
 | `skipDangerousModePermissionPrompt` | `true` | bypass 모드 프롬프트 생략 |
 | `autoDreamEnabled` | `true` | 세션 종료 시 자동 메모리 추출 |
 | `effortLevel` | `medium` | 기본 작업 노력 수준 |
+| `advisorModel` | (선택) | `/advisor` 명령으로 설정 — 보조 리뷰어 모델. statusline에 표시됨 |
 | `ENABLE_TOOL_SEARCH` | `true` | 지연 로드 도구 검색 활성화 |
 | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` | `1` | 멀티 에이전트 팀 기능 활성화 |
 | `CLAUDE_CODE_USE_POWERSHELL_TOOL` | `1` | PowerShell 도구 활성화 |
