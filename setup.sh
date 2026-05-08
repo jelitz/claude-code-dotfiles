@@ -90,23 +90,37 @@ if ! command -v claude &>/dev/null; then
 fi
 
 if [ -z "$SKIP_PLUGINS" ]; then
-  claude plugin marketplace add exa-skills github:benjaminjackson/exa-skills 2>/dev/null && echo "  ✓ exa-skills" || echo "  - exa-skills (이미 등록됨)"
-  claude plugin marketplace add Claudest github:gupsammy/claudest 2>/dev/null && echo "  ✓ Claudest" || echo "  - Claudest (이미 등록됨)"
-  claude plugin marketplace add openai-codex github:openai/codex-plugin-cc 2>/dev/null && echo "  ✓ openai-codex" || echo "  - openai-codex (이미 등록됨)"
+  # 마켓플레이스 (claude-plugins-official 은 기본 등록)
+  MARKETPLACES=(
+    "anthropic-agent-skills github:anthropics/skills"
+    "exa-skills github:benjaminjackson/exa-skills"
+    "openai-codex github:openai/codex-plugin-cc"
+    "thedotmack github:thedotmack/claude-mem"
+    "korean-law-marketplace github:chrisryugj/korean-law-mcp"
+    "lazyweb https://github.com/aboul3ata/lazyweb-skill.git"
+  )
+  for entry in "${MARKETPLACES[@]}"; do
+    id="${entry%% *}"
+    src="${entry#* }"
+    claude plugin marketplace add "$id" "$src" 2>/dev/null && echo "  ✓ $id" || echo "  - $id (이미 등록됨)"
+  done
 
   # ──────────────────────────────────────────────
-  # 5. 플러그인 설치
+  # 4. 플러그인 설치
   # ──────────────────────────────────────────────
   echo "[4/5] 플러그인 설치..."
 
   PLUGINS=(
     "superpowers@claude-plugins-official"
     "context7@claude-plugins-official"
-    "frontend-design@claude-plugins-official"
     "pyright-lsp@claude-plugins-official"
-    "playwright@claude-plugins-official"
+    "ralph-loop@claude-plugins-official"
+    "claude-code-setup@claude-plugins-official"
+    "playground@claude-plugins-official"
+    "codex@openai-codex"
     "exa-core@exa-skills"
-    "claude-memory@Claudest"
+    "document-skills@anthropic-agent-skills"
+    "claude-mem@thedotmack"
   )
 
   for plugin in "${PLUGINS[@]}"; do
@@ -115,24 +129,10 @@ if [ -z "$SKIP_PLUGINS" ]; then
 fi
 
 # ──────────────────────────────────────────────
-# 5. BMAD Method 설치 (글로벌 Claude Code 스킬)
-# ──────────────────────────────────────────────
-echo "[5/6] BMAD Method 설치..."
-
-if ! command -v npx &>/dev/null; then
-  echo "  ⚠ npx 가 없습니다. Node.js v20+ 설치 후 다시 실행하세요."
-else
-  # --directory ~/.claude 로 Claude Code 전역 스킬 디렉토리에 설치
-  npx bmad-method install --directory "$CLAUDE_DIR" --modules bmm --tools claude-code --yes \
-    && echo "  ✓ BMAD Method 설치 완료" \
-    || echo "  ⚠ BMAD Method 설치 실패 — 수동으로 실행: npx bmad-method install"
-fi
-
-# ──────────────────────────────────────────────
 # 완료
 # ──────────────────────────────────────────────
 echo ""
-echo "[6/6] 완료!"
+echo "[5/5] 완료!"
 echo ""
 echo "다음 단계:"
 echo "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인"

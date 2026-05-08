@@ -81,9 +81,12 @@ if (-not $claudeCmd) {
 }
 
 $marketplaces = @(
-    @{ id = "exa-skills";    arg = "github:benjaminjackson/exa-skills" },
-    @{ id = "Claudest";      arg = "github:gupsammy/claudest" },
-    @{ id = "openai-codex";  arg = "github:openai/codex-plugin-cc" }
+    @{ id = "anthropic-agent-skills"; arg = "github:anthropics/skills" },
+    @{ id = "exa-skills";             arg = "github:benjaminjackson/exa-skills" },
+    @{ id = "openai-codex";           arg = "github:openai/codex-plugin-cc" },
+    @{ id = "thedotmack";             arg = "github:thedotmack/claude-mem" },
+    @{ id = "korean-law-marketplace"; arg = "github:chrisryugj/korean-law-mcp" },
+    @{ id = "lazyweb";                arg = "https://github.com/aboul3ata/lazyweb-skill.git" }
 )
 foreach ($mp in $marketplaces) {
     try {
@@ -95,18 +98,21 @@ foreach ($mp in $marketplaces) {
 }
 
 # ──────────────────────────────────────────────
-# 5. 플러그인 설치
+# 4. 플러그인 설치
 # ──────────────────────────────────────────────
 Write-Host "[4/5] 플러그인 설치..." -ForegroundColor Yellow
 
 $plugins = @(
     "superpowers@claude-plugins-official",
     "context7@claude-plugins-official",
-    "frontend-design@claude-plugins-official",
     "pyright-lsp@claude-plugins-official",
-    "playwright@claude-plugins-official",
+    "ralph-loop@claude-plugins-official",
+    "claude-code-setup@claude-plugins-official",
+    "playground@claude-plugins-official",
+    "codex@openai-codex",
     "exa-core@exa-skills",
-    "claude-memory@Claudest"
+    "document-skills@anthropic-agent-skills",
+    "claude-mem@thedotmack"
 )
 foreach ($plugin in $plugins) {
     try {
@@ -118,27 +124,10 @@ foreach ($plugin in $plugins) {
 }
 
 # ──────────────────────────────────────────────
-# 5. BMAD Method 설치 (글로벌 Claude Code 스킬)
-# ──────────────────────────────────────────────
-Write-Host "[5/6] BMAD Method 설치..." -ForegroundColor Yellow
-
-$npxCmd = Get-Command npx -ErrorAction SilentlyContinue
-if (-not $npxCmd) {
-    Write-Host "  ⚠ npx 가 없습니다. Node.js v20+ 설치 후 다시 실행하세요." -ForegroundColor Red
-} else {
-    try {
-        npx bmad-method install --directory $ClaudeDir --modules bmm --tools claude-code --yes
-        Write-Host "  ✓ BMAD Method 설치 완료" -ForegroundColor Green
-    } catch {
-        Write-Host "  ⚠ BMAD Method 설치 실패 — 수동으로 실행: npx bmad-method install" -ForegroundColor Red
-    }
-}
-
-# ──────────────────────────────────────────────
 # 완료
 # ──────────────────────────────────────────────
 Write-Host ""
-Write-Host "[6/6] 완료!" -ForegroundColor Cyan
+Write-Host "[5/5] 완료!" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "다음 단계:"
 Write-Host "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인"

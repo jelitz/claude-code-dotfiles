@@ -6,17 +6,24 @@
     "CLAUDE_CODE_USE_POWERSHELL_TOOL": "1"
   },
   "permissions": {
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "enabledPlugins": {
-    "codex@openai-codex": false,
-    "pyright-lsp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "playground@claude-plugins-official": true,
+    "codex@openai-codex": true,
     "exa-core@exa-skills": true,
-    "claude-memory@Claudest": true,
-    "frontend-design@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true
+    "document-skills@anthropic-agent-skills": true,
+    "claude-mem@thedotmack": true,
+    "frontend-design@claude-plugins-official": false,
+    "playwright@claude-plugins-official": false,
+    "korean-law@korean-law-marketplace": false,
+    "lazyweb@lazyweb": false,
+    "cloudflare@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
     "exa-skills": {
@@ -25,16 +32,34 @@
         "repo": "benjaminjackson/exa-skills"
       }
     },
-    "Claudest": {
-      "source": {
-        "source": "github",
-        "repo": "gupsammy/claudest"
-      }
-    },
     "openai-codex": {
       "source": {
         "source": "github",
         "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "korean-law-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "chrisryugj/korean-law-mcp"
+      }
+    },
+    "lazyweb": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/aboul3ata/lazyweb-skill.git"
       }
     }
   },
@@ -42,9 +67,10 @@
     "type": "command",
     "command": "/c/Users/YOUR_USERNAME/.claude/statusline-bash.sh"
   },
+  "language": "Korean",
   "effortLevel": "medium",
+  "advisorModel": "opus",
   "autoUpdatesChannel": "latest",
   "autoDreamEnabled": true,
-  "skipDangerousModePermissionPrompt": true,
   "model": "sonnet[1m]"
 }

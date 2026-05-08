@@ -1,10 +1,19 @@
 {
-  "_comment": "Claude Desktop MCP 서버 설정. Windows: %APPDATA%\\Claude\\claude_desktop_config.json 에 복사",
+  "_comment": "Claude Desktop / Claude Code MCP 서버 설정. Windows: %APPDATA%\\Claude\\claude_desktop_config.json 에 복사. 'claude-in-chrome'은 Chrome 확장에서 자동 등록되므로 여기 포함하지 않음.",
   "mcpServers": {
     "playwright": {
       "command": "npx",
       "args": [
         "@playwright/mcp@latest"
+      ]
+    },
+    "_korean-law-example": {
+      "_note": "한국 법령 MCP. 사용 시 키 이름에서 '_' 제거하고 YOUR_OC_ID 를 본인의 국가법령정보센터 OC 식별자로 교체.",
+      "command": "npx",
+      "args": [
+        "korean-law-mcp@latest",
+        "--oc",
+        "YOUR_OC_ID"
       ]
     }
   },
