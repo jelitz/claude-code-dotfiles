@@ -28,12 +28,31 @@ claude-code-dotfiles/
 
 ### 전제 조건
 
-```bash
-# Node.js 설치 확인
-node --version   # v18 이상 권장
+**1. Claude Code CLI 설치** — Native Install 권장 (npm 방식은 더 이상 권장하지 않음)
 
-# Claude Code CLI 설치
-npm install -g @anthropic-ai/claude-code
+| 플랫폼 | 명령 |
+|---|---|
+| Windows PowerShell | `irm https://claude.ai/install.ps1 \| iex` |
+| Windows CMD | `curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd` |
+| macOS / Linux / WSL | `curl -fsSL https://claude.ai/install.sh \| bash` |
+| WinGet (Windows 대안) | `winget install Anthropic.ClaudeCode` |
+| Homebrew (macOS 대안) | `brew install --cask claude-code` |
+
+> 네이티브 설치는 백그라운드 자동 업데이트를 지원합니다. 자세한 내용은 [Claude Code 공식 설정 문서](https://code.claude.com/docs/ko/setup) 참고.
+
+**2. Git for Windows** (Windows 권장, 선택)
+
+Claude Code의 Bash 도구를 사용하려면 [Git for Windows](https://git-scm.com/downloads/win) 설치를 권장합니다. 미설치 시 PowerShell로 폴백됩니다.
+
+**3. Node.js v20+** (옵션 — 일부 MCP 서버 한정)
+
+`@playwright/mcp`, `korean-law-mcp` 등 npx 기반 MCP 서버를 사용하려는 경우에만 필요합니다. Claude Code 본체는 더 이상 Node.js에 의존하지 않습니다.
+
+**설치 확인**
+
+```bash
+claude --version
+claude doctor   # 설치 상태 진단
 ```
 
 ### Git Bash (Windows) / macOS / Linux
