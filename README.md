@@ -195,39 +195,39 @@ claude-code-dotfiles/
 
 | 플러그인 | 마켓플레이스 | 설명 |
 |---|---|---|
-| `superpowers` | claude-plugins-official | 브레인스토밍·플래닝·TDD·디버깅·코드리뷰 스킬 모음 |
-| `context7` | claude-plugins-official | 라이브러리/프레임워크 최신 문서 실시간 조회 (MCP) |
-| `pyright-lsp` | claude-plugins-official | Python LSP 지원 (타입 체크·자동완성) |
-| `ralph-loop` | claude-plugins-official | Ralph Loop 반복 실행 워크플로 |
-| `claude-code-setup` | claude-plugins-official | Claude Code 자동화 추천·설정 헬퍼 |
-| `playground` | claude-plugins-official | 단일 HTML playground/explorer 생성 스킬 |
-| `codex` | openai-codex | OpenAI Codex 서브에이전트 (rescue, setup). **job은 항상 `--background` 로 실행** (CLAUDE.md 참고) |
-| `exa-core` | exa-skills | Exa AI 웹 검색 (search, context, answer, find-similar 등) |
-| `document-skills` | anthropic-agent-skills | Anthropic 공식 문서 작업 (PDF·DOCX·XLSX·PPTX·frontend-design 등) |
-| `claude-mem` | thedotmack | 세션 간 영속 메모리 (mem-search, timeline-report, smart-explore) |
-| `andrej-karpathy-skills` | karpathy-skills | Karpathy 코딩 가이드라인 — 과도한 복잡화 방지·외과적 수정 |
+| [`superpowers`](https://github.com/obra/superpowers) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | 브레인스토밍·플래닝·TDD·디버깅·코드리뷰 스킬 모음 (by Jesse Vincent) |
+| [`context7`](https://github.com/upstash/context7) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | 라이브러리/프레임워크 최신 문서 실시간 조회 (MCP, by Upstash) |
+| [`pyright-lsp`](https://github.com/anthropics/claude-plugins-official) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Python LSP 지원 — [microsoft/pyright](https://github.com/microsoft/pyright) 기반 (타입 체크·자동완성) |
+| [`ralph-loop`](https://github.com/anthropics/claude-plugins-official) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Ralph Loop 반복 실행 워크플로 |
+| [`claude-code-setup`](https://github.com/anthropics/claude-plugins-official) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Claude Code 자동화 추천·설정 헬퍼 |
+| [`playground`](https://github.com/anthropics/claude-plugins-official) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | 단일 HTML playground/explorer 생성 스킬 |
+| [`codex`](https://github.com/openai/codex-plugin-cc) | [openai-codex](https://github.com/openai/codex-plugin-cc) | OpenAI Codex 서브에이전트 (rescue, setup). **job은 항상 `--background` 로 실행** (CLAUDE.md 참고) |
+| [`exa-core`](https://github.com/benjaminjackson/exa-skills) | [exa-skills](https://github.com/benjaminjackson/exa-skills) | [Exa AI](https://exa.ai) 웹 검색 (search, context, answer, find-similar 등) |
+| [`document-skills`](https://github.com/anthropics/skills) | [anthropic-agent-skills](https://github.com/anthropics/skills) | Anthropic 공식 문서 작업 (PDF·DOCX·XLSX·PPTX·frontend-design 등) |
+| [`claude-mem`](https://github.com/thedotmack/claude-mem) | [thedotmack](https://github.com/thedotmack/claude-mem) | 세션 간 영속 메모리 (mem-search, timeline-report, smart-explore) |
+| [`andrej-karpathy-skills`](https://github.com/forrestchang/andrej-karpathy-skills) | [karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills) | Karpathy 코딩 가이드라인 — 과도한 복잡화 방지·외과적 수정 |
 
 ### 설치되어 있지만 비활성 (`enabled: false`)
 
 | 플러그인 | 마켓플레이스 | 비활성 사유 |
 |---|---|---|
-| `frontend-design` | claude-plugins-official | document-skills의 frontend-design과 중복 |
-| `playwright` | claude-plugins-official | claude-in-chrome MCP를 우선 사용 |
-| `korean-law` | korean-law-marketplace | 개인 OC ID 필요 (필요시 활성화) |
-| `lazyweb` | lazyweb | 옵션 |
-| `cloudflare` | claude-plugins-official | Cloudflare 리소스 다룰 때만 활성화 |
-| `example-skills` | anthropic-agent-skills | 참고용으로 설치만 해둠 |
-| `ui-ux-pro-max` | ui-ux-pro-max-skill | 프로젝트 스코프 설치, 현재 미활성 |
-| `sentry` | claude-plugins-official | 특정 프로젝트 스코프로만 설치 (전역 미사용) |
+| [`frontend-design`](https://github.com/anthropics/claude-plugins-official) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | document-skills의 frontend-design과 중복 |
+| [`playwright`](https://github.com/microsoft/playwright-mcp) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | claude-in-chrome MCP를 우선 사용 |
+| [`korean-law`](https://github.com/chrisryugj/korean-law-mcp) | [korean-law-marketplace](https://github.com/chrisryugj/korean-law-mcp) | 개인 OC ID 필요 (필요시 활성화) |
+| [`lazyweb`](https://github.com/aboul3ata/lazyweb-skill) | [lazyweb](https://github.com/aboul3ata/lazyweb-skill) | 옵션 |
+| [`cloudflare`](https://github.com/anthropics/claude-plugins-official) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Cloudflare 리소스 다룰 때만 활성화 |
+| [`example-skills`](https://github.com/anthropics/skills) | [anthropic-agent-skills](https://github.com/anthropics/skills) | 참고용으로 설치만 해둠 |
+| [`ui-ux-pro-max`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 프로젝트 스코프 설치, 현재 미활성 |
+| [`sentry`](https://github.com/getsentry/sentry-for-ai) | [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | 특정 프로젝트 스코프로만 설치 (전역 미사용) |
 
-마켓플레이스는 `plugins/known_marketplaces.json` 에 **실사용(active) / 등록만(registered-only)** 으로 구분 기록되어 있습니다. 등록만 해둔 곳(Claudest, ecc, agent-browser, claude-for-financial-services)은 setup 스크립트에서 주석 처리되어 있으며 필요 시 해제하면 됩니다.
+마켓플레이스는 `plugins/known_marketplaces.json` 에 **실사용(active) / 등록만(registered-only)** 으로 구분 기록되어 있습니다. 등록만 해둔 곳([Claudest](https://github.com/gupsammy/claudest), [ecc](https://github.com/affaan-m/everything-claude-code), [agent-browser](https://github.com/vercel-labs/agent-browser), [claude-for-financial-services](https://github.com/anthropics/financial-services))은 setup 스크립트에서 주석 처리되어 있으며 필요 시 해제하면 됩니다.
 
 </details>
 
 <details>
 <summary><b>🧰 사용자 스킬 — Exa 검색 3종</b></summary>
 
-플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`). 셋 다 Exa MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다.
+플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`). 셋 다 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다.
 
 | 스킬 | 용도 |
 |---|---|
@@ -240,14 +240,14 @@ claude-code-dotfiles/
 <details>
 <summary><b>🔗 MCP 서버</b></summary>
 
-| 서버 | 등록 방식 | 설명 |
-|---|---|---|
-| `claude-in-chrome` | Chrome 확장에서 자동 | 브라우저 자동화 기본 수단 (CLAUDE.md 에서 Playwright 보다 우선하도록 지정) |
-| `context7` | 플러그인이 자동 등록 | `context7@claude-plugins-official` 활성 시 자동 |
-| `claude-mem` (mcp-search) | 플러그인이 자동 등록 | `claude-mem@thedotmack` 활성 시 자동 |
-| Slack | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결) |
-| `playwright` | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
-| `korean-law` (옵션) | Claude Desktop | `npx korean-law-mcp@latest --oc YOUR_OC_ID` — 사용 시 `_korean-law-example` 키의 `_` 제거 + 본인 [국가법령정보센터](https://open.law.go.kr) OC ID 입력 |
+| 서버 | 출처 | 등록 방식 | 설명 |
+|---|---|---|---|
+| `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 기본 수단 (CLAUDE.md 에서 Playwright 보다 우선하도록 지정) |
+| `context7` | [upstash/context7](https://github.com/upstash/context7) | 플러그인이 자동 등록 | `context7@claude-plugins-official` 활성 시 자동 |
+| `claude-mem` (mcp-search) | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | 플러그인이 자동 등록 | `claude-mem@thedotmack` 활성 시 자동 |
+| Slack | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결) |
+| `playwright` | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
+| `korean-law` (옵션) | [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) | Claude Desktop | `npx korean-law-mcp@latest --oc YOUR_OC_ID` — 사용 시 `_korean-law-example` 키의 `_` 제거 + 본인 [국가법령정보센터](https://open.law.go.kr) OC ID 입력 |
 
 </details>
 
