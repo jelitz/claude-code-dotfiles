@@ -1,14 +1,16 @@
-# Claude Code 설정 복원 스크립트 (PowerShell)
-# 사용법: .\setup.ps1
+# Claude Code 설정 복원 스크립트 (Windows PowerShell)
+# 사용법: .\scripts\setup.ps1   (repo 어디서 실행해도 무방)
 # Windows PowerShell 7+ (pwsh) 권장
 
 $ErrorActionPreference = "Stop"
 
+$RepoDir = Split-Path $PSScriptRoot -Parent
+$ConfigDir = Join-Path $RepoDir "config"
 $ClaudeDir = "$env:USERPROFILE\.claude"
-$ScriptDir = $PSScriptRoot
 $AppDataClaude = "$env:APPDATA\Claude"
 
 Write-Host "=== Claude Code Setup ===" -ForegroundColor Cyan
+Write-Host "감지된 OS   : Windows (PowerShell)"
 Write-Host "설정 디렉토리: $ClaudeDir"
 Write-Host ""
 
@@ -20,12 +22,12 @@ New-Item -ItemType Directory -Force -Path "$ClaudeDir\plugins" | Out-Null
 New-Item -ItemType Directory -Force -Path "$ClaudeDir\skills" | Out-Null
 
 # ──────────────────────────────────────────────
-# 2. 설정 파일 복사
+# 2. 설정 파일 복사 (config\ → ~\.claude\)
 # ──────────────────────────────────────────────
 Write-Host "[1/6] 설정 파일 복사..." -ForegroundColor Yellow
 
 # settings.json (YOUR_USERNAME → 실제 사용자명 치환)
-$settingsContent = Get-Content "$ScriptDir\settings.json" -Raw
+$settingsContent = Get-Content "$ConfigDir\settings.json" -Raw
 $settingsContent = $settingsContent -replace 'YOUR_USERNAME', $env:USERNAME
 if (Test-Path "$ClaudeDir\settings.json") {
     $answer = Read-Host "  settings.json 이 이미 존재합니다. 덮어쓰시겠습니까? (y/N)"
@@ -40,20 +42,20 @@ if (Test-Path "$ClaudeDir\settings.json") {
 
 # settings.local.json (템플릿에서 생성)
 if (-not (Test-Path "$ClaudeDir\settings.local.json")) {
-    Copy-Item "$ScriptDir\settings.local.json.template" "$ClaudeDir\settings.local.json"
+    Copy-Item "$ConfigDir\settings.local.json.template" "$ClaudeDir\settings.local.json"
     Write-Host "  ✓ settings.local.json 생성 완료 (템플릿에서)" -ForegroundColor Green
 } else {
     Write-Host "  - settings.local.json 은 이미 존재하므로 건너뜀"
 }
 
 # statusline-bash.sh
-Copy-Item "$ScriptDir\statusline-bash.sh" "$ClaudeDir\statusline-bash.sh" -Force
+Copy-Item "$ConfigDir\statusline-bash.sh" "$ClaudeDir\statusline-bash.sh" -Force
 Write-Host "  ✓ statusline-bash.sh 복사 완료" -ForegroundColor Green
 
 # CLAUDE.md + RTK.md (CLAUDE.md 가 @RTK.md 를 import 하므로 쌍으로 유지)
 foreach ($doc in @("CLAUDE.md", "RTK.md")) {
     if (-not (Test-Path "$ClaudeDir\$doc")) {
-        Copy-Item "$ScriptDir\$doc" "$ClaudeDir\$doc"
+        Copy-Item "$ConfigDir\$doc" "$ClaudeDir\$doc"
         Write-Host "  ✓ $doc 복사 완료" -ForegroundColor Green
     } else {
         Write-Host "  - $doc 는 이미 존재하므로 건너뜀"
@@ -61,19 +63,19 @@ foreach ($doc in @("CLAUDE.md", "RTK.md")) {
 }
 
 # ──────────────────────────────────────────────
-# 3. 사용자 스킬 복사 (~/.claude/skills)
+# 3. 사용자 스킬 복사 (config\skills → ~\.claude\skills)
 # ──────────────────────────────────────────────
 Write-Host "[2/6] 사용자 스킬 복사..." -ForegroundColor Yellow
-Copy-Item "$ScriptDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
+Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
 Write-Host "  ✓ skills\ → $ClaudeDir\skills (code-search-exa, company-research, web-search-advanced-research-paper)" -ForegroundColor Green
 
 # ──────────────────────────────────────────────
-# 4. Claude Desktop MCP 설정 복사
+# 4. Claude Desktop 설정 복사 (desktop\ → %APPDATA%\Claude)
 # ──────────────────────────────────────────────
-Write-Host "[3/6] MCP 설정 복사..." -ForegroundColor Yellow
+Write-Host "[3/6] Claude Desktop 설정 복사..." -ForegroundColor Yellow
 
 New-Item -ItemType Directory -Force -Path $AppDataClaude | Out-Null
-$mcpContent = Get-Content "$ScriptDir\mcp\claude_desktop_config.json" -Raw
+$mcpContent = Get-Content "$RepoDir\desktop\claude_desktop_config.json" -Raw
 $mcpContent = $mcpContent -replace 'YOUR_USERNAME', $env:USERNAME
 Set-Content "$AppDataClaude\claude_desktop_config.json" $mcpContent -Encoding UTF8
 Write-Host "  ✓ claude_desktop_config.json → $AppDataClaude" -ForegroundColor Green
@@ -152,10 +154,10 @@ if ($rtkCmd) {
 } else {
     Write-Host "  ⚠ rtk 가 PATH에 없습니다!" -ForegroundColor Red
     Write-Host "    settings.json 의 PreToolUse 훅('rtk hook claude')이 rtk 를 호출하므로,"
-    Write-Host "    rtk 미설치 상태에서는 모든 Bash 도구 호출 시 훅 오류가 발생합니다."
+    Write-Host "    rtk 미설치 상태에서는 모든 Bash·PowerShell 도구 호출 시 훅 오류가 발생합니다."
     Write-Host "    해결 방법 중 하나를 선택하세요:"
-    Write-Host "      a) rtk 설치: https://github.com/rtk-ai/rtk (단일 Rust 바이너리, PATH에 배치)"
-    Write-Host "      b) ~/.claude/settings.json 에서 hooks.PreToolUse 블록 제거"
+    Write-Host "      a) rtk 설치: https://github.com/rtk-ai/rtk (단일 Rust 바이너리, %USERPROFILE%\.local\bin 등 PATH에 배치)"
+    Write-Host "      b) ~\.claude\settings.json 에서 hooks.PreToolUse 블록 제거"
 }
 
 # ──────────────────────────────────────────────
@@ -165,7 +167,7 @@ Write-Host ""
 Write-Host "완료!" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "다음 단계:"
-Write-Host "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인"
+Write-Host "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인 (Git Bash 실제 설치 경로)"
 Write-Host "  2. Claude Desktop 의 localAgentModeTrustedFolders 를 실제 작업 폴더로 변경"
-Write-Host "  3. korean-law MCP 사용 시 본인 OC ID 입력 (mcp\claude_desktop_config.json 참고)"
+Write-Host "  3. korean-law MCP 사용 시 본인 OC ID 입력 (desktop\claude_desktop_config.json 참고)"
 Write-Host "  4. Claude Code 재시작"
