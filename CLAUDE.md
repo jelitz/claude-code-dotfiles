@@ -1,4 +1,4 @@
-  # CLAUDE.md — User Global
+# CLAUDE.md — User Global
 
   모든 프로젝트에 공통 적용되는 개인 글로벌 지침. 프로젝트 고유 규칙은 해당 repo의 `./CLAUDE.md`에 둠
 
@@ -9,6 +9,25 @@
     - 명백한 질문을 하지 말 것
     - 사용자가 고려하지 않았을 수 있는 어려운 부분을 파고들 것
     - 모든 것을 다룰 때 까지 인터뷰할 것을 권장
+  - 비용
+    - 올바른 모델 선택
+      - sonnet : 일일 코딩 작업을 위해 최신 Sonnet 모델을 사용합니다
+      - opus : 복잡한 추론 작업을 위해 최신 Opus 모델을 사용합니다
+      - haiku : 간단한 작업을 위해 빠르고 효율적인 Haiku 모델을 사용합니다
+    - 시간이 많이 소요되는 스레드를 시작할 때 전달 체크포인트를 설정하세요.
+      - 계속 진행하기 전에, 결과물을 한 문장으로 명시하세요(PR 제목, 변경된 파일, 예상되는 명령 출력 등).
+      - (a) 10분 이상 수정 없이 진행하거나, (b) 동일한 접근 방식이 두 번 실패하는 경우 작업이 비정상적임을 인지하고 중단하거나 작업 방식에 대해 다시 판단할 것
+      - 단일 수정 사항에 대해 두 번 이상 재시도하지 말 것
+    - 시간이 많이 소요되는 스레드를 시작할 때 새로운 컨텍스트 제약 조건을 설정
+      - 계속 진행하기 전에 처음부터 다시 시작
+      - 현재 목표, 관련 파일, 실패한 명령/출력, 그리고 아래의 제약 조건만 사용
+      - 수정하기 전에 작업 컨텍스트를 10개 항목 이내로 다시 작성
+    - agent teams
+      - 팀원에게 sonnet을 사용. 조정 작업을 위해 기능과 비용의 균형을 맞춤
+      - spawn 프롬프트를 집중적으로 유지
+      - 작업이 완료되면 팀을 정리
+    - subagent
+      - 간단한 subagent 의 경우 저렴한 모델 구성을 고려
 
   ## Environment
   - **IMPORTANT:** Python + Windows 한글 파일 처리 시 기본 인코딩이 cp949 → 파일/sqlite I/O는 항상 `encoding="utf-8"` 명시
@@ -43,7 +62,7 @@
 
   ### Agent
   - 병렬작업 시 subagents 와 agent Teams 아키텍처를 이해하고 선택
-    - 테스트 실행, 문서 가져오기 또는 로그 파일 처리 등 빠르고 집중된 워커가 필요할 때 subagent를 사용 
+    - 테스트 실행, 문서 가져오기 또는 로그 파일 처리 등 빠르고 집중된 워커가 필요할 때 subagent를 사용
     - 팀원이 결과를 공유하고, 서로 도전하고, 독립적으로 조정해야 할 때 agent team을 사용
     - 터닝포인트 : 병렬 subagent를 실행하지만 컨텍스트 제한에 도달하거나, subagent가 서로 통신해야 할 경우, agent team이 자연스러운 다음 단계
   - 작업이 병렬 작업의 이점이 있다고 판단하면, 팀 생성을 제안할 것
@@ -65,26 +84,31 @@
   - 기본: `claude-in-chrome` MCP (`mcp__claude-in-chrome__*` 도구)
   - Playwright 등 다른 도구는 사용자가 명시 요청하거나 claude-in-chrome으로 불가한 경우에만 사용
 
-  ### URL fetch / 웹 검색
-  - 기본: Jina
-    - URL 접근: `https://r.jina.ai/<URL>`
-    - 검색: `https://s.jina.ai/<query>`
-  - WebFetch/WebSearch는 Jina로 처리 불가하거나 사용자가 다른 방식을 명시한 경우에만 사용
-
   ### GitHub
-  - issue / PR / release / API 조회는 `gh` CLI 우선 (WebFetch보다 빠르고 인증 처리 자동)
+  - issue / PR / release / API 조회는 `gh` CLI 우선
+
+  ### codex plugin
+  - **IMPORTANT:** codex job은 항상 `--background`로 실행하고 status 폴링으로 결과 수거 (foreground는 무한 hang 가능 — v1.0.4 타임아웃 부재 확인됨)
+  - hang 발생 시 재시도는 `--fresh` + 좁은 프롬프트로 새 Agent 실행 (새 broker 기동됨)
+  - plugin 경로가 계속 실패하면 `codex exec --sandbox read-only ... | tee <log>`를 Bash `run_in_background`로 직접 호출
 
   ### CLI 도구 사용
   - 사용 가능한 경우 CLI 도구 선호
     - CLI 도구가 없는 경우 다른 도구를 활용할 수 있는 지 탐색
 
-  ## 비용
-  - 올바른 모델 선택
-    - 간단한 subagent 작업의 경우, subagent 구성에서 model: haiku를 지정
-    - agent teams
-      - 팀원에게 Sonnet을 사용. 조정 작업을 위해 기능과 비용의 균형을 맞춤
-      - spawn 프롬프트를 집중적으로 유지
-      - 작업이 완료되면 팀을 정리
+  ## URL fetch / 웹 검색
+  - 기본: Exa MCP
+    - 웹 검색: `web_search_exa`
+    - 알고 있는 URL 본문 확인: `web_fetch_exa`
+    - Exa가 지원하는 코드 컨텍스트·회사·사람 검색 도구가 있으면 해당 Exa 도구를 우선 사용
+  - Exa로 처리하기 어렵거나 결과가 부족하면 Jina를 사용
+    - URL 접근: `https://r.jina.ai/<URL>`
+    - 검색: `https://s.jina.ai/<query>`
+  - 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
+  - 기본 검색은 자연어 쿼리, `type: "auto"`, `numResults: 5-10`, `contents: { "highlights": true }`
+  - 최신성이 중요한 정보는 검색으로 확인하고 출처 링크와 중요한 날짜를 함께 답변
+  - full text가 필요할 때만 요청하고 `maxCharacters`를 명시
+  - 실시간성이 꼭 필요한 경우에만 `contents.maxAgeHours: 0` 사용
 
   ---
 
@@ -95,13 +119,20 @@
   `@docs/` 에 다음 4종 공식 문서를 유지
 
   | 파일 | 목적 |
-  |---|---|
   | `@docs/prd.md` | 제품 요구사항 명세 |
   | `@docs/spec.md` | 기능 요구사항 명세 |
   | `@docs/plan.md` | Phase 단위 구현 계획 |
-  | `@docs/implemented.md` | 완료 내역 — 콜렉션·라우트·테스트 수·배포 상태 실측 기준 |
+  | `@docs/implemented.md` | 완료 내역 — 콜렉션·라우트·테스트 수·배포 상태 실측 기준 등|
+
+  implemented.md 에는 다음 내용이 포함되어야 합니다.
+  - 설계 결정: 명세가 모호하여 본인이 내린 선택들
+  - 편차: 의도적으로 명세를 따르지 않은 부분과 그 이유
+  - 트레이드오프: 고려했던 대안들과 현재 방식을 선택한 이유
+  - 미결 질문: 확인이나 수정이 필요한 사항들
 
   **YOU MUST:**
   - 모든 코드 변경(신규·수정·폐기)을 위 문서에 동기화
   - PR 전에 코드·테스트·배포 상태와 문서 일치 여부를 확인
   - 불일치 시 동일 PR 또는 별도 `docs:` 커밋으로 동기화
+
+@RTK.md

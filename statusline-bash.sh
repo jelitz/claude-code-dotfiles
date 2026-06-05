@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Claude Code statusLine (2 lines):
-#   row 1 (identity): ⎇ branch │ ◈ model │ effort │ ⚖ advisor: <model>
-#   row 2 (usage):    ctx bar% │ $cost │ 5h bar% ↻ left │ [7d bar%] │ vX.Y.Z
+#   row 1 (identity): ⎇ branch │ ◈ model │ effort │ ⚖ advisor: <model> │ vX.Y.Z
+#   row 2 (usage):    ctx bar% │ $cost │ 5h bar% ↻ left │ 7d bar%
 
 input=$(cat)
 
@@ -148,7 +148,10 @@ else
   add1 "${DIM}⚖ advisor: (unset)${RESET}"
 fi
 
-# === row 2: usage (ctx / cost / rate limits / version) ===
+# version (dim, with │ separator like other row 1 items)
+[ -n "$version" ] && add1 "${DIM}v${version}${RESET}"
+
+# === row 2: usage (ctx / cost / rate limits) ===
 
 # ctx progress bar
 if [ -n "$ctx_pct" ]; then
@@ -170,17 +173,11 @@ if [ -n "$five_hour" ]; then
   add2 "$fh_str"
 fi
 
-# 7d rate limit: only when ≥ 10%
+# 7d rate limit: bar + %  (always shown when present, like 5h)
 if [ -n "$seven_day" ]; then
-  sd_val=${seven_day%.*}
-  if [[ ${sd_val:-0} -ge 10 ]]; then
-    col=$(pct_color "$seven_day")
-    add2 "${DIM}7d${RESET} ${col}$(bar "$seven_day") ${seven_day}%${RESET}"
-  fi
+  col=$(pct_color "$seven_day")
+  add2 "${DIM}7d${RESET} ${col}$(bar "$seven_day") ${seven_day}%${RESET}"
 fi
-
-# version (dim, no separator — appended at end of row 2)
-[ -n "$version" ] && row2+="  ${DIM}v${version}${RESET}"
 
 printf '%s\n' "$row1"
 printf '%s\n' "$row2"

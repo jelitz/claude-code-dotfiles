@@ -1,12 +1,12 @@
 {
-  "_comment": "설치/활성화 대상 플러그인 목록. setup.sh / setup.ps1 가 enabled=true 인 항목만 install 실행.",
+  "_comment": "설치/활성화 대상 플러그인 목록. setup.sh / setup.ps1 가 enabled=true 인 항목만 install 실행. enabled=false 항목은 현재 환경에 설치만 되어 있거나 의도적으로 비활성화한 상태의 기록.",
   "plugins": [
     {
       "id": "superpowers@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "superpowers",
       "enabled": true,
-      "description": "브레인스토밍·플래닝·TDD·디버깅 등 개발 워크플로 스킬 모음"
+      "description": "브레인스토밍·플래닝·TDD·디버깅·코드리뷰 등 개발 워크플로 스킬 모음"
     },
     {
       "id": "context7@claude-plugins-official",
@@ -48,7 +48,7 @@
       "marketplace": "openai-codex",
       "name": "codex",
       "enabled": true,
-      "description": "OpenAI Codex 서브에이전트 (rescue, setup)"
+      "description": "OpenAI Codex 서브에이전트 (rescue, setup). job은 항상 --background 로 실행할 것 (RTK.md·CLAUDE.md 참고)"
     },
     {
       "id": "exa-core@exa-skills",
@@ -72,6 +72,13 @@
       "description": "세션 간 영속 메모리 (mem-search, timeline-report, smart-explore 등)"
     },
     {
+      "id": "andrej-karpathy-skills@karpathy-skills",
+      "marketplace": "karpathy-skills",
+      "name": "andrej-karpathy-skills",
+      "enabled": true,
+      "description": "Karpathy 코딩 가이드라인 스킬 — 과도한 복잡화 방지, 외과적 수정, 가정 표면화"
+    },
+    {
       "id": "frontend-design@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "frontend-design",
@@ -90,7 +97,7 @@
       "marketplace": "korean-law-marketplace",
       "name": "korean-law",
       "enabled": false,
-      "description": "한국 법령 검색 MCP (개인 OC ID 필요)"
+      "description": "한국 법령 검색 MCP (개인 OC ID 필요, 필요시 활성화)"
     },
     {
       "id": "lazyweb@lazyweb",
@@ -105,6 +112,29 @@
       "name": "cloudflare",
       "enabled": false,
       "description": "Cloudflare 리소스 관리 (필요시 활성화)"
+    },
+    {
+      "id": "example-skills@anthropic-agent-skills",
+      "marketplace": "anthropic-agent-skills",
+      "name": "example-skills",
+      "enabled": false,
+      "description": "Anthropic 예제 스킬 모음 — 설치만 되어 있고 enabledPlugins 에는 미등록 (참고용)"
+    },
+    {
+      "id": "ui-ux-pro-max@ui-ux-pro-max-skill",
+      "marketplace": "ui-ux-pro-max-skill",
+      "name": "ui-ux-pro-max",
+      "enabled": false,
+      "scope": "project",
+      "description": "UI/UX 디자인 강화 스킬 — 프로젝트 스코프로 설치만 된 상태 (미활성)"
+    },
+    {
+      "id": "sentry@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "sentry",
+      "enabled": false,
+      "scope": "project",
+      "description": "Sentry 에러 모니터링 연동 — 특정 프로젝트 스코프로만 설치 (전역 미사용)"
     }
   ]
 }
