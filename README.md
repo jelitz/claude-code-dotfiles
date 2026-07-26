@@ -120,7 +120,7 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (6단계):
 
 1. `config/` 의 설정 파일 5종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 사용자 스킬 3종 → `~/.claude/skills/`
+2. `config/skills/` 의 사용자 스킬 5종 → `~/.claude/skills/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 커스텀 마켓플레이스 8곳 등록
 5. 활성 플러그인 11종 설치
@@ -138,9 +138,11 @@ claude-code-dotfiles/
 │   ├── CLAUDE.md                        #   전역 AI 지시사항 (@RTK.md import)
 │   ├── RTK.md                           #   rtk 메타 명령 사용 지침
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
-│   └── skills/                          #   사용자 스킬 (Exa 검색 3종)
+│   └── skills/                          #   사용자 스킬 5종
+│       ├── agent-orchestration/
 │       ├── code-search-exa/
 │       ├── company-research/
+│       ├── web-research/
 │       └── web-search-advanced-research-paper/
 ├── desktop/
 │   └── claude_desktop_config.json       # Claude Desktop MCP·환경 설정
@@ -205,15 +207,17 @@ claude-code-dotfiles/
 
 마켓플레이스는 `plugins/known_marketplaces.json` 에 **실사용(active) / 등록만(registered-only)** 으로 구분 기록되어 있습니다. 등록만 해둔 곳(Claudest, ecc, agent-browser, claude-for-financial-services)은 setup 스크립트에서 주석 처리되어 있으며 필요 시 해제하면 됩니다.
 
-### 🧰 사용자 스킬 — Exa 검색 3종
+### 🧰 사용자 스킬 — 5종
 
-플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`). 셋 다 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다.
+플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`). 이 중 Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다.
 
 | 스킬 | 용도 |
 |---|---|
-| `code-search-exa` | 코드 예제·API 문법·라이브러리 문서 검색 (GitHub/StackOverflow) |
-| `company-research` | 기업 정보·경쟁사·시장 리서치 |
-| `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) |
+| `code-search-exa` | 코드 예제·API 문법·라이브러리 문서 검색 (GitHub/StackOverflow) — Exa 기반 |
+| `company-research` | 기업 정보·경쟁사·시장 리서치 — Exa 기반 |
+| `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) — Exa 기반 |
+| `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
+| `agent-orchestration` | 병렬 작업 시 subagent vs agent team 선택, 팀 구성·운영 판단 기준 |
 
 ### 🔗 MCP 서버
 
