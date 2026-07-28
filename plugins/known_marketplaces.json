@@ -30,34 +30,6 @@
       "description": "OpenAI Codex 플러그인 마켓플레이스 (codex 제공)"
     },
     {
-      "id": "thedotmack",
-      "source": "github",
-      "repo": "thedotmack/claude-mem",
-      "usage": "active",
-      "description": "claude-mem (영속 메모리) 마켓플레이스"
-    },
-    {
-      "id": "karpathy-skills",
-      "source": "github",
-      "repo": "forrestchang/andrej-karpathy-skills",
-      "usage": "active",
-      "description": "Karpathy 코딩 가이드라인 스킬 마켓플레이스 (andrej-karpathy-skills 제공)"
-    },
-    {
-      "id": "korean-law-marketplace",
-      "source": "github",
-      "repo": "chrisryugj/korean-law-mcp",
-      "usage": "active",
-      "description": "한국 법령 검색 MCP 마켓플레이스 (korean-law 제공, 플러그인은 비활성)"
-    },
-    {
-      "id": "lazyweb",
-      "source": "git",
-      "url": "https://github.com/aboul3ata/lazyweb-skill.git",
-      "usage": "active",
-      "description": "LazyWeb 마켓플레이스 (lazyweb 제공, 플러그인은 비활성)"
-    },
-    {
       "id": "ui-ux-pro-max-skill",
       "source": "github",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
