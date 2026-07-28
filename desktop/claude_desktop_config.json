@@ -6,15 +6,6 @@
       "args": [
         "@playwright/mcp@latest"
       ]
-    },
-    "_korean-law-example": {
-      "_note": "한국 법령 MCP. 사용 시 키 이름에서 '_' 제거하고 YOUR_OC_ID 를 본인의 국가법령정보센터 OC 식별자로 교체.",
-      "command": "npx",
-      "args": [
-        "korean-law-mcp@latest",
-        "--oc",
-        "YOUR_OC_ID"
-      ]
     }
   },
   "preferences": {

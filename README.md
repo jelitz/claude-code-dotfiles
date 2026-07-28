@@ -16,6 +16,7 @@
 - [빠른 시작](#빠른-시작)
 - [파일 구조](#파일-구조)
 - [RTK — 토큰 절약 레이어](#rtk--토큰-절약-레이어)
+- [pup — Datadog CLI](#pup--datadog-cli)
 - [구성 요소 상세](#구성-요소-상세) (플러그인 · 스킬 · MCP · Statusline · 설정값)
 - [수동 설치](#수동-설치)
 
@@ -26,7 +27,7 @@
 ```mermaid
 flowchart LR
     subgraph repo["claude-code-dotfiles"]
-        CFG["config/<br/>(settings · CLAUDE.md · RTK.md<br/>statusline · skills)"]
+        CFG["config/<br/>(settings · CLAUDE.md · RTK.md<br/>statusline · skills · agents)"]
         DSK["desktop/<br/>(claude_desktop_config.json)"]
         REF["plugins/ · examples/<br/>(참고 기록 — 복사 대상 아님)"]
     end
@@ -35,7 +36,7 @@ flowchart LR
     DSK --> SETUP
     SETUP -->|"플레이스홀더 치환<br/>+ OS별 보정"| HOME["~/.claude/"]
     SETUP -->|"OS별 경로"| DESKTOP["Claude Desktop 설정 폴더"]
-    SETUP -->|"claude plugin ..."| PLG["마켓플레이스 8곳 등록<br/>플러그인 11종 설치"]
+    SETUP -->|"claude plugin ..."| PLG["마켓플레이스 4곳 등록<br/>플러그인 9종 설치"]
 ```
 
 규칙은 세 가지입니다.
@@ -68,7 +69,7 @@ flowchart LR
 
 **Git for Windows** (Windows만) — Bash 도구와 statusline 스크립트가 사용.
 
-**Node.js v20+** (옵션) — `@playwright/mcp`, `korean-law-mcp` 등 npx 기반 MCP 서버 사용 시에만 필요.
+**Node.js v20+** (옵션) — `@playwright/mcp` 등 npx 기반 MCP 서버 사용 시에만 필요.
 
 ### 2. OS별 설치
 
@@ -172,9 +173,45 @@ claude-code-dotfiles/
 
 ---
 
+## pup — Datadog CLI
+
+Datadog 데이터(모니터·로그·APM·대시보드 등) 조회는 공식 Datadog MCP 플러그인 대신 [pup](https://github.com/DataDog/pup) CLI로 처리합니다. MCP OAuth 재연동이 불안정했던 반면 pup은 자체 OAuth2(PKCE + Dynamic Client Registration) 인증이 안정적으로 동작하고, 바이너리 하나로 200개 이상의 명령을 지원합니다.
+
+### 설치
+
+```bash
+# Homebrew (macOS/Linux)
+brew tap datadog-labs/pack
+brew install datadog-labs/pack/pup
+
+# 수동 다운로드 (Windows 포함) — 최신 릴리스에서 OS별 바이너리 확인
+# https://github.com/DataDog/pup/releases/latest
+```
+
+### 인증
+
+```bash
+pup auth login      # OAuth2 브라우저 로그인 (권장, 토큰 자동 갱신)
+pup auth status     # 인증 상태 확인
+```
+
+### Claude Code 스킬·에이전트 설치
+
+pup 바이너리는 Claude Code용 스킬·에이전트를 자체 내장하고 있어, 별도 마켓플레이스 등록 없이 아래 한 줄로 설치됩니다. 이 저장소의 `config/skills/dd-*` (11종)와 `config/agents/*.md` (48종)가 이 명령의 결과물이며, `cp -r config/skills/*`·`cp -r config/agents/*` 로 그대로 복원할 수 있습니다.
+
+```bash
+pup skills install claude   # ~/.claude/skills/dd-*, ~/.claude/agents/*.md 설치
+```
+
+pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전트가 최신 상태로 갱신됩니다.
+
+> ℹ pup은 이 저장소에 커밋하지 않습니다(바이너리이므로 `config/skills/`·`config/agents/` 만 미러 대상). Datadog 관련 작업이 필요 없다면 이 섹션은 건너뛰어도 됩니다.
+
+---
+
 ## 구성 요소 상세
 
-### 🔌 플러그인 — 활성 11종 / 비활성 8종
+### 🔌 플러그인 — 활성 9종 / 비활성 6종
 
 #### 활성 (`enabled: true`)
 
@@ -189,8 +226,6 @@ claude-code-dotfiles/
 | [`codex`](https://github.com/openai/codex-plugin-cc) | openai-codex | OpenAI Codex 서브에이전트 (rescue, setup). **job은 항상 `--background` 로 실행** (CLAUDE.md 참고) |
 | [`exa-core`](https://github.com/benjaminjackson/exa-skills) | exa-skills | [Exa AI](https://exa.ai) 웹 검색 (search, context, answer, find-similar 등) |
 | [`document-skills`](https://github.com/anthropics/skills) | anthropic-agent-skills | Anthropic 공식 문서 작업 (PDF·DOCX·XLSX·PPTX·frontend-design 등) |
-| [`claude-mem`](https://github.com/thedotmack/claude-mem) | thedotmack | 세션 간 영속 메모리 (mem-search, timeline-report, smart-explore) |
-| [`andrej-karpathy-skills`](https://github.com/forrestchang/andrej-karpathy-skills) | karpathy-skills | Karpathy 코딩 가이드라인 — 과도한 복잡화 방지·외과적 수정 |
 
 #### 설치되어 있지만 비활성 (`enabled: false`)
 
@@ -198,8 +233,6 @@ claude-code-dotfiles/
 |---|---|---|
 | [`frontend-design`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | document-skills의 frontend-design과 중복 |
 | [`playwright`](https://github.com/microsoft/playwright-mcp) | claude-plugins-official | claude-in-chrome MCP를 우선 사용 |
-| [`korean-law`](https://github.com/chrisryugj/korean-law-mcp) | korean-law-marketplace | 개인 OC ID 필요 (필요시 활성화) |
-| [`lazyweb`](https://github.com/aboul3ata/lazyweb-skill) | lazyweb | 옵션 |
 | [`cloudflare`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | Cloudflare 리소스 다룰 때만 활성화 |
 | [`example-skills`](https://github.com/anthropics/skills) | anthropic-agent-skills | 참고용으로 설치만 해둠 |
 | [`ui-ux-pro-max`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | ui-ux-pro-max-skill | 프로젝트 스코프 설치, 현재 미활성 |
@@ -219,16 +252,34 @@ claude-code-dotfiles/
 | `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
 | `agent-orchestration` | 병렬 작업 시 subagent vs agent team 선택, 팀 구성·운영 판단 기준 |
 
+### 🐾 pup 스킬 · 에이전트 — 11 + 48종
+
+[pup](#pup--datadog-cli) CLI가 자체 내장·설치하는 Datadog 스킬(`config/skills/dd-*`)과 도메인별 서브에이전트(`config/agents/*.md`). 마켓플레이스 등록 없이 `pup skills install claude` 한 줄로 생성되며, 손으로 관리하지 않습니다 — pup 버전을 올릴 때마다 같은 명령으로 갱신.
+
+| 스킬 | 용도 |
+|---|---|
+| `dd-pup` | pup CLI 기본 — OAuth2 인증, 토큰 갱신 |
+| `dd-monitors` | 모니터 생성·수정·mute, 알림 베스트 프랙티스 |
+| `dd-logs` | 로그 검색, 파이프라인, 아카이브, 비용 관리 |
+| `dd-apm` | 트레이스·서비스·의존성·성능 분석 |
+| `dd-debugger` | Live Debugger — 프로덕션 런타임 값 캡처 |
+| `dd-docs` | Datadog 공식 문서 검색 |
+| `dd-code-generation` | pup CLI 사용 또는 TypeScript/Python/Java/Go/Rust 코드 생성 |
+| `dd-file-issue` | pup CLI·플러그인 저장소에 GitHub 이슈 등록 |
+| `dd-symdb` | Symbol Database — 서비스 심볼·probe 가능 메서드 검색 |
+| `dd-unblock-pr` | 실패한 PR CI 파이프라인 원인 분류(flaky/infra/regression) |
+| `dd-triage-flaky-test` | 특정 flaky 테스트 히스토리·원인·조치 추천 |
+
+에이전트 48종은 모니터링·대시보드·시큐리티·인시던트·비용 관리 등 Datadog 도메인별로 세분화되어 있습니다 — 전체 목록은 `config/agents/`를 참고하거나 `pup skills list --type=agent` 로 확인.
+
 ### 🔗 MCP 서버
 
 | 서버 | 출처 | 등록 방식 | 설명 |
 |---|---|---|---|
 | `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 기본 수단 (CLAUDE.md 에서 Playwright 보다 우선하도록 지정) |
 | `context7` | [upstash/context7](https://github.com/upstash/context7) | 플러그인이 자동 등록 | `context7@claude-plugins-official` 활성 시 자동 |
-| `claude-mem` (mcp-search) | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | 플러그인이 자동 등록 | `claude-mem@thedotmack` 활성 시 자동 |
 | Slack | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결) |
 | `playwright` | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
-| `korean-law` (옵션) | [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) | Claude Desktop | `npx korean-law-mcp@latest --oc YOUR_OC_ID` — 사용 시 `_korean-law-example` 키의 `_` 제거 + 본인 [국가법령정보센터](https://open.law.go.kr) OC ID 입력 |
 
 ### 📊 Statusline — 커스텀 2줄 상태 표시
 
@@ -316,10 +367,6 @@ cp desktop/claude_desktop_config.json "$HOME/.config/Claude/claude_desktop_confi
 claude plugin marketplace add anthropic-agent-skills github:anthropics/skills
 claude plugin marketplace add exa-skills github:benjaminjackson/exa-skills
 claude plugin marketplace add openai-codex github:openai/codex-plugin-cc
-claude plugin marketplace add thedotmack github:thedotmack/claude-mem
-claude plugin marketplace add karpathy-skills github:forrestchang/andrej-karpathy-skills
-claude plugin marketplace add korean-law-marketplace github:chrisryugj/korean-law-mcp
-claude plugin marketplace add lazyweb https://github.com/aboul3ata/lazyweb-skill.git
 claude plugin marketplace add ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill
 
 # 4. 플러그인 설치 (활성화 대상)
@@ -332,8 +379,6 @@ claude plugin install playground@claude-plugins-official
 claude plugin install codex@openai-codex
 claude plugin install exa-core@exa-skills
 claude plugin install document-skills@anthropic-agent-skills
-claude plugin install claude-mem@thedotmack
-claude plugin install andrej-karpathy-skills@karpathy-skills
 ```
 
 </details>

@@ -65,20 +65,6 @@
       "description": "Anthropic 공식 문서 작업 스킬 (PDF, DOCX, XLSX, PPTX, frontend-design 등)"
     },
     {
-      "id": "claude-mem@thedotmack",
-      "marketplace": "thedotmack",
-      "name": "claude-mem",
-      "enabled": true,
-      "description": "세션 간 영속 메모리 (mem-search, timeline-report, smart-explore 등)"
-    },
-    {
-      "id": "andrej-karpathy-skills@karpathy-skills",
-      "marketplace": "karpathy-skills",
-      "name": "andrej-karpathy-skills",
-      "enabled": true,
-      "description": "Karpathy 코딩 가이드라인 스킬 — 과도한 복잡화 방지, 외과적 수정, 가정 표면화"
-    },
-    {
       "id": "frontend-design@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "frontend-design",
@@ -91,20 +77,6 @@
       "name": "playwright",
       "enabled": false,
       "description": "Playwright 기반 브라우저 자동화 (claude-in-chrome 우선 사용으로 비활성)"
-    },
-    {
-      "id": "korean-law@korean-law-marketplace",
-      "marketplace": "korean-law-marketplace",
-      "name": "korean-law",
-      "enabled": false,
-      "description": "한국 법령 검색 MCP (개인 OC ID 필요, 필요시 활성화)"
-    },
-    {
-      "id": "lazyweb@lazyweb",
-      "marketplace": "lazyweb",
-      "name": "lazyweb",
-      "enabled": false,
-      "description": "LazyWeb 스킬 마켓플레이스 통합 (옵션)"
     },
     {
       "id": "cloudflare@claude-plugins-official",
