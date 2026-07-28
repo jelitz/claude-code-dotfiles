@@ -20,6 +20,7 @@ Write-Host ""
 New-Item -ItemType Directory -Force -Path $ClaudeDir | Out-Null
 New-Item -ItemType Directory -Force -Path "$ClaudeDir\plugins" | Out-Null
 New-Item -ItemType Directory -Force -Path "$ClaudeDir\skills" | Out-Null
+New-Item -ItemType Directory -Force -Path "$ClaudeDir\agents" | Out-Null
 
 # ──────────────────────────────────────────────
 # 2. 설정 파일 복사 (config\ → ~\.claude\)
@@ -67,7 +68,12 @@ foreach ($doc in @("CLAUDE.md", "RTK.md")) {
 # ──────────────────────────────────────────────
 Write-Host "[2/6] 사용자 스킬 복사..." -ForegroundColor Yellow
 Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
-Write-Host "  ✓ skills\ → $ClaudeDir\skills (code-search-exa, company-research, web-search-advanced-research-paper)" -ForegroundColor Green
+Write-Host "  ✓ skills\ → $ClaudeDir\skills (code-search-exa, company-research, web-search-advanced-research-paper 등 + pup 제공 dd-* 11종)" -ForegroundColor Green
+
+if (Test-Path "$ConfigDir\agents") {
+    Copy-Item "$ConfigDir\agents\*" "$ClaudeDir\agents\" -Recurse -Force
+    Write-Host "  ✓ agents\ → $ClaudeDir\agents (pup 제공 Datadog 도메인 서브에이전트 48종)" -ForegroundColor Green
+}
 
 # ──────────────────────────────────────────────
 # 4. Claude Desktop 설정 복사 (desktop\ → %APPDATA%\Claude)
@@ -97,10 +103,6 @@ $marketplaces = @(
     @{ id = "anthropic-agent-skills"; arg = "github:anthropics/skills" },
     @{ id = "exa-skills";             arg = "github:benjaminjackson/exa-skills" },
     @{ id = "openai-codex";           arg = "github:openai/codex-plugin-cc" },
-    @{ id = "thedotmack";             arg = "github:thedotmack/claude-mem" },
-    @{ id = "karpathy-skills";        arg = "github:forrestchang/andrej-karpathy-skills" },
-    @{ id = "korean-law-marketplace"; arg = "github:chrisryugj/korean-law-mcp" },
-    @{ id = "lazyweb";                arg = "https://github.com/aboul3ata/lazyweb-skill.git" },
     @{ id = "ui-ux-pro-max-skill";    arg = "github:nextlevelbuilder/ui-ux-pro-max-skill" }
 )
 # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
@@ -130,9 +132,7 @@ $plugins = @(
     "playground@claude-plugins-official",
     "codex@openai-codex",
     "exa-core@exa-skills",
-    "document-skills@anthropic-agent-skills",
-    "claude-mem@thedotmack",
-    "andrej-karpathy-skills@karpathy-skills"
+    "document-skills@anthropic-agent-skills"
 )
 foreach ($plugin in $plugins) {
     try {
@@ -169,5 +169,4 @@ Write-Host ""
 Write-Host "다음 단계:"
 Write-Host "  1. settings.json 의 CLAUDE_CODE_GIT_BASH_PATH 경로 확인 (Git Bash 실제 설치 경로)"
 Write-Host "  2. Claude Desktop 의 localAgentModeTrustedFolders 를 실제 작업 폴더로 변경"
-Write-Host "  3. korean-law MCP 사용 시 본인 OC ID 입력 (desktop\claude_desktop_config.json 참고)"
-Write-Host "  4. Claude Code 재시작"
+Write-Host "  3. Claude Code 재시작"

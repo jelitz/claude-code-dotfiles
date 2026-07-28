@@ -33,7 +33,7 @@ echo ""
 # ──────────────────────────────────────────────
 # 1. 필수 디렉토리 생성
 # ──────────────────────────────────────────────
-mkdir -p "$CLAUDE_DIR" "$CLAUDE_DIR/plugins" "$CLAUDE_DIR/skills"
+mkdir -p "$CLAUDE_DIR" "$CLAUDE_DIR/plugins" "$CLAUDE_DIR/skills" "$CLAUDE_DIR/agents"
 
 # ──────────────────────────────────────────────
 # 2. 설정 파일 복사 (config/ → ~/.claude/)
@@ -97,7 +97,12 @@ done
 # ──────────────────────────────────────────────
 echo "[2/6] 사용자 스킬 복사..."
 cp -r "$CONFIG_DIR/skills/"* "$CLAUDE_DIR/skills/"
-echo "  ✓ skills/ → $CLAUDE_DIR/skills (code-search-exa, company-research, web-search-advanced-research-paper)"
+echo "  ✓ skills/ → $CLAUDE_DIR/skills (code-search-exa, company-research, web-search-advanced-research-paper 등 + pup 제공 dd-* 11종)"
+
+if [ -d "$CONFIG_DIR/agents" ]; then
+  cp -r "$CONFIG_DIR/agents/"* "$CLAUDE_DIR/agents/"
+  echo "  ✓ agents/ → $CLAUDE_DIR/agents (pup 제공 Datadog 도메인 서브에이전트 48종)"
+fi
 
 # ──────────────────────────────────────────────
 # 4. Claude Desktop 설정 복사 (desktop/ → OS별 경로)
@@ -140,10 +145,6 @@ if [ -z "$SKIP_PLUGINS" ]; then
     "anthropic-agent-skills github:anthropics/skills"
     "exa-skills github:benjaminjackson/exa-skills"
     "openai-codex github:openai/codex-plugin-cc"
-    "thedotmack github:thedotmack/claude-mem"
-    "karpathy-skills github:forrestchang/andrej-karpathy-skills"
-    "korean-law-marketplace github:chrisryugj/korean-law-mcp"
-    "lazyweb https://github.com/aboul3ata/lazyweb-skill.git"
     "ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill"
   )
   # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
@@ -171,8 +172,6 @@ if [ -z "$SKIP_PLUGINS" ]; then
     "codex@openai-codex"
     "exa-core@exa-skills"
     "document-skills@anthropic-agent-skills"
-    "claude-mem@thedotmack"
-    "andrej-karpathy-skills@karpathy-skills"
   )
 
   for plugin in "${PLUGINS[@]}"; do
@@ -209,5 +208,4 @@ else
   echo "  1. statusline 경로가 \$HOME 기준으로 적용되었는지 확인 (~/.claude/settings.json)"
 fi
 echo "  2. Claude Desktop 의 localAgentModeTrustedFolders 를 실제 작업 폴더로 변경"
-echo "  3. korean-law MCP 사용 시 본인 OC ID 입력 (desktop/claude_desktop_config.json 참고)"
-echo "  4. Claude Code 재시작"
+echo "  3. Claude Code 재시작"
