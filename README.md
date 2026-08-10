@@ -206,7 +206,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🔌 플러그인 — 활성 11종 / 비활성 6종</b></summary>
 
 #### 활성 (`enabled: true`)
@@ -242,7 +242,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 
 </details>
 
-<details>
+<details open>
 <summary><b>🧰 사용자 스킬 — 10종</b></summary>
 
 플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`).
@@ -264,7 +264,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 
 </details>
 
-<details>
+<details open>
 <summary><b>🐾 pup 스킬 · 에이전트 — 11 + 48종</b></summary>
 
 [pup](#-pup--datadog-cli) CLI가 자체 내장·설치하는 Datadog 스킬(`config/skills/dd-*`)과 도메인별 서브에이전트(`config/agents/*.md`). 마켓플레이스 등록 없이 `pup skills install claude` 한 줄로 생성되며, 손으로 관리하지 않습니다 — pup 버전을 올릴 때마다 같은 명령으로 갱신.
@@ -287,7 +287,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 
 </details>
 
-<details>
+<details open>
 <summary><b>🔗 MCP 서버</b></summary>
 
 | 서버 | 출처 | 등록 방식 | 설명 |
