@@ -97,7 +97,7 @@ done
 # ──────────────────────────────────────────────
 echo "[2/6] 사용자 스킬 복사..."
 cp -r "$CONFIG_DIR/skills/"* "$CLAUDE_DIR/skills/"
-echo "  ✓ skills/ → $CLAUDE_DIR/skills (code-search-exa, company-research, web-search-advanced-research-paper 등 + pup 제공 dd-* 11종)"
+echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 10종 + pup 제공 dd-* 11종)"
 
 if [ -d "$CONFIG_DIR/agents" ]; then
   cp -r "$CONFIG_DIR/agents/"* "$CLAUDE_DIR/agents/"
@@ -143,12 +143,13 @@ if [ -z "$SKIP_PLUGINS" ]; then
   # 실사용 마켓플레이스 (claude-plugins-official 은 기본 등록)
   MARKETPLACES=(
     "anthropic-agent-skills github:anthropics/skills"
-    "exa-skills github:benjaminjackson/exa-skills"
     "openai-codex github:openai/codex-plugin-cc"
+    "gptaku-plugins https://github.com/fivetaku/gptaku_plugins.git"
     "ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill"
   )
   # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
   # MARKETPLACES+=(
+  #   "exa-skills github:benjaminjackson/exa-skills"
   #   "Claudest github:gupsammy/claudest"
   #   "ecc github:affaan-m/everything-claude-code"
   #   "agent-browser github:vercel-labs/agent-browser"
@@ -163,15 +164,17 @@ if [ -z "$SKIP_PLUGINS" ]; then
   echo "[5/6] 플러그인 설치..."
 
   PLUGINS=(
-    "superpowers@claude-plugins-official"
-    "context7@claude-plugins-official"
-    "pyright-lsp@claude-plugins-official"
-    "ralph-loop@claude-plugins-official"
-    "claude-code-setup@claude-plugins-official"
-    "playground@claude-plugins-official"
     "codex@openai-codex"
-    "exa-core@exa-skills"
+    "context7@claude-plugins-official"
+    "playwright@claude-plugins-official"
     "document-skills@anthropic-agent-skills"
+    "example-skills@anthropic-agent-skills"
+    "cloudflare@claude-plugins-official"
+    "security-guidance@claude-plugins-official"
+    "code-simplifier@claude-plugins-official"
+    "pr-review-toolkit@claude-plugins-official"
+    "claude-md-management@claude-plugins-official"
+    "insane-search@gptaku-plugins"
   )
 
   for plugin in "${PLUGINS[@]}"; do

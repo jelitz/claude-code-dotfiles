@@ -68,7 +68,7 @@ foreach ($doc in @("CLAUDE.md", "RTK.md")) {
 # ──────────────────────────────────────────────
 Write-Host "[2/6] 사용자 스킬 복사..." -ForegroundColor Yellow
 Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
-Write-Host "  ✓ skills\ → $ClaudeDir\skills (code-search-exa, company-research, web-search-advanced-research-paper 등 + pup 제공 dd-* 11종)" -ForegroundColor Green
+Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 10종 + pup 제공 dd-* 11종)" -ForegroundColor Green
 
 if (Test-Path "$ConfigDir\agents") {
     Copy-Item "$ConfigDir\agents\*" "$ClaudeDir\agents\" -Recurse -Force
@@ -101,12 +101,13 @@ if (-not $claudeCmd) {
 # 실사용 마켓플레이스 (claude-plugins-official 은 기본 등록)
 $marketplaces = @(
     @{ id = "anthropic-agent-skills"; arg = "github:anthropics/skills" },
-    @{ id = "exa-skills";             arg = "github:benjaminjackson/exa-skills" },
     @{ id = "openai-codex";           arg = "github:openai/codex-plugin-cc" },
+    @{ id = "gptaku-plugins";         arg = "https://github.com/fivetaku/gptaku_plugins.git" },
     @{ id = "ui-ux-pro-max-skill";    arg = "github:nextlevelbuilder/ui-ux-pro-max-skill" }
 )
 # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
 # $marketplaces += @(
+#     @{ id = "exa-skills";                    arg = "github:benjaminjackson/exa-skills" },
 #     @{ id = "Claudest";                      arg = "github:gupsammy/claudest" },
 #     @{ id = "ecc";                           arg = "github:affaan-m/everything-claude-code" },
 #     @{ id = "agent-browser";                 arg = "github:vercel-labs/agent-browser" },
@@ -124,15 +125,17 @@ foreach ($mp in $marketplaces) {
 Write-Host "[5/6] 플러그인 설치..." -ForegroundColor Yellow
 
 $plugins = @(
-    "superpowers@claude-plugins-official",
-    "context7@claude-plugins-official",
-    "pyright-lsp@claude-plugins-official",
-    "ralph-loop@claude-plugins-official",
-    "claude-code-setup@claude-plugins-official",
-    "playground@claude-plugins-official",
     "codex@openai-codex",
-    "exa-core@exa-skills",
-    "document-skills@anthropic-agent-skills"
+    "context7@claude-plugins-official",
+    "playwright@claude-plugins-official",
+    "document-skills@anthropic-agent-skills",
+    "example-skills@anthropic-agent-skills",
+    "cloudflare@claude-plugins-official",
+    "security-guidance@claude-plugins-official",
+    "code-simplifier@claude-plugins-official",
+    "pr-review-toolkit@claude-plugins-official",
+    "claude-md-management@claude-plugins-official",
+    "insane-search@gptaku-plugins"
 )
 foreach ($plugin in $plugins) {
     try {
