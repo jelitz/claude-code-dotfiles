@@ -19,8 +19,8 @@
       "id": "exa-skills",
       "source": "github",
       "repo": "benjaminjackson/exa-skills",
-      "usage": "active",
-      "description": "Exa AI 검색 스킬 마켓플레이스 (exa-core 제공)"
+      "usage": "registered-only",
+      "description": "Exa AI 검색 스킬 마켓플레이스 — exa-core 플러그인은 제거됨, 마켓플레이스 등록만 남아있음"
     },
     {
       "id": "openai-codex",
@@ -63,6 +63,13 @@
       "repo": "anthropics/financial-services",
       "usage": "registered-only",
       "description": "Anthropic 금융 서비스 스킬 마켓플레이스 — 등록만 해둔 상태"
+    },
+    {
+      "id": "gptaku-plugins",
+      "source": "git",
+      "repo": "https://github.com/fivetaku/gptaku_plugins.git",
+      "usage": "active",
+      "description": "fivetaku 개인 플러그인 마켓플레이스 (git 소스, GitHub App 마켓플레이스 아님) — insane-search 제공"
     }
   ]
 }

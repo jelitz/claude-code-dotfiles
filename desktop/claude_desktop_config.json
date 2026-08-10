@@ -12,12 +12,10 @@
     "localAgentModeTrustedFolders": [
       "C:\\Users\\YOUR_USERNAME\\Documents\\GitHub"
     ],
-    "allowAllBrowserActions": true,
     "coworkScheduledTasksEnabled": true,
     "ccdScheduledTasksEnabled": true,
-    "sidebarMode": "task",
-    "bypassPermissionsModeEnabled": true,
+    "sidebarMode": "code",
     "coworkWebSearchEnabled": true,
-    "keepAwakeEnabled": true
+    "keepAwakeEnabled": false
   }
 }

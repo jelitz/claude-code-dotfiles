@@ -12,6 +12,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "sonnet",
   "hooks": {
     "PreToolUse": [
       {
@@ -33,18 +34,19 @@
     "command": "/c/Users/YOUR_USERNAME/.claude/statusline-bash.sh"
   },
   "enabledPlugins": {
-    "superpowers@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true,
-    "playground@claude-plugins-official": true,
     "codex@openai-codex": true,
-    "exa-core@exa-skills": true,
+    "superpowers@claude-plugins-official": false,
+    "context7@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
-    "frontend-design@claude-plugins-official": false,
-    "playwright@claude-plugins-official": false,
-    "cloudflare@claude-plugins-official": false
+    "ralph-loop@claude-plugins-official": false,
+    "cloudflare@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "insane-search@gptaku-plugins": true,
+    "example-skills@anthropic-agent-skills": true,
+    "code-simplifier@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "exa-skills": {
@@ -76,14 +78,21 @@
         "source": "github",
         "repo": "anthropics/financial-services"
       }
+    },
+    "gptaku-plugins": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/fivetaku/gptaku_plugins.git"
+      }
     }
   },
   "language": "Korean",
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "default",
   "autoDreamEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "editorMode": "normal",
   "teammateMode": "auto",
   "remoteControlAtStartup": true,

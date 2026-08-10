@@ -77,6 +77,7 @@
 - codex plugin: job은 `--background`로 실행하고 status 폴링으로 결과 수거 — foreground는 무한 hang 가능. hang 시 `--fresh` + 좁은 프롬프트로 새 Agent 실행, plugin 경로가 계속 실패하면 `codex exec --sandbox read-only ... | tee <log>`를 Bash `run_in_background`로 직접 호출
   <!-- 만료 조건: codex plugin이 foreground hang(타임아웃 부재, v1.0.4 확인)을 고치면 이 절 삭제 -->
 - 웹 검색·fetch 우선순위: Exa MCP → Jina(`r.jina.ai/<URL>`, `s.jina.ai/<query>`) → insane-search 스킬(403/차단 시 공개 페이지 폴백) → claude-in-chrome. 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
+- 웹 사이트/UI 디자인(신규 제작·리디자인, 높은 완성도 요구): `designing-premium-web-ui` 스킬 우선 확인
 - 최신성이 중요한 정보는 검색으로 확인하고 출처 링크·날짜와 함께 답변. 검색 파라미터 등 세부는 `web-research` skill 참조
 
 ## Compaction·긴 세션
