@@ -53,18 +53,6 @@ flowchart LR
 
 ### 1. 전제 조건
 
-**Claude Code CLI** — Native Install 권장 (npm 방식은 더 이상 권장하지 않음)
-
-| 플랫폼 | 명령 |
-|---|---|
-| Windows PowerShell | `irm https://claude.ai/install.ps1 \| iex` |
-| Windows CMD | `curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd` |
-| macOS / Linux / WSL | `curl -fsSL https://claude.ai/install.sh \| bash` |
-| WinGet (Windows 대안) | `winget install Anthropic.ClaudeCode` |
-| Homebrew (macOS 대안) | `brew install --cask claude-code` |
-
-설치 확인: `claude --version` / `claude doctor`
-
 **rtk** (사실상 필수) — `settings.json` 의 PreToolUse 훅이 `rtk` 를 호출하므로, **rtk 미설치 상태로 settings.json 을 적용하면 모든 Bash·PowerShell 도구 호출에서 훅 오류가 발생**합니다. setup 스크립트가 설치 여부를 검사하고 경고합니다. → [RTK](#rtk--토큰-절약-레이어)
 
 **Git for Windows** (Windows만) — Bash 도구와 statusline 스크립트가 사용.
