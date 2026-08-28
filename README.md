@@ -14,7 +14,7 @@
 
 - [동작 방식](#동작-방식)
 - [빠른 시작](#빠른-시작)
-- [자세히 보기](#자세히-보기) — 파일 구조 · RTK · pup · 플러그인 · 스킬 · MCP · Statusline · 설정값 · 수동 설치
+- [자세히 보기](#자세히-보기) — 파일 구조 · pup · 플러그인 · 스킬 · MCP · Statusline · 설정값 · 수동 설치
 
 ---
 
@@ -23,7 +23,7 @@
 ```mermaid
 flowchart LR
     subgraph repo["claude-code-dotfiles"]
-        CFG["config/<br/>(settings · CLAUDE.md · RTK.md<br/>statusline · skills · agents)"]
+        CFG["config/<br/>(settings · CLAUDE.md<br/>statusline · skills · agents)"]
         DSK["desktop/<br/>(claude_desktop_config.json)"]
         REF["plugins/ · examples/<br/>(참고 기록 — 복사 대상 아님)"]
     end
@@ -48,8 +48,6 @@ flowchart LR
 ## 빠른 시작
 
 ### 1. 전제 조건
-
-**rtk** (사실상 필수) — `settings.json` 의 PreToolUse 훅이 `rtk` 를 호출하므로, **rtk 미설치 상태로 settings.json 을 적용하면 모든 Bash·PowerShell 도구 호출에서 훅 오류가 발생**합니다. setup 스크립트가 설치 여부를 검사하고 경고합니다. → [RTK 상세](#rtk--토큰-절약-레이어)
 
 **Git for Windows** (Windows만) — Bash 도구와 statusline 스크립트가 사용.
 
@@ -102,16 +100,15 @@ bash scripts/setup.sh
 
 </details>
 
-setup 스크립트가 수행하는 일 (6단계):
+setup 스크립트가 수행하는 일 (5단계):
 
-1. `config/` 의 설정 파일 5종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
+1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
 2. `config/skills/` 의 스킬 21종(직접 관리 10종 + pup 제공 dd-* 11종) → `~/.claude/skills/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 커스텀 마켓플레이스 4곳(+옵션 5곳) 등록
 5. 활성 플러그인 11종 설치
-6. rtk 설치 여부 검사 및 경고
 
-나머지 세부 — 파일 구조, RTK/pup 내부 동작, 플러그인·스킬·MCP·Statusline·설정값 전체 목록, 스크립트 없이 수동 설치하는 법은 아래 [자세히 보기](#자세히-보기)에 접어두었습니다.
+나머지 세부 — 파일 구조, pup 내부 동작, 플러그인·스킬·MCP·Statusline·설정값 전체 목록, 스크립트 없이 수동 설치하는 법은 아래 [자세히 보기](#자세히-보기)에 접어두었습니다.
 
 ---
 
@@ -123,10 +120,9 @@ setup 스크립트가 수행하는 일 (6단계):
 ```
 claude-code-dotfiles/
 ├── config/                              # ~/.claude/ 미러
-│   ├── settings.json                    #   메인 설정 (hooks·플러그인·권한 정책)
+│   ├── settings.json                    #   메인 설정 (플러그인·권한 정책)
 │   ├── settings.local.json.template     #   머신별 로컬 설정 템플릿
-│   ├── CLAUDE.md                        #   전역 AI 지시사항 (@RTK.md import)
-│   ├── RTK.md                           #   rtk 메타 명령 사용 지침
+│   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
 │   └── skills/                          #   스킬 21종 (직접 관리 10 + pup dd-* 11)
 │       ├── agent-orchestration/
@@ -151,21 +147,6 @@ claude-code-dotfiles/
     ├── setup.sh                         # 복원 스크립트 (Git Bash/macOS/Linux/WSL)
     └── setup.ps1                        # 복원 스크립트 (Windows PowerShell)
 ```
-
-</details>
-
-<details>
-<summary><b>⚡ RTK — 토큰 절약 레이어</b></summary>
-
-[rtk](https://github.com/rtk-ai/rtk) (Rust Token Killer)는 git/ls/grep 등 자주 쓰는 CLI 출력물을 LLM 컨텍스트에 들어가기 전에 압축·필터링해 **토큰을 60-90% 절약**하는 단일 Rust 바이너리 프록시입니다.
-
-| 구성 요소 | 역할 |
-|---|---|
-| `config/settings.json` → `hooks.PreToolUse` | `rtk hook claude` — Bash·PowerShell 도구 호출을 가로채 `git status` → `rtk git status` 식으로 자동 재작성 (rtk가 모르는 명령·PowerShell 고유 구문은 그대로 통과) |
-| `config/RTK.md` | rtk 메타 명령(`rtk gain`, `rtk discover`, `rtk proxy`) 사용 지침. `CLAUDE.md` 가 `@RTK.md` 로 import |
-| 바이너리 위치 | `~/.local/bin/rtk` (PATH 등록 필요, 스냅샷 시점 버전 0.45.0) |
-
-> ⚠ rtk 를 쓰지 않으려면 `~/.claude/settings.json` 에서 `hooks.PreToolUse` 블록을 제거하고, `CLAUDE.md` 의 `@RTK.md` import 줄과 `RTK.md` 를 삭제하면 됩니다.
 
 </details>
 
@@ -344,7 +325,6 @@ ctx ████░░░░ 45% │ $0.23 │ 5h ██░░░░░░ 23% �
 | `model` | `sonnet` | 기본 모델 고정 (세션마다 `/model` 로 변경 가능) |
 | `effortLevel` | `high` | 기본 작업 노력 수준 (low/medium/high/xhigh/max) |
 | `permissions.defaultMode` | `auto` | 안전한 작업은 자동 승인 |
-| `hooks.PreToolUse` | `rtk hook claude` | Bash·PowerShell 명령을 rtk 프록시로 재작성 (토큰 절약) |
 | `worktree.baseRef` | `fresh` | 워크트리 생성 시 기준 ref |
 | `autoDreamEnabled` | `true` | 세션 종료 시 자동 메모리 추출 |
 | `teammateMode` | `auto` | Agent Teams 팀원 실행 방식 자동 선택 |
@@ -370,7 +350,7 @@ ctx ████░░░░ 45% │ $0.23 │ 5h ██░░░░░░ 23% �
 # 1. 설정 파일 복사 (YOUR_USERNAME 치환 필요)
 cp config/settings.json ~/.claude/settings.json
 cp config/settings.local.json.template ~/.claude/settings.local.json
-cp config/CLAUDE.md config/RTK.md ~/.claude/
+cp config/CLAUDE.md ~/.claude/
 cp config/statusline-bash.sh ~/.claude/ && chmod +x ~/.claude/statusline-bash.sh
 mkdir -p ~/.claude/skills && cp -r config/skills/* ~/.claude/skills/
 
