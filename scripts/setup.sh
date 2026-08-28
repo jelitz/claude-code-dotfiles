@@ -38,7 +38,7 @@ mkdir -p "$CLAUDE_DIR" "$CLAUDE_DIR/plugins" "$CLAUDE_DIR/skills" "$CLAUDE_DIR/a
 # ──────────────────────────────────────────────
 # 2. 설정 파일 복사 (config/ → ~/.claude/)
 # ──────────────────────────────────────────────
-echo "[1/6] 설정 파일 복사..."
+echo "[1/5] 설정 파일 복사..."
 
 # settings.json 렌더링 — OS별 보정
 #  - windows : YOUR_USERNAME → 실제 사용자명
@@ -82,20 +82,18 @@ cp "$CONFIG_DIR/statusline-bash.sh" "$CLAUDE_DIR/statusline-bash.sh"
 chmod +x "$CLAUDE_DIR/statusline-bash.sh"
 echo "  ✓ statusline-bash.sh 복사 완료"
 
-# CLAUDE.md + RTK.md (CLAUDE.md 가 @RTK.md 를 import 하므로 쌍으로 유지)
-for doc in CLAUDE.md RTK.md; do
-  if [ ! -f "$CLAUDE_DIR/$doc" ]; then
-    cp "$CONFIG_DIR/$doc" "$CLAUDE_DIR/$doc"
-    echo "  ✓ $doc 복사 완료"
-  else
-    echo "  - $doc 는 이미 존재하므로 건너뜀"
-  fi
-done
+# CLAUDE.md
+if [ ! -f "$CLAUDE_DIR/CLAUDE.md" ]; then
+  cp "$CONFIG_DIR/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
+  echo "  ✓ CLAUDE.md 복사 완료"
+else
+  echo "  - CLAUDE.md 는 이미 존재하므로 건너뜀"
+fi
 
 # ──────────────────────────────────────────────
 # 3. 사용자 스킬 복사 (config/skills → ~/.claude/skills)
 # ──────────────────────────────────────────────
-echo "[2/6] 사용자 스킬 복사..."
+echo "[2/5] 사용자 스킬 복사..."
 cp -r "$CONFIG_DIR/skills/"* "$CLAUDE_DIR/skills/"
 echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 10종 + pup 제공 dd-* 11종)"
 
@@ -107,7 +105,7 @@ fi
 # ──────────────────────────────────────────────
 # 4. Claude Desktop 설정 복사 (desktop/ → OS별 경로)
 # ──────────────────────────────────────────────
-echo "[3/6] Claude Desktop 설정 복사..."
+echo "[3/5] Claude Desktop 설정 복사..."
 
 copy_desktop_config() {
   local dest_dir="$1"
@@ -131,7 +129,7 @@ esac
 # ──────────────────────────────────────────────
 # 5. 커스텀 마켓플레이스 등록 + 플러그인 설치
 # ──────────────────────────────────────────────
-echo "[4/6] 커스텀 마켓플레이스 등록..."
+echo "[4/5] 커스텀 마켓플레이스 등록..."
 
 if ! command -v claude &>/dev/null; then
   echo "  ⚠ claude CLI 가 PATH에 없습니다. 마켓플레이스/플러그인 설치를 건너뜁니다."
@@ -161,7 +159,7 @@ if [ -z "$SKIP_PLUGINS" ]; then
     claude plugin marketplace add "$id" "$src" 2>/dev/null && echo "  ✓ $id" || echo "  - $id (이미 등록됨)"
   done
 
-  echo "[5/6] 플러그인 설치..."
+  echo "[5/5] 플러그인 설치..."
 
   PLUGINS=(
     "codex@openai-codex"
@@ -180,22 +178,6 @@ if [ -z "$SKIP_PLUGINS" ]; then
   for plugin in "${PLUGINS[@]}"; do
     claude plugin install "$plugin" 2>/dev/null && echo "  ✓ $plugin" || echo "  - $plugin (이미 설치됨 또는 오류)"
   done
-fi
-
-# ──────────────────────────────────────────────
-# 6. rtk 확인 (settings.json 의 PreToolUse 훅이 의존)
-# ──────────────────────────────────────────────
-echo "[6/6] rtk 확인..."
-
-if command -v rtk &>/dev/null; then
-  echo "  ✓ rtk $(rtk --version 2>/dev/null | head -1)"
-else
-  echo "  ⚠ rtk 가 PATH에 없습니다!"
-  echo "    settings.json 의 PreToolUse 훅('rtk hook claude')이 rtk 를 호출하므로,"
-  echo "    rtk 미설치 상태에서는 모든 Bash·PowerShell 도구 호출 시 훅 오류가 발생합니다."
-  echo "    해결 방법 중 하나를 선택하세요:"
-  echo "      a) rtk 설치: https://github.com/rtk-ai/rtk (단일 Rust 바이너리, ~/.local/bin 등 PATH 에 배치)"
-  echo "      b) ~/.claude/settings.json 에서 hooks.PreToolUse 블록 제거"
 fi
 
 # ──────────────────────────────────────────────

@@ -25,7 +25,7 @@ New-Item -ItemType Directory -Force -Path "$ClaudeDir\agents" | Out-Null
 # ──────────────────────────────────────────────
 # 2. 설정 파일 복사 (config\ → ~\.claude\)
 # ──────────────────────────────────────────────
-Write-Host "[1/6] 설정 파일 복사..." -ForegroundColor Yellow
+Write-Host "[1/5] 설정 파일 복사..." -ForegroundColor Yellow
 
 # settings.json (YOUR_USERNAME → 실제 사용자명 치환)
 $settingsContent = Get-Content "$ConfigDir\settings.json" -Raw
@@ -53,20 +53,18 @@ if (-not (Test-Path "$ClaudeDir\settings.local.json")) {
 Copy-Item "$ConfigDir\statusline-bash.sh" "$ClaudeDir\statusline-bash.sh" -Force
 Write-Host "  ✓ statusline-bash.sh 복사 완료" -ForegroundColor Green
 
-# CLAUDE.md + RTK.md (CLAUDE.md 가 @RTK.md 를 import 하므로 쌍으로 유지)
-foreach ($doc in @("CLAUDE.md", "RTK.md")) {
-    if (-not (Test-Path "$ClaudeDir\$doc")) {
-        Copy-Item "$ConfigDir\$doc" "$ClaudeDir\$doc"
-        Write-Host "  ✓ $doc 복사 완료" -ForegroundColor Green
-    } else {
-        Write-Host "  - $doc 는 이미 존재하므로 건너뜀"
-    }
+# CLAUDE.md
+if (-not (Test-Path "$ClaudeDir\CLAUDE.md")) {
+    Copy-Item "$ConfigDir\CLAUDE.md" "$ClaudeDir\CLAUDE.md"
+    Write-Host "  ✓ CLAUDE.md 복사 완료" -ForegroundColor Green
+} else {
+    Write-Host "  - CLAUDE.md 는 이미 존재하므로 건너뜀"
 }
 
 # ──────────────────────────────────────────────
 # 3. 사용자 스킬 복사 (config\skills → ~\.claude\skills)
 # ──────────────────────────────────────────────
-Write-Host "[2/6] 사용자 스킬 복사..." -ForegroundColor Yellow
+Write-Host "[2/5] 사용자 스킬 복사..." -ForegroundColor Yellow
 Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
 Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 10종 + pup 제공 dd-* 11종)" -ForegroundColor Green
 
@@ -78,7 +76,7 @@ if (Test-Path "$ConfigDir\agents") {
 # ──────────────────────────────────────────────
 # 4. Claude Desktop 설정 복사 (desktop\ → %APPDATA%\Claude)
 # ──────────────────────────────────────────────
-Write-Host "[3/6] Claude Desktop 설정 복사..." -ForegroundColor Yellow
+Write-Host "[3/5] Claude Desktop 설정 복사..." -ForegroundColor Yellow
 
 New-Item -ItemType Directory -Force -Path $AppDataClaude | Out-Null
 $mcpContent = Get-Content "$RepoDir\desktop\claude_desktop_config.json" -Raw
@@ -89,7 +87,7 @@ Write-Host "  ✓ claude_desktop_config.json → $AppDataClaude" -ForegroundColo
 # ──────────────────────────────────────────────
 # 5. 커스텀 마켓플레이스 등록 + 플러그인 설치
 # ──────────────────────────────────────────────
-Write-Host "[4/6] 커스텀 마켓플레이스 등록..." -ForegroundColor Yellow
+Write-Host "[4/5] 커스텀 마켓플레이스 등록..." -ForegroundColor Yellow
 
 $claudeCmd = Get-Command claude -ErrorAction SilentlyContinue
 if (-not $claudeCmd) {
@@ -122,7 +120,7 @@ foreach ($mp in $marketplaces) {
     }
 }
 
-Write-Host "[5/6] 플러그인 설치..." -ForegroundColor Yellow
+Write-Host "[5/5] 플러그인 설치..." -ForegroundColor Yellow
 
 $plugins = @(
     "codex@openai-codex",
@@ -144,23 +142,6 @@ foreach ($plugin in $plugins) {
     } catch {
         Write-Host "  - $plugin (이미 설치됨 또는 오류)"
     }
-}
-
-# ──────────────────────────────────────────────
-# 6. rtk 확인 (settings.json 의 PreToolUse 훅이 의존)
-# ──────────────────────────────────────────────
-Write-Host "[6/6] rtk 확인..." -ForegroundColor Yellow
-
-$rtkCmd = Get-Command rtk -ErrorAction SilentlyContinue
-if ($rtkCmd) {
-    Write-Host "  ✓ $(rtk --version 2>$null)" -ForegroundColor Green
-} else {
-    Write-Host "  ⚠ rtk 가 PATH에 없습니다!" -ForegroundColor Red
-    Write-Host "    settings.json 의 PreToolUse 훅('rtk hook claude')이 rtk 를 호출하므로,"
-    Write-Host "    rtk 미설치 상태에서는 모든 Bash·PowerShell 도구 호출 시 훅 오류가 발생합니다."
-    Write-Host "    해결 방법 중 하나를 선택하세요:"
-    Write-Host "      a) rtk 설치: https://github.com/rtk-ai/rtk (단일 Rust 바이너리, %USERPROFILE%\.local\bin 등 PATH에 배치)"
-    Write-Host "      b) ~\.claude\settings.json 에서 hooks.PreToolUse 블록 제거"
 }
 
 # ──────────────────────────────────────────────

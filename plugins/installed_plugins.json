@@ -6,7 +6,7 @@
       "marketplace": "openai-codex",
       "name": "codex",
       "enabled": true,
-      "description": "OpenAI Codex 서브에이전트 (rescue, setup). job은 항상 --background 로 실행할 것 (RTK.md·CLAUDE.md 참고)"
+      "description": "OpenAI Codex 서브에이전트 (rescue, setup). job은 항상 --background 로 실행할 것 (CLAUDE.md 참고)"
     },
     {
       "id": "context7@claude-plugins-official",

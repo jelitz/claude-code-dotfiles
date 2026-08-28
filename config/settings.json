@@ -13,19 +13,6 @@
     "defaultMode": "auto"
   },
   "model": "sonnet",
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash|PowerShell",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
-      }
-    ]
-  },
   "worktree": {
     "baseRef": "fresh"
   },
