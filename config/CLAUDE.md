@@ -19,9 +19,9 @@
 
 ## 자율성과 안전
 
-- 사용자에게 멈춰 묻는 경우는 세 가지: 파괴적·비가역 행동, 실질적 범위 변경, 사용자만 줄 수 있는 입력. 그 외 원래 요청에서 파생된 가역적 행동은 묻지 않고 진행
+- 사용자에게 멈춰 묻는 경우는 세 가지: 파괴적·비가역 행동, 실질적 범위 변경, 사용자만 줄 수 있는 입력. 
 - 계획·질문·"~하겠습니다" 약속만 남기고 턴을 끝내지 않기 — 그 작업을 지금 수행
-- 되돌리기 어렵거나 외부에 보이는 작업은 실행 전 확인: 파일 삭제(rm -rf), git push --force, git reset --hard, PR/이슈 코멘트, 메시지·이메일 발송
+- 되돌리기 어렵거나 외부에 보이는 작업은 실행 전 확인. 예시 : 파일 삭제(rm -rf), git push --force, git reset --hard, PR/이슈 코멘트, 메시지·이메일 발송
 - 장애물을 만나도 --no-verify 등 안전장치 우회 금지
 - 사용자가 문제를 설명하거나 질문 중일 뿐 변경을 요청한 게 아니면 산출물은 평가·보고 — 수정 적용은 요청받은 뒤
 - 시스템 상태를 바꾸는 명령(재시작·삭제·설정 변경) 전, 증거가 그 구체적 행동을 뒷받침하는지 확인 — 알려진 실패 패턴과 비슷한 신호도 원인이 다를 수 있음
@@ -55,15 +55,14 @@
 
 ## 서브에이전트 위임
 
-- 진짜 독립적이고 병렬화 가능한 대규모 작업만 위임. 몇 번의 도구 호출로 끝나는 작업은 직접 수행
+- 몇 번의 도구 호출로 끝나는 작업은 직접 수행
 - 자기 작업 재확인 용도의 서브에이전트 금지 — 검증은 메인 루프에서
-- 서브에이전트 반환은 압축 요약으로 받기(원본 데이터 전체를 메인 컨텍스트에 쏟지 않기)
 - 병렬 작업 검토·팀 구성·운영 판단이 필요하면 `agent-orchestration` skill 참조
+- Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델 유지
 
 ## 지식 관리
 
 - 동일 유형 작업을 반복하거나 시행착오 끝에 패턴을 확립하면 skill 자산화(또는 memory 저장) 제안
-- 메모리 운영: 교훈당 1파일, 상단에 한 줄 요약. 기존 노트 업데이트 우선(중복 생성 금지), 틀린 노트는 삭제, 저장소·대화 이력이 이미 기록하는 내용은 저장하지 않기
 
 ## Environment
 
@@ -73,12 +72,13 @@
 
 - 브라우저 자동화: `claude-in-chrome` MCP (`mcp__claude-in-chrome__*`) 기본. Playwright 등 다른 도구는 사용자가 명시 요청하거나 claude-in-chrome으로 불가한 경우만
 - GitHub: issue / PR / release / API 조회는 `gh` CLI 우선
-- 사용 가능한 경우 CLI 도구 선호
+- 사용 가능한 경우 CLI 도구를 먼저 확인하고 사용
 - codex plugin: job은 `--background`로 실행하고 status 폴링으로 결과 수거 — foreground는 무한 hang 가능. hang 시 `--fresh` + 좁은 프롬프트로 새 Agent 실행, plugin 경로가 계속 실패하면 `codex exec --sandbox read-only ... | tee <log>`를 Bash `run_in_background`로 직접 호출
-  <!-- 만료 조건: codex plugin이 foreground hang(타임아웃 부재, v1.0.4 확인)을 고치면 이 절 삭제 -->
+  <!-- 만료 조건: codex plugin이 foreground hang(타임아웃 부재)을 고치면 이 절 삭제 — v1.0.5 설치
+       확인(2026-08-31), hang 자체 수정 여부는 미검증 -->
 - 웹 검색·fetch 우선순위: Exa MCP → Jina(`r.jina.ai/<URL>`, `s.jina.ai/<query>`) → insane-search 스킬(403/차단 시 공개 페이지 폴백) → claude-in-chrome. 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
-- 웹 사이트/UI 디자인(신규 제작·리디자인, 높은 완성도 요구): `designing-premium-web-ui` 스킬 우선 확인
 - 최신성이 중요한 정보는 검색으로 확인하고 출처 링크·날짜와 함께 답변. 검색 파라미터 등 세부는 `web-research` skill 참조
+- 툴 호출 파라미터(JSON)의 한글 등 비ASCII 문자열은 항상 리터럴 UTF-8로 작성하고, \uXXXX 유니코드 이스케이프로 표기하지 않는다
 
 ## Compaction·긴 세션
 

@@ -235,7 +235,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) — Exa 기반 |
 | `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
 | `agent-orchestration` | 병렬 작업 시 subagent vs agent team 선택, 팀 구성·운영 판단 기준 |
-| `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 (CLAUDE.md에서 우선 참조하도록 지정) |
+| `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 |
 | `design-taste-frontend` | Anti-slop 프론트엔드 디자인 — 브리프를 읽고 방향을 추론해 템플릿처럼 안 보이는 UI 생성 |
 | `high-end-visual-design` | 고급 에이전시 스타일 폰트·간격·그림자·카드 구조·애니메이션 정의, 흔한 AI풍 디자인 차단 |
 | `redesign-existing-projects` | 기존 웹사이트/앱을 프리미엄 품질로 업그레이드 — 현재 디자인 감사 후 제네릭 패턴 제거 |
