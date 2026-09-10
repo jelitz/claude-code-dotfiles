@@ -70,9 +70,10 @@
 
 ## 도구
 
-- 브라우저 자동화: `claude-in-chrome` MCP (`mcp__claude-in-chrome__*`) 기본. Playwright 등 다른 도구는 사용자가 명시 요청하거나 claude-in-chrome으로 불가한 경우만
+- 설치된 전용 CLI가 있으면 MCP·브라우저 자동화보다 우선 — 새 서비스를 다루기 전 해당 CLI 설치 여부부터 확인
+- Google Workspace: `gws` CLI
 - GitHub: issue / PR / release / API 조회는 `gh` CLI 우선
-- 사용 가능한 경우 CLI 도구를 먼저 확인하고 사용
+- 브라우저 자동화: 전용 CLI가 없거나 안 되는 경우에 `claude-in-chrome` MCP (`mcp__claude-in-chrome__*`). Playwright 등 다른 도구는 사용자가 명시 요청하거나 claude-in-chrome으로 불가한 경우만
 - codex plugin: job은 `--background`로 실행하고 status 폴링으로 결과 수거 — foreground는 무한 hang 가능. hang 시 `--fresh` + 좁은 프롬프트로 새 Agent 실행, plugin 경로가 계속 실패하면 `codex exec --sandbox read-only ... | tee <log>`를 Bash `run_in_background`로 직접 호출
   <!-- 만료 조건: codex plugin이 foreground hang(타임아웃 부재)을 고치면 이 절 삭제 — v1.0.5 설치
        확인(2026-08-31), hang 자체 수정 여부는 미검증 -->
