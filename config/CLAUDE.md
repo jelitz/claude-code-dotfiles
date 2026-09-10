@@ -57,7 +57,8 @@
 
 - 몇 번의 도구 호출로 끝나는 작업은 직접 수행
 - 자기 작업 재확인 용도의 서브에이전트 금지 — 검증은 메인 루프에서
-- 병렬 작업 검토·팀 구성·운영 판단이 필요하면 `agent-orchestration` skill 참조
+- 병렬화가 이득이면 먼저 제안하고 동의를 받은 뒤 실행. 단발 조사는 Agent 1회, 주고받기가 필요하면 name 붙여 spawn 후 SendMessage, 단계가 고정된 fan-out은 Workflow(스크립트 작성 전 `workflow-authoring` 참조)
+- 병렬 리뷰·경쟁 가설은 겹치지 않는 렌즈로 나누고 적대적으로 배치, 팀원별 파일 소유 분리
 - Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델 유지
 
 ## 지식 관리
