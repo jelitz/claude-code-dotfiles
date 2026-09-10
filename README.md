@@ -273,7 +273,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 
 | 서버 | 출처 | 등록 방식 | 설명 |
 |---|---|---|---|
-| `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 기본 수단 (CLAUDE.md 에서 Playwright 보다 우선하도록 지정) |
+| `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 수단 (CLAUDE.md 에서 전용 CLI 가 없을 때의 폴백으로 지정, Playwright 보다 우선) |
 | `context7` | [upstash/context7](https://github.com/upstash/context7) | 플러그인이 자동 등록 | `context7@claude-plugins-official` 활성 시 자동 |
 | Slack | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결) |
 | `playwright` | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
