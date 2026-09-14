@@ -124,7 +124,8 @@ claude-code-dotfiles/
 │   ├── settings.local.json.template     #   머신별 로컬 설정 템플릿
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
-│   └── skills/                          #   스킬 20종 (직접 관리 9 + pup dd-* 11)
+│   └── skills/                          #   스킬 21종 (직접 관리 10 + pup dd-* 11)
+│       ├── browser-automation/
 │       ├── code-search-exa/
 │       ├── company-research/
 │       ├── design-taste-frontend/
@@ -233,6 +234,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `company-research` | 기업 정보·경쟁사·시장 리서치 — Exa 기반 |
 | `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) — Exa 기반 |
 | `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
+| `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
 | `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 |
 | `design-taste-frontend` | Anti-slop 프론트엔드 디자인 — 브리프를 읽고 방향을 추론해 템플릿처럼 안 보이는 UI 생성 |
 | `high-end-visual-design` | 고급 에이전시 스타일 폰트·간격·그림자·카드 구조·애니메이션 정의, 흔한 AI풍 디자인 차단 |
@@ -271,7 +273,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 
 | 서버 | 출처 | 등록 방식 | 설명 |
 |---|---|---|---|
-| `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 수단 (CLAUDE.md 에서 전용 CLI 가 없을 때의 폴백으로 지정, Playwright 보다 우선) |
+| `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 3수단(Aside CLI·claude-in-chrome·Playwright MCP) 중 하나 — 내 Chrome 탭을 보며 스텝별로 조작할 때. 선택 기준은 `browser-automation` 스킬 |
 | `context7` | [upstash/context7](https://github.com/upstash/context7) | 플러그인이 자동 등록 | `context7@claude-plugins-official` 활성 시 자동 |
 | Slack | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결) |
 | `playwright` | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
