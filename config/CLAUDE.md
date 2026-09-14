@@ -67,18 +67,19 @@
 
 ## Environment
 
-- Python + Windows 한글 처리: 파일·sqlite I/O·표준출력(print) 모두 encoding="utf-8" 명시 (또는 `PYTHONIOENCODING=utf-8`) — 기본 인코딩이 cp949라 한글이 깨짐
+- Python + Windows 한글 처리: 파일·sqlite I/O·표준출력(print) 모두 encoding="utf-8" 명시 (또는 `PYTHONIOENCODING=utf-8`) — 기본 인코딩이 cp949라 한글이 깨짐. **이 머신은 2026-09-14부터 `PYTHONUTF8=1`+`PYTHONIOENCODING=utf-8`을 Claude Code `env`(`~/.claude/settings.json`)와 Windows User 환경변수 양쪽에 전역 고정**(open()도 기본 UTF-8로 확인됨) — 텍스트 규칙이 계속 새서 추가한 이중 안전망. 다만 이 조치는 이 머신에만 적용되고 팀원 PC·CI에는 없으므로, 커밋되는 코드에는 여전히 encoding="utf-8"을 명시할 것
 
 ## 도구
 
 - 설치된 전용 CLI가 있으면 MCP·브라우저 자동화보다 우선 — 새 서비스를 다루기 전 해당 CLI 설치 여부부터 확인
 - Google Workspace: `gws` CLI
 - GitHub: issue / PR / release / API 조회는 `gh` CLI 우선
-- 브라우저 자동화: 전용 CLI가 없거나 안 되는 경우에 `claude-in-chrome` MCP (`mcp__claude-in-chrome__*`). Playwright 등 다른 도구는 사용자가 명시 요청하거나 claude-in-chrome으로 불가한 경우만
+- 브라우저 자동화: 서비스 전용 CLI(gws·gh 등)가 없거나 안 될 때만. Aside·claude-in-chrome·Playwright MCP 중 선택 기준과 도구별 주의점은 `browser-automation` skill 참조
+  <!-- 근거: 2026-09-14 5시나리오×3도구 실측(Aside 1.26.906) + 공식 문서. 만료 조건은 skill 파일 하단 -->
 - codex plugin: job은 `--background`로 실행하고 status 폴링으로 결과 수거 — foreground는 무한 hang 가능. hang 시 `--fresh` + 좁은 프롬프트로 새 Agent 실행, plugin 경로가 계속 실패하면 `codex exec --sandbox read-only ... | tee <log>`를 Bash `run_in_background`로 직접 호출
   <!-- 만료 조건: codex plugin이 foreground hang(타임아웃 부재)을 고치면 이 절 삭제 — v1.0.5 설치
        확인(2026-08-31), hang 자체 수정 여부는 미검증 -->
-- 웹 검색·fetch 우선순위: Exa MCP → Jina(`r.jina.ai/<URL>`, `s.jina.ai/<query>`) → insane-search 스킬(403/차단 시 공개 페이지 폴백) → claude-in-chrome. 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
+- 웹 검색·fetch 우선순위: Exa MCP → Jina(`r.jina.ai/<URL>`, `s.jina.ai/<query>`) → insane-search 스킬(403/차단 시 공개 페이지 폴백) → 브라우저(위 규칙으로 선택). 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
 - 최신성이 중요한 정보는 검색으로 확인하고 출처 링크·날짜와 함께 답변. 검색 파라미터 등 세부는 `web-research` skill 참조
 - 툴 호출 파라미터(JSON)의 한글 등 비ASCII 문자열은 항상 리터럴 UTF-8로 작성하고, \uXXXX 유니코드 이스케이프로 표기하지 않는다
 
