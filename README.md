@@ -103,7 +103,7 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (5단계):
 
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 스킬 21종(직접 관리 10종 + pup 제공 dd-* 11종) → `~/.claude/skills/`
+2. `config/skills/` 의 스킬 22종(직접 관리 10종 + pup 제공 dd-* 11종 + Aside 자동설치 1종) → `~/.claude/skills/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 커스텀 마켓플레이스 4곳(+옵션 5곳) 등록
 5. 활성 플러그인 11종 설치
@@ -124,7 +124,8 @@ claude-code-dotfiles/
 │   ├── settings.local.json.template     #   머신별 로컬 설정 템플릿
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
-│   └── skills/                          #   스킬 21종 (직접 관리 10 + pup dd-* 11)
+│   └── skills/                          #   스킬 22종 (직접 관리 10 + pup dd-* 11 + Aside 1)
+│       ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
 │       ├── browser-automation/
 │       ├── code-search-exa/
 │       ├── company-research/
@@ -242,6 +243,17 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `stitch-design-taste` | Google Stitch용 시맨틱 디자인 시스템 — 타이포·색상·레이아웃·모션 기준을 담은 DESIGN.md 생성 |
 
 Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다.
+
+</details>
+
+<details>
+<summary><b>🧭 Aside — AI 브라우저 CLI (선택)</b></summary>
+
+[Aside](https://aside.com)는 로그인된 계정 세션을 그대로 쓸 수 있는 서드파티 AI 브라우저 CLI로, 브라우저 자동화 3수단 중 하나입니다(선택 기준은 위 `browser-automation` 스킬).
+
+- `config/skills/aside-browser/` — Aside CLI 설치 시 자동 생성되는 진입점 스킬(`aside guide` 필독 지시). 손으로 작성하지 않으며, Aside를 설치하면 최신 버전으로 재생성됩니다. 저장소에는 복원 편의를 위한 스냅샷만 커밋합니다.
+- 설치: `curl -fsSL https://releases.aside.com/install.sh | bash` (macOS/Linux) — Windows는 [aside.com](https://aside.com) 참고.
+- Aside 미설치 환경에서는 `browser-automation` 스킬의 나머지 두 도구(claude-in-chrome·Playwright MCP)만 적용됩니다.
 
 </details>
 
