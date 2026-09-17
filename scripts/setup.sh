@@ -102,6 +102,14 @@ if [ -d "$CONFIG_DIR/agents" ]; then
   echo "  ✓ agents/ → $CLAUDE_DIR/agents (pup 제공 Datadog 도메인 서브에이전트 48종)"
 fi
 
+# hooks (config/scripts/hooks, config/scripts/lib → ~/.claude/scripts/)
+if [ -d "$CONFIG_DIR/scripts/hooks" ]; then
+  mkdir -p "$CLAUDE_DIR/scripts/hooks" "$CLAUDE_DIR/scripts/lib"
+  cp -r "$CONFIG_DIR/scripts/hooks/"* "$CLAUDE_DIR/scripts/hooks/"
+  cp -r "$CONFIG_DIR/scripts/lib/"* "$CLAUDE_DIR/scripts/lib/"
+  echo "  ✓ scripts/hooks, scripts/lib → $CLAUDE_DIR/scripts (settings.json의 hooks 절이 이 스크립트를 참조)"
+fi
+
 # ──────────────────────────────────────────────
 # 4. Claude Desktop 설정 복사 (desktop/ → OS별 경로)
 # ──────────────────────────────────────────────

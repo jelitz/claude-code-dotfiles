@@ -73,6 +73,15 @@ if (Test-Path "$ConfigDir\agents") {
     Write-Host "  ✓ agents\ → $ClaudeDir\agents (pup 제공 Datadog 도메인 서브에이전트 48종)" -ForegroundColor Green
 }
 
+# hooks (config\scripts\hooks, config\scripts\lib → ~\.claude\scripts\)
+if (Test-Path "$ConfigDir\scripts\hooks") {
+    New-Item -ItemType Directory -Force -Path "$ClaudeDir\scripts\hooks" | Out-Null
+    New-Item -ItemType Directory -Force -Path "$ClaudeDir\scripts\lib" | Out-Null
+    Copy-Item "$ConfigDir\scripts\hooks\*" "$ClaudeDir\scripts\hooks\" -Recurse -Force
+    Copy-Item "$ConfigDir\scripts\lib\*" "$ClaudeDir\scripts\lib\" -Recurse -Force
+    Write-Host "  ✓ scripts\hooks, scripts\lib → $ClaudeDir\scripts (settings.json의 hooks 절이 이 스크립트를 참조)" -ForegroundColor Green
+}
+
 # ──────────────────────────────────────────────
 # 4. Claude Desktop 설정 복사 (desktop\ → %APPDATA%\Claude)
 # ──────────────────────────────────────────────
