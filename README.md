@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-![snapshot](https://img.shields.io/badge/snapshot-2026--08--10-blue)
+![snapshot](https://img.shields.io/badge/snapshot-2026--09--17-blue)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.225-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -23,7 +23,7 @@
 ```mermaid
 flowchart LR
     subgraph repo["claude-code-dotfiles"]
-        CFG["config/<br/>(settings · CLAUDE.md<br/>statusline · skills · agents)"]
+        CFG["config/<br/>(settings · CLAUDE.md<br/>statusline · skills · agents · hooks)"]
         DSK["desktop/<br/>(claude_desktop_config.json)"]
         REF["plugins/ · examples/<br/>(참고 기록 — 복사 대상 아님)"]
     end
@@ -103,7 +103,7 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (5단계):
 
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 스킬 22종(직접 관리 10종 + pup 제공 dd-* 11종 + Aside 자동설치 1종) → `~/.claude/skills/`
+2. `config/skills/` 의 스킬 23종(직접 관리 11종 + pup 제공 dd-* 11종 + Aside 자동설치 1종) → `~/.claude/skills/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 커스텀 마켓플레이스 4곳(+옵션 5곳) 등록
 5. 활성 플러그인 11종 설치
@@ -124,19 +124,23 @@ claude-code-dotfiles/
 │   ├── settings.local.json.template     #   머신별 로컬 설정 템플릿
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
-│   └── skills/                          #   스킬 22종 (직접 관리 10 + pup dd-* 11 + Aside 1)
-│       ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
-│       ├── browser-automation/
-│       ├── code-search-exa/
-│       ├── company-research/
-│       ├── design-taste-frontend/
-│       ├── designing-premium-web-ui/
-│       ├── high-end-visual-design/
-│       ├── redesign-existing-projects/
-│       ├── stitch-design-taste/
-│       ├── web-research/
-│       ├── web-search-advanced-research-paper/
-│       └── dd-*/                        #   pup 제공, 11종 (구성 요소 상세 참고)
+│   ├── skills/                          #   스킬 23종 (직접 관리 11 + pup dd-* 11 + Aside 1)
+│   │   ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
+│   │   ├── browser-automation/
+│   │   ├── code-search-exa/
+│   │   ├── company-research/
+│   │   ├── design-taste-frontend/
+│   │   ├── designing-premium-web-ui/
+│   │   ├── high-end-visual-design/
+│   │   ├── public-writing/              #   남이 읽을 글(문서·메시지) 작성 흐름 — im-not-ai 발췌 포함
+│   │   ├── redesign-existing-projects/
+│   │   ├── stitch-design-taste/
+│   │   ├── web-research/
+│   │   ├── web-search-advanced-research-paper/
+│   │   └── dd-*/                        #   pup 제공, 11종 (구성 요소 상세 참고)
+│   └── scripts/
+│       ├── hooks/                       #   PreToolUse·PostToolUse 등 훅 스크립트
+│       └── lib/                         #   훅 공용 유틸 (hooks/*.js 가 require)
 ├── desktop/
 │   └── claude_desktop_config.json       # Claude Desktop MCP·환경 설정
 ├── plugins/                             # 참고 기록 (복사 대상 아님)
@@ -225,7 +229,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 </details>
 
 <details open>
-<summary><b>🧰 사용자 스킬 — 10종</b></summary>
+<summary><b>🧰 사용자 스킬 — 11종</b></summary>
 
 플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`).
 
@@ -236,6 +240,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) — Exa 기반 |
 | `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
+| `public-writing` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `public-writing-gate` 훅과 짝을 이룸 |
 | `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 |
 | `design-taste-frontend` | Anti-slop 프론트엔드 디자인 — 브리프를 읽고 방향을 추론해 템플릿처럼 안 보이는 UI 생성 |
 | `high-end-visual-design` | 고급 에이전시 스타일 폰트·간격·그림자·카드 구조·애니메이션 정의, 흔한 AI풍 디자인 차단 |
@@ -277,6 +282,21 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 | `dd-triage-flaky-test` | 특정 flaky 테스트 히스토리·원인·조치 추천 |
 
 에이전트 48종은 모니터링·대시보드·시큐리티·인시던트·비용 관리 등 Datadog 도메인별로 세분화되어 있습니다 — 전체 목록은 `config/agents/`를 참고하거나 `pup skills list --type=agent` 로 확인.
+
+</details>
+
+<details>
+<summary><b>🪝 훅 — PreToolUse·PostToolUse 3종</b></summary>
+
+`config/scripts/hooks/` (+ 공용 유틸 `config/scripts/lib/`) → `~/.claude/scripts/`. `settings.json`의 `hooks` 절이 이 스크립트를 가리키며, 명령이 없으면 조용히 넘어가는 게 아니라 훅 자체가 발동하지 않으므로 `scripts/hooks`와 `scripts/lib`는 항상 같이 복사합니다.
+
+| 훅 | 이벤트 | 하는 일 |
+|---|---|---|
+| `suggest-compact.js` | PreToolUse (`Edit`\|`Write`) | 컨텍스트 사용량·도구 호출 수를 추적해 압축 시점을 제안 (자동 압축 대신 전략적 지점에서) |
+| `reset-compact-counters.js` | PostCompact | 압축 직후 위 카운터를 리셋 |
+| `public-writing-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, `gws`·`gh`의 쓰기 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `public-writing` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌. `gh` PR·이슈는 스킬 없이 가벼운 체크리스트만 |
+
+세 훅 모두 실패 시 조용히 통과(`exit 0`)하도록 작성되어 있습니다 — 품질 게이트이지 보안 경계가 아니므로, 훅이 고장 나도 정상 작업을 막지 않습니다.
 
 </details>
 
@@ -365,6 +385,8 @@ cp config/settings.local.json.template ~/.claude/settings.local.json
 cp config/CLAUDE.md ~/.claude/
 cp config/statusline-bash.sh ~/.claude/ && chmod +x ~/.claude/statusline-bash.sh
 mkdir -p ~/.claude/skills && cp -r config/skills/* ~/.claude/skills/
+mkdir -p ~/.claude/scripts/hooks ~/.claude/scripts/lib
+cp -r config/scripts/hooks/* ~/.claude/scripts/hooks/ && cp -r config/scripts/lib/* ~/.claude/scripts/lib/
 
 # macOS/Linux 추가 보정 (statusline 경로 + Windows 전용 env 제거)
 #   settings.json 의 "/c/Users/YOUR_USERNAME" → "$HOME" 으로 치환
