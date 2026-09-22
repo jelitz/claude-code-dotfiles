@@ -13,6 +13,7 @@
     "defaultMode": "auto"
   },
   "model": "sonnet",
+  "promptSuggestionEnabled": false,
   "worktree": {
     "baseRef": "fresh"
   },
