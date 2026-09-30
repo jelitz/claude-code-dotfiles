@@ -1,9 +1,9 @@
 ---
-name: public-writing
-description: 사용자 본인이 아닌 사람이 읽게 될 글을 쓰기 전에 사용 — 기준은 독자이고, 글이 나가는 도구·경로나 길이는 기준이 아니다. 문서 유형 정하기 → 정보 구조 만들기 → AI 말투 제거(윤문) → 문장 다듬기 순서를 거친다. 예 — Confluence·Jira·Slack 게시, Google Docs·메일(gws), README·개발 문서, 블로그, 레포트, 민원·탄원서, 카카오톡·문자 메시지. 게시 도구나 명령이 public-writing-gate hook에 막혔을 때도 사용.
+name: dadeumi
+description: 사용자 본인이 아닌 사람이 읽게 될 글을 쓰기 전에 사용 — 기준은 독자이고, 글이 나가는 도구·경로나 길이는 기준이 아니다. 문서 유형 정하기 → 정보 구조 만들기 → AI 말투 제거(윤문) → 문장 다듬기 순서를 거친다. 예 — Confluence·Jira·Slack 게시, Google Docs·메일(gws), README·개발 문서, 블로그, 레포트, 민원·탄원서, 카카오톡·문자 메시지. 게시 도구나 명령이 dadeumi-gate hook에 막혔을 때도 사용.
 ---
 
-# public-writing — 남이 읽을 글 쓰기 흐름
+# dadeumi (다듬이) — 남이 읽을 글 쓰기 흐름
 
 사용자 외의 사람이 읽을 글은 아래 순서를 거친 뒤에 내놓는다. 순서는 바꾸지 않는다: AI 말투 제거는 문장 다듬기보다 먼저다.
 
@@ -85,11 +85,11 @@ description: 사용자 본인이 아닌 사람이 읽게 될 글을 쓰기 전�
 
 ## 게시 도구가 hook에 막혔을 때
 
-`~/.claude/scripts/hooks/public-writing-gate.js`가 PreToolUse에서 자주 쓰는 게시 경로를 검사한다. hook은 안전망일 뿐이고, 이 skill의 적용 범위는 hook이 보는 경로보다 넓다.
+`~/.claude/scripts/hooks/dadeumi-gate.js`가 PreToolUse에서 자주 쓰는 게시 경로를 검사한다. hook은 안전망일 뿐이고, 이 skill의 적용 범위는 hook이 보는 경로보다 넓다.
 
 | 경로 | hook의 동작 |
 |---|---|
 | Confluence·Jira·Slack MCP 게시 도구, `gws`로 글을 올리는 명령(docs, slides, gmail 발송, chat, drive 업로드·댓글) | 이 세션에서 최근 60분 안에 Skill 도구로 이 skill을 호출한 기록이 없으면 거부 |
 | `gh`로 PR·이슈·릴리스 글을 올리는 명령 | 세션당 한 번, 스크리닝 체크리스트와 함께 거부. 같은 명령을 다시 실행하면 통과하고 그 세션에서는 다시 묻지 않는다. 명령 문자열의 따옴표 안에만 있는 `gh pr create` 등은 감지하지 않는다 |
 
-첫 번째 경로에서 거부되면 Skill 도구로 `public-writing`을 호출하고, 올리려던 글이 이 흐름을 거쳤는지 확인한 뒤(안 거쳤으면 지금 거친다) 같은 호출을 다시 시도한다. 다른 경로로 우회하지 않는다.
+첫 번째 경로에서 거부되면 Skill 도구로 `dadeumi`를 호출하고, 올리려던 글이 이 흐름을 거쳤는지 확인한 뒤(안 거쳤으면 지금 거친다) 같은 호출을 다시 시도한다. 다른 경로로 우회하지 않는다.

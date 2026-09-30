@@ -29,7 +29,7 @@ im-not-ai의 단일 호출 윤문 에이전트(`agents/humanize-monolith.md`)와
 7. 윤문본을 `pw-after.md`로 저장하고 Bash 도구로 변경률 게이트를 실행한다.
 
    ```bash
-   python3 ~/.claude/skills/public-writing/scripts/change_rate.py --before <경로>/pw-before.md --after <경로>/pw-after.md
+   python3 ~/.claude/skills/dadeumi/scripts/change_rate.py --before <경로>/pw-before.md --after <경로>/pw-after.md
    ```
 
    표·헤딩·불릿이 많은 문서는 `--ignore-markup`을 붙여 본문만 비교한다.
