@@ -95,7 +95,7 @@ fi
 # ──────────────────────────────────────────────
 echo "[2/5] 사용자 스킬 복사..."
 cp -r "$CONFIG_DIR/skills/"* "$CLAUDE_DIR/skills/"
-echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 10종 + pup 제공 dd-* 11종)"
+echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 12종 + Aside 1종 + pup 제공 dd-* 11종)"
 
 if [ -d "$CONFIG_DIR/agents" ]; then
   cp -r "$CONFIG_DIR/agents/"* "$CLAUDE_DIR/agents/"

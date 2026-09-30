@@ -66,7 +66,7 @@ if (-not (Test-Path "$ClaudeDir\CLAUDE.md")) {
 # ──────────────────────────────────────────────
 Write-Host "[2/5] 사용자 스킬 복사..." -ForegroundColor Yellow
 Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
-Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 10종 + pup 제공 dd-* 11종)" -ForegroundColor Green
+Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 12종 + Aside 1종 + pup 제공 dd-* 11종)" -ForegroundColor Green
 
 if (Test-Path "$ConfigDir\agents") {
     Copy-Item "$ConfigDir\agents\*" "$ClaudeDir\agents\" -Recurse -Force
