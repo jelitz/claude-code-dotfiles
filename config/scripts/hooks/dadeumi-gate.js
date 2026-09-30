@@ -4,10 +4,10 @@
  *
  * Cross-platform (Windows, macOS, Linux)
  *
- * Makes sure text goes through the `public-writing` skill before it is posted
+ * Makes sure text goes through the `dadeumi` skill before it is posted
  * where other people read it. One script, two events:
  *
- * - PostToolUse (matcher "Skill"): when the invoked skill is public-writing,
+ * - PostToolUse (matcher "Skill"): when the invoked skill is dadeumi,
  *   stamp a per-session marker file.
  * - PreToolUse (matchers in ~/.claude/settings.json): decide per call.
  *     - Confluence / Jira / Slack MCP posting tools and `gws` write commands
@@ -40,16 +40,16 @@ const {
   output
 } = require('../lib/utils');
 
-const SKILL_NAME = 'public-writing';
-const MARKER_FILE_PREFIX = 'claude-public-writing-';
-const SCREEN_MARKER_FILE_PREFIX = 'claude-public-writing-screen-';
+const SKILL_NAME = 'dadeumi';
+const MARKER_FILE_PREFIX = 'claude-dadeumi-';
+const SCREEN_MARKER_FILE_PREFIX = 'claude-dadeumi-screen-';
 const MARKER_TTL_MS = 60 * 60 * 1000;
 const TTL_MINUTES = MARKER_TTL_MS / 60000;
 
 const SKILL_DENY_REASON = [
-  '남이 읽을 글을 게시하기 전에 public-writing skill을 거쳐야 합니다.',
+  '남이 읽을 글을 게시하기 전에 dadeumi skill을 거쳐야 합니다.',
   `이 세션에서 최근 ${TTL_MINUTES}분 안에 skill을 호출한 기록이 없습니다.`,
-  'Skill 도구로 "public-writing"을 호출하고, 올리려는 글이 그 흐름(문서형은 전체 흐름, 메시지·댓글은 간이 흐름)을 거쳤는지 확인한 뒤 같은 호출을 다시 시도하세요.',
+  'Skill 도구로 "dadeumi"를 호출하고, 올리려는 글이 그 흐름(문서형은 전체 흐름, 메시지·댓글은 간이 흐름)을 거쳤는지 확인한 뒤 같은 호출을 다시 시도하세요.',
   '사용자가 준 원문을 그대로 올리는 경우도 skill의 "대상이 아닌 것" 절을 확인하고 진행합니다. 다른 경로로 우회하지 마세요.'
 ].join(' ');
 
@@ -173,13 +173,13 @@ async function main() {
   if (input.hook_event_name === 'PreToolUse' && !isFresh(markerFile)) {
     const check = requiredCheck(toolName, toolInput);
     if (check === 'skill') {
-      log(`[PublicWritingGate] Denied ${toolName}: no fresh ${SKILL_NAME} marker for session ${sessionId}`);
+      log(`[DadeumiGate] Denied ${toolName}: no fresh ${SKILL_NAME} marker for session ${sessionId}`);
       deny(SKILL_DENY_REASON);
     } else if (check === 'screen' && !fs.existsSync(screenMarkerFile)) {
       // Once per session, no TTL. Stamp before denying so the retry passes:
       // this is a nudge, not a review.
       writeFile(screenMarkerFile, new Date().toISOString());
-      log(`[PublicWritingGate] Screening checklist shown for ${toolName} in session ${sessionId}`);
+      log(`[DadeumiGate] Screening checklist shown for ${toolName} in session ${sessionId}`);
       deny(SCREEN_DENY_REASON);
     }
   }
@@ -188,6 +188,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error('[PublicWritingGate] Error:', err.message);
+  console.error('[DadeumiGate] Error:', err.message);
   process.exit(0);
 });
