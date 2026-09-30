@@ -14,8 +14,13 @@
  *       need a skill marker younger than MARKER_TTL_MS. Otherwise the call is
  *       denied and the reason tells the model to invoke the skill and retry.
  *     - `gh` PR / issue / release text only gets a light screening: the first
- *       call in a TTL window is denied once with a four-item checklist, the
- *       retry passes. No skill invocation needed.
+ *       call in a session is denied once with a four-item checklist, the
+ *       retry and every later call in that session pass. No TTL here: the
+ *       nudge is meant to be seen once, not once per PR. No skill invocation
+ *       needed.
+ *
+ * Command text is scanned with quoted segments removed, so a command that
+ * merely mentions `gh pr create` inside a string is not a posting call.
  *
  * What this proves: the skill was loaded (or the checklist was shown) recently
  * in this session. It does not prove the flow was done well.
@@ -50,7 +55,7 @@ const SKILL_DENY_REASON = [
 
 const SCREEN_DENY_REASON = [
   'PR·이슈에 올리는 제목과 본문을 아래 네 가지만 훑어보고, 고칠 곳이 있으면 고친 뒤 같은 명령을 다시 실행하세요.',
-  `skill 호출은 필요 없고, 이 확인은 ${TTL_MINUTES}분에 한 번만 요청됩니다.`,
+  'skill 호출은 필요 없고, 이 확인은 세션당 한 번만 요청됩니다.',
   '(1) 제목이 바뀐 내용을 구체적으로 말하는가',
   '(2) 본문 첫 문단이 무엇을 왜 바꿨는지 말하는가',
   '(3) 챗봇 프레임 문장, 과장 관용구("결론적으로", "매우 중요합니다"), 장식용 이모지가 없는가 — attribution 줄은 예외',
@@ -70,6 +75,15 @@ const GWS_WRITE_PATTERNS = [
 const GH_WRITE_RE = /\bgh\s+(?:(?:pr|issue)\s+(?:create|comment|review)|release\s+create)\b/;
 const GH_EDIT_RE = /\bgh\s+(?:pr|issue)\s+edit\b/;
 const GH_EDIT_TEXT_FLAG_RE = /(?:^|\s)(?:--title|--body|--body-file|-t|-b|-F)(?:\s|=|$)/;
+
+/**
+ * Drop single- and double-quoted segments so that text carried as an
+ * argument (a PR body, a JSON payload, an echo) cannot trigger the gate.
+ * The command word itself is never quoted, so real posting calls survive.
+ */
+function stripQuoted(command) {
+  return command.replace(/"(?:[^"\\]|\\.)*"|'[^']*'/g, ' ');
+}
 
 function isGwsWrite(command) {
   const start = command.search(/\bgws\s/);
@@ -108,8 +122,9 @@ function carriesProse(toolName, toolInput) {
 function requiredCheck(toolName, toolInput) {
   if (toolName === 'Bash' || toolName === 'PowerShell') {
     const command = typeof toolInput.command === 'string' ? toolInput.command : '';
-    if (isGwsWrite(command)) return 'skill';
-    if (isGhWrite(command)) return 'screen';
+    const bare = stripQuoted(command);
+    if (isGwsWrite(bare)) return 'skill';
+    if (isGhWrite(bare)) return 'screen';
     return null;
   }
   return carriesProse(toolName, toolInput) ? 'skill' : null;
@@ -160,8 +175,9 @@ async function main() {
     if (check === 'skill') {
       log(`[PublicWritingGate] Denied ${toolName}: no fresh ${SKILL_NAME} marker for session ${sessionId}`);
       deny(SKILL_DENY_REASON);
-    } else if (check === 'screen' && !isFresh(screenMarkerFile)) {
-      // Stamp before denying so the retry passes: this is a nudge, not a review.
+    } else if (check === 'screen' && !fs.existsSync(screenMarkerFile)) {
+      // Once per session, no TTL. Stamp before denying so the retry passes:
+      // this is a nudge, not a review.
       writeFile(screenMarkerFile, new Date().toISOString());
       log(`[PublicWritingGate] Screening checklist shown for ${toolName} in session ${sessionId}`);
       deny(SCREEN_DENY_REASON);
