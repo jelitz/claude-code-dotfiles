@@ -103,7 +103,7 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (5단계):
 
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 스킬 23종(직접 관리 11종 + pup 제공 dd-* 11종 + Aside 자동설치 1종) → `~/.claude/skills/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
+2. `config/skills/` 의 스킬 24종(직접 관리 12종 + pup 제공 dd-* 11종 + Aside 자동설치 1종) → `~/.claude/skills/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 커스텀 마켓플레이스 4곳(+옵션 5곳) 등록
 5. 활성 플러그인 11종 설치
@@ -124,7 +124,7 @@ claude-code-dotfiles/
 │   ├── settings.local.json.template     #   머신별 로컬 설정 템플릿
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
-│   ├── skills/                          #   스킬 23종 (직접 관리 11 + pup dd-* 11 + Aside 1)
+│   ├── skills/                          #   스킬 24종 (직접 관리 12 + pup dd-* 11 + Aside 1)
 │   │   ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
 │   │   ├── browser-automation/
 │   │   ├── code-search-exa/
@@ -137,6 +137,7 @@ claude-code-dotfiles/
 │   │   ├── stitch-design-taste/
 │   │   ├── web-research/
 │   │   ├── web-search-advanced-research-paper/
+│   │   ├── web-ux-sweep/                #   실행 중인 웹 앱을 눌러 보며 UX·동작 결함을 찾는 읽기 전용 감사
 │   │   └── dd-*/                        #   pup 제공, 11종 (구성 요소 상세 참고)
 │   └── scripts/
 │       ├── hooks/                       #   PreToolUse·PostToolUse 등 훅 스크립트
@@ -229,7 +230,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 </details>
 
 <details open>
-<summary><b>🧰 사용자 스킬 — 11종</b></summary>
+<summary><b>🧰 사용자 스킬 — 12종</b></summary>
 
 플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`).
 
@@ -240,6 +241,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) — Exa 기반 |
 | `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
+| `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
 | `public-writing` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `public-writing-gate` 훅과 짝을 이룸 |
 | `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 |
 | `design-taste-frontend` | Anti-slop 프론트엔드 디자인 — 브리프를 읽고 방향을 추론해 템플릿처럼 안 보이는 UI 생성 |
