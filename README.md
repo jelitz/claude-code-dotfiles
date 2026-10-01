@@ -242,7 +242,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
 | `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
-| `dadeumi` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `dadeumi-gate` 훅과 짝을 이룸. hook 연동과 개인 설정을 뺀 공개판은 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)에서 플러그인으로 배포 |
+| `dadeumi` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `dadeumi-gate` 훅과 짝을 이룸. 개인 설정을 뺀 공개판(훅 포함)은 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)에서 플러그인으로 배포 |
 | `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 |
 | `design-taste-frontend` | Anti-slop 프론트엔드 디자인 — 브리프를 읽고 방향을 추론해 템플릿처럼 안 보이는 UI 생성 |
 | `high-end-visual-design` | 고급 에이전시 스타일 폰트·간격·그림자·카드 구조·애니메이션 정의, 흔한 AI풍 디자인 차단 |
