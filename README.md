@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.11.2-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.11.3-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
