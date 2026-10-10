@@ -65,6 +65,21 @@
             "type": "command",
             "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
             "if": "Bash(gws *)"
+          },
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
+            "if": "Bash(gh *)"
+          },
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
+            "if": "PowerShell(*gws *)"
+          },
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
+            "if": "PowerShell(*gh *)"
           }
         ]
       }

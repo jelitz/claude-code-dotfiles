@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.11-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.11.2-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -331,7 +331,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 |---|---|---|
 | `suggest-compact.js` | PreToolUse (`Edit`\|`Write`) | 컨텍스트 사용량·도구 호출 수를 추적해 압축 시점을 제안 (자동 압축 대신 전략적 지점에서) |
 | `reset-compact-counters.js` | PostCompact | 압축 직후 위 카운터를 리셋 |
-| `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, `gws` 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌 |
+| `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, Bash·PowerShell의 `gws`·`gh` 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌. `gh` PR·이슈·릴리스는 스킬 없이 가벼운 체크리스트만 (세션당 1회) |
 | `destructive-command-gate.js` | PreToolUse (`Bash`\|`PowerShell`) | git 명령의 `--no-verify` 는 거부하고, `rm -rf`·`git push --force`·`git reset --hard`·`git clean -f` 등은 auto 모드에서도 확인을 받게 함 |
 | `py-encoding-check.js` | PostToolUse (`Edit`\|`Write`) | `.py` 파일 저장 직후 `encoding=` 없는 텍스트 I/O 호출(`open()`·`read_text()` 등)을 찾아 Claude에게 알림 (차단하지 않음) |
 
