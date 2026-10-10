@@ -131,11 +131,12 @@ bash scripts/setup.sh        # Windows: .\scripts\setup.ps1
 
 1. `RELEASE-NOTES.md` 맨 위에 `## vYYYY.MM.DD (YYYY-MM-DD)` 절을 추가합니다.
 2. `VERSION` 파일과 README 상단의 version 배지를 같은 버전으로 바꿉니다.
-3. 커밋하고 태그를 push합니다.
+3. 커밋을 push한 뒤 태그를 따로 push합니다. 브랜치와 태그를 한 명령으로 push했을 때 태그 이벤트가 발생하지 않아 워크플로가 돌지 않은 적이 있습니다.
 
    ```bash
+   git push origin master
    git tag v2026.10.11
-   git push origin master v2026.10.11
+   git push origin v2026.10.11
    ```
 
 태그를 push하면 GitHub Actions(`.github/workflows/release.yml`)가 `scripts/release-notes.sh`로 해당 절을 뽑아 Release를 만듭니다. 태그가 `VERSION` 파일이나 배지와 다르거나 절이 없으면 워크플로가 실패하고 Release는 만들어지지 않습니다.
