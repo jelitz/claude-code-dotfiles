@@ -4,11 +4,13 @@
 
 ## v2026.10.11.2 (2026-10-11)
 
-`dadeumi-gate` 훅의 검사 범위를 스킬 문서에 맞게 되돌렸습니다. 커밋 작성자 정보를 개인 계정으로 통일하느라 저장소 히스토리를 다시 썼습니다.
+`dadeumi-gate` 훅의 검사 범위를 스킬 문서에 맞게 되돌렸고 `destructive-command-gate` 훅이 커밋 메시지 같은 따옴표 안의 글자 때문에 명령을 막던 문제를 고쳤습니다. 커밋 작성자 정보를 개인 계정으로 통일하느라 저장소 히스토리를 다시 썼습니다.
 
 ### 훅
 
 - **`dadeumi-gate` 훅이 다시 Bash·PowerShell의 `gws`·`gh` 명령을 검사합니다.** v2026.10.11에서는 Bash의 `gws` 명령만 검사했습니다. `dadeumi` 스킬 문서가 설명하는 범위를 기준으로 설정을 고쳤습니다.
+- **`destructive-command-gate` 훅이 따옴표·heredoc·PowerShell here-string 안의 글자를 명령으로 보지 않습니다.** 이전에는 커밋 메시지에 `--no-verify`나 `rm -rf`라는 글자만 있어도 명령이 막혔습니다. `bash -c "..."`·`pwsh -Command "..."` 안의 명령은 따로 다시 검사합니다. `--no-verify`와 같은 뜻인 `git commit -n`도 이제 거부합니다.
+- **`destructive-command-gate` 훅의 회귀 테스트를 추가했습니다.** `node --test "tests/**/*.test.js"`로 실행합니다.
 
 ### 저장소
 

@@ -182,6 +182,7 @@ claude-code-dotfiles/
 │   ├── setup.sh                         # 복원 스크립트 (Git Bash/macOS/Linux/WSL)
 │   ├── setup.ps1                        # 복원 스크립트 (Windows PowerShell)
 │   └── release-notes.sh                 # RELEASE-NOTES.md 에서 한 버전 절을 추출 (릴리스 워크플로용)
+├── tests/hooks/                         # 훅 회귀 테스트 (node --test, 복사 대상 아님)
 ├── .github/workflows/release.yml        # v* 태그 push 시 GitHub Release 생성
 ├── RELEASE-NOTES.md                     # 버전별 변경 이력
 └── VERSION                              # 현재 버전 (태그·README 배지와 일치)
@@ -332,10 +333,12 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 | `suggest-compact.js` | PreToolUse (`Edit`\|`Write`) | 컨텍스트 사용량·도구 호출 수를 추적해 압축 시점을 제안 (자동 압축 대신 전략적 지점에서) |
 | `reset-compact-counters.js` | PostCompact | 압축 직후 위 카운터를 리셋 |
 | `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, Bash·PowerShell의 `gws`·`gh` 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌. `gh` PR·이슈·릴리스는 스킬 없이 가벼운 체크리스트만 (세션당 1회) |
-| `destructive-command-gate.js` | PreToolUse (`Bash`\|`PowerShell`) | git 명령의 `--no-verify` 는 거부하고, `rm -rf`·`git push --force`·`git reset --hard`·`git clean -f` 등은 auto 모드에서도 확인을 받게 함 |
+| `destructive-command-gate.js` | PreToolUse (`Bash`\|`PowerShell`) | git 명령의 `--no-verify`(`git commit -n` 포함)는 거부하고, `rm -rf`·`git push --force`·`git reset --hard`·`git clean -f` 등은 auto 모드에서도 확인을 받게 함. 따옴표·heredoc 안의 글자는 명령으로 보지 않고, `bash -c "..."` 안의 명령은 다시 검사 |
 | `py-encoding-check.js` | PostToolUse (`Edit`\|`Write`) | `.py` 파일 저장 직후 `encoding=` 없는 텍스트 I/O 호출(`open()`·`read_text()` 등)을 찾아 Claude에게 알림 (차단하지 않음) |
 
 다섯 훅 모두 실패 시 조용히 통과(`exit 0`)하도록 작성되어 있습니다 — 품질 게이트이지 보안 경계가 아니므로, 훅이 고장 나도 정상 작업을 막지 않습니다.
+
+`destructive-command-gate` 의 회귀 테스트는 `tests/hooks/` 에 있고 `node --test "tests/**/*.test.js"` 로 실행합니다(Node 18 이상).
 
 </details>
 

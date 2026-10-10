@@ -17,6 +17,11 @@
  *           Claude Code >= 2.1.211): the classifier can still deny, but it can
  *           no longer approve silently. The reason is shown to the user.
  *
+ * Text the shell does not run as a command is masked before matching: quoted
+ * strings, heredoc bodies and PowerShell here-strings. A commit message that
+ * mentions --no-verify or rm -rf is therefore not a match. The payload of
+ * `bash -c "..."` / `pwsh -Command "..."` is a command, so it is checked again.
+ *
  * Fail-open by design: any unexpected error exits 0 with no output, so a
  * broken hook never blocks ordinary commands. Exit 0 with no output means
  * "no decision" and the normal permission flow continues.
@@ -31,8 +36,99 @@ function segments(command) {
   return command.split(SEGMENT_SPLIT_RE).map(s => s.trim()).filter(Boolean);
 }
 
+// Same length as the input; masked characters (newlines included) become spaces.
+function maskQuoted(command) {
+  const out = command.split('');
+  const blank = (from, to) => { for (let k = from; k < to; k++) out[k] = ' '; };
+  const heredocs = []; // { bodyStart, resume } in source order
+  let i = 0;
+  while (i < command.length) {
+    if (heredocs.length && i === heredocs[0].bodyStart) {
+      const h = heredocs.shift();
+      blank(h.bodyStart, h.bodyEnd);
+      i = h.resume;
+      continue;
+    }
+    const rest = command.slice(i);
+    // PowerShell here-string: @'<newline> ... <newline>'@
+    let m = rest.match(/^@(['"])\r?\n/);
+    if (m) {
+      const close = command.indexOf('\n' + m[1] + '@', i + 2);
+      const end = close === -1 ? command.length : close + 1;
+      blank(i + 2, end);
+      i = end;
+      continue;
+    }
+    // heredoc: <<EOF, <<-EOF, <<'EOF', <<"EOF" — the body starts on the next line
+    m = rest.match(/^<<(-?)\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\2/);
+    if (m) {
+      const lineEnd = command.indexOf('\n', i);
+      if (lineEnd !== -1) {
+        const delim = new RegExp('\\n' + (m[1] ? '\\t*' : '') + m[3] + '[ \\t]*\\r?(?=\\n|$)');
+        const d = command.slice(lineEnd).match(delim);
+        const bodyEnd = d ? lineEnd + d.index : command.length;
+        heredocs.push({ bodyStart: lineEnd, bodyEnd, resume: bodyEnd });
+      }
+      i += m[0].length;
+      continue;
+    }
+    const c = command[i];
+    if (c === "'") {
+      const close = command.indexOf("'", i + 1);
+      const end = close === -1 ? command.length : close;
+      blank(i + 1, end);
+      i = end + 1;
+      continue;
+    }
+    if (c === '"') {
+      // \ (bash) and ` (PowerShell) escape the next character
+      let j = i + 1;
+      while (j < command.length && command[j] !== '"') j += (command[j] === '\\' || command[j] === '`') ? 2 : 1;
+      blank(i + 1, Math.min(j, command.length));
+      i = j + 1;
+      continue;
+    }
+    i += 1;
+  }
+  return out.join('');
+}
+
+// `bash -c "..."`, `pwsh -NoProfile -Command '...'`: the quoted payload is a command.
+const SHELL_PAYLOAD_RE = /(^|[\s;&|(])(?:bash|sh|zsh|dash|pwsh|powershell)(?:\.exe)?\s+(?:-[A-Za-z]+\s+)*?(?:-c|-Command|-command)\s+("(?:[^"\\`]|[\\`][\s\S])*"|'[^']*')/g;
+
+function shellPayloads(command, masked) {
+  const payloads = [];
+  for (const m of command.matchAll(SHELL_PAYLOAD_RE)) {
+    const start = m.index + m[1].length;
+    if (masked[start] !== command[start]) continue; // the shell word itself is quoted text
+    const quoted = m[2];
+    const body = quoted.slice(1, -1);
+    payloads.push(quoted[0] === '"' ? body.replace(/[\\`](["\\`$])/g, '$1') : body);
+  }
+  return payloads;
+}
+
+// Subcommands that accept --no-verify (commit also takes -n for it).
+const NO_VERIFY_SUBCOMMANDS = new Set(['commit', 'push', 'merge', 'rebase', 'am', 'cherry-pick', 'revert', 'pull']);
+const GIT_OPTIONS_WITH_VALUE = new Set(['-C', '-c', '--git-dir', '--work-tree', '--namespace']);
+
+function gitInvocation(seg) {
+  const tokens = seg.split(/\s+/).filter(Boolean);
+  const g = tokens.findIndex(t => /(^|[\\/])git(\.exe)?$/i.test(t));
+  if (g === -1) return null;
+  let k = g + 1;
+  while (k < tokens.length && tokens[k].startsWith('-')) {
+    if (GIT_OPTIONS_WITH_VALUE.has(tokens[k])) k += 1;
+    k += 1;
+  }
+  return k < tokens.length ? { sub: tokens[k], args: tokens.slice(k + 1) } : null;
+}
+
 function hasNoVerify(seg) {
-  return /\bgit\b/.test(seg) && /(^|\s)--no-verify\b/.test(seg);
+  const git = gitInvocation(seg);
+  if (!git || !NO_VERIFY_SUBCOMMANDS.has(git.sub)) return false;
+  if (git.args.includes('--no-verify')) return true;
+  return git.sub === 'commit' && git.args.some(a => /^-[A-Za-z]*n[A-Za-z]*$/.test(a));
 }
 
 function isForcePush(seg) {
@@ -68,9 +164,10 @@ function isCmdRecursiveRd(seg) {
   return /(^|\s)(rd|rmdir)\s+.*\/[sS](\s|$)/.test(seg);
 }
 
-function classify(command) {
+function classify(command, depth = 0) {
+  const masked = maskQuoted(command);
   let ask = null;
-  for (const seg of segments(command)) {
+  for (const seg of segments(masked)) {
     if (hasNoVerify(seg)) return { decision: 'deny', what: '--no-verify' };
     if (ask) continue;
     if (isForcePush(seg)) ask = 'git push --force';
@@ -79,6 +176,13 @@ function classify(command) {
     else if (isRecursiveRm(seg)) ask = 'rm -rf';
     else if (isPowerShellRecursiveRemove(seg)) ask = 'Remove-Item -Recurse';
     else if (isCmdRecursiveRd(seg)) ask = 'rd /s';
+  }
+  if (depth < 3) {
+    for (const payload of shellPayloads(command, masked)) {
+      const inner = classify(payload, depth + 1);
+      if (inner && inner.decision === 'deny') return inner;
+      if (inner && !ask) ask = inner.what;
+    }
   }
   return ask ? { decision: 'ask', what: ask } : null;
 }
