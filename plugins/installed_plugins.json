@@ -132,7 +132,7 @@
       "marketplace": "claude-plugins-official",
       "name": "sentry",
       "enabled": true,
-      "description": "Sentry 에러 모니터링 연동 — 특정 프로젝트 스코프로만 설치 (전역 미사용)"
+      "description": "Sentry 이슈 조회·디버깅 스킬과 MCP"
     },
     {
       "id": "typescript-lsp@claude-plugins-official",

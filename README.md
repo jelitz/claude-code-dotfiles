@@ -33,7 +33,7 @@ flowchart LR
     DSK --> SETUP
     SETUP -->|"플레이스홀더 치환<br/>+ OS별 보정"| HOME["~/.claude/"]
     SETUP -->|"OS별 경로"| DESKTOP["Claude Desktop 설정 폴더"]
-    SETUP -->|"claude plugin ..."| PLG["마켓플레이스 4곳 등록<br/>플러그인 11종 설치"]
+    SETUP -->|"claude plugin ..."| PLG["마켓플레이스 5곳 등록<br/>플러그인 12종 설치"]
 ```
 
 규칙은 세 가지입니다.
@@ -108,7 +108,7 @@ setup 스크립트가 수행하는 일 (5단계):
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
 2. `config/skills/` 의 스킬 19종(직접 관리 7종 + pup 제공 dd-* 11종 + Aside 자동설치 1종)과 `config/agents/` 의 에이전트 49종(직접 관리 1종 + pup 제공 48종) → `~/.claude/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
-4. 커스텀 마켓플레이스 4곳(+옵션 7곳) 등록
+4. 마켓플레이스 5곳(+옵션 7곳) 등록
 5. 활성 플러그인 12종 설치
 
 나머지 세부 — 파일 구조, pup 내부 동작, 플러그인·스킬·MCP·Statusline·설정값 전체 목록, 스크립트 없이 수동 설치하는 법은 아래 [자세히 보기](#자세히-보기)에 접어두었습니다.
@@ -173,7 +173,7 @@ claude-code-dotfiles/
 ├── desktop/
 │   └── claude_desktop_config.json       # Claude Desktop MCP·환경 설정
 ├── plugins/                             # 참고 기록 (복사 대상 아님)
-│   ├── installed_plugins.json           #   플러그인 목록 (활성/비활성/스코프 + 설명)
+│   ├── installed_plugins.json           #   플러그인 목록 (활성/비활성 + 설명)
 │   └── known_marketplaces.json          #   마켓플레이스 목록 (실사용/등록만 구분)
 ├── examples/
 │   └── project-permissions.example.json # 프로젝트 종속 권한 예시 (Railway 등)
@@ -213,7 +213,7 @@ pup auth status     # 인증 상태 확인
 
 #### Claude Code 스킬·에이전트 설치
 
-pup 바이너리는 Claude Code용 스킬·에이전트를 자체 내장하고 있어, 별도 마켓플레이스 등록 없이 아래 한 줄로 설치됩니다. 이 저장소의 `config/skills/dd-*` (11종)와 `config/agents/*.md` (48종)가 이 명령의 결과물이며, `cp -r config/skills/*`·`cp -r config/agents/*` 로 그대로 복원할 수 있습니다.
+pup 바이너리는 Claude Code용 스킬·에이전트를 자체 내장하고 있어, 별도 마켓플레이스 등록 없이 아래 한 줄로 설치됩니다. 이 저장소의 `config/skills/dd-*` (11종)와 `config/agents/` 중 `adversarial-reviewer.md` 를 뺀 48종이 이 명령의 결과물이며, `cp -r config/skills/*`·`cp -r config/agents/*` 로 그대로 복원할 수 있습니다.
 
 ```bash
 pup skills install claude   # ~/.claude/skills/dd-*, ~/.claude/agents/*.md 설치
@@ -221,7 +221,7 @@ pup skills install claude   # ~/.claude/skills/dd-*, ~/.claude/agents/*.md 설�
 
 pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전트가 최신 상태로 갱신됩니다.
 
-> ℹ pup은 이 저장소에 커밋하지 않습니다(바이너리이므로 `config/skills/`·`config/agents/` 만 미러 대상). Datadog 관련 작업이 필요 없다면 이 섹션은 건너뛰어도 됩니다. 현재 이 스냅샷을 만든 머신에는 pup이 설치되어 있지 않아 `~/.claude/skills/dd-*`·`~/.claude/agents/`가 비어 있는 상태이지만, repo 안의 스냅샷은 위 명령으로 언제든 그대로 복원 가능하도록 유지합니다.
+> ℹ pup은 이 저장소에 커밋하지 않습니다(바이너리이므로 `config/skills/`·`config/agents/` 만 미러 대상). Datadog 관련 작업이 필요 없다면 이 섹션은 건너뛰어도 됩니다. 현재 이 스냅샷을 만든 머신에는 pup이 설치되어 있지 않아 `~/.claude/skills/dd-*` 와 pup 에이전트가 없는 상태이지만, repo 안의 스냅샷은 위 명령으로 언제든 그대로 복원 가능하도록 유지합니다.
 
 </details>
 
@@ -279,7 +279,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
 | `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
 | `dadeumi` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `dadeumi-gate` 훅과 짝을 이룸. 개인 설정을 뺀 공개판(훅 포함)은 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)에서 플러그인으로 배포 |
-Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다. 현재는 `settings.json` 의 `skillOverrides` 로 세 스킬 모두 꺼 두었습니다.
+Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, 메인 컨텍스트 오염을 막기 위해 frontmatter의 `context: fork` 로 분리된 컨텍스트에서 실행됩니다. 현재는 `settings.json` 의 `skillOverrides` 로 세 스킬 모두 꺼 두었습니다.
 
 > 이전 스냅샷에 있던 디자인 스킬 5종(`designing-premium-web-ui`, `design-taste-frontend`, `high-end-visual-design`, `redesign-existing-projects`, `stitch-design-taste`)은 현재 PC 설정에 없어 저장소에서도 제거했습니다.
 
@@ -317,7 +317,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 | `dd-unblock-pr` | 실패한 PR CI 파이프라인 원인 분류(flaky/infra/regression) |
 | `dd-triage-flaky-test` | 특정 flaky 테스트 히스토리·원인·조치 추천 |
 
-에이전트 48종은 모니터링·대시보드·시큐리티·인시던트·비용 관리 등 Datadog 도메인별로 세분화되어 있습니다 — 전체 목록은 `config/agents/`를 참고하거나 `pup skills list --type=agent` 로 확인.
+에이전트 48종은 모니터링·대시보드·시큐리티·인시던트·비용 관리 등 Datadog 도메인별로 세분화되어 있습니다 — 전체 목록은 `config/agents/`(`adversarial-reviewer.md` 제외)를 참고하거나 `pup skills list --type=agent` 로 확인.
 
 </details>
 
@@ -348,6 +348,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 | Slack · Exa | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결). Exa 커넥터가 `web_fetch_exa` 를 제공 |
 | `exa` | [exa.ai](https://exa.ai/docs/get-started/exa-mcp) | `claude mcp add` (user 스코프) | 웹 검색 1순위. 필터 검색 도구 `web_search_advanced_exa` 는 기본 비활성이라 tools 파라미터로 켬: `claude mcp add --transport http -s user exa "https://mcp.exa.ai/mcp?tools=web_search_exa,web_search_advanced_exa"` |
 | `playwright` | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
+| `shadcn` | [ui.shadcn.com](https://ui.shadcn.com) | `claude mcp add` (user 스코프) | shadcn/ui 컴포넌트 레지스트리 조회: `claude mcp add -s user shadcn -- npx shadcn@latest mcp` |
 
 </details>
 
@@ -441,11 +442,12 @@ cp desktop/claude_desktop_config.json "$APPDATA/Claude/claude_desktop_config.jso
 cp desktop/claude_desktop_config.json "$HOME/Library/Application Support/Claude/claude_desktop_config.json"  # macOS
 cp desktop/claude_desktop_config.json "$HOME/.config/Claude/claude_desktop_config.json"                 # Linux
 
-# 3. 커스텀 마켓플레이스 등록 (claude-plugins-official·anthropic-plugin-directory 는 기본 등록)
-claude plugin marketplace add anthropic-agent-skills github:anthropics/skills
-claude plugin marketplace add openai-codex github:openai/codex-plugin-cc
-claude plugin marketplace add gptaku-plugins https://github.com/fivetaku/gptaku_plugins.git
-claude plugin marketplace add superpowers-marketplace github:obra/superpowers-marketplace
+# 3. 마켓플레이스 등록 (anthropic-plugin-directory 는 내장, 나머지는 인자 하나로 추가)
+claude plugin marketplace add anthropics/claude-plugins-official
+claude plugin marketplace add anthropics/skills
+claude plugin marketplace add openai/codex-plugin-cc
+claude plugin marketplace add https://github.com/fivetaku/gptaku_plugins.git
+claude plugin marketplace add obra/superpowers-marketplace
 
 # 4. 플러그인 설치 (활성화 대상)
 claude plugin install codex@openai-codex

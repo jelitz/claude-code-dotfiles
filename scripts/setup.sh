@@ -146,27 +146,32 @@ if ! command -v claude &>/dev/null; then
 fi
 
 if [ -z "$SKIP_PLUGINS" ]; then
-  # 실사용 마켓플레이스 (claude-plugins-official·anthropic-plugin-directory 는 기본 등록)
+  # 실사용 마켓플레이스 — `claude plugin marketplace add <source>` (인자 하나)
+  # anthropic-plugin-directory 는 내장. claude-plugins-official 은 Claude Code를
+  # 한 번도 실행하지 않은 상태에서는 등록돼 있지 않으므로 명시적으로 추가한다.
   MARKETPLACES=(
-    "anthropic-agent-skills github:anthropics/skills"
-    "openai-codex github:openai/codex-plugin-cc"
-    "gptaku-plugins https://github.com/fivetaku/gptaku_plugins.git"
-    "superpowers-marketplace github:obra/superpowers-marketplace"
+    "anthropics/claude-plugins-official"
+    "anthropics/skills"
+    "openai/codex-plugin-cc"
+    "https://github.com/fivetaku/gptaku_plugins.git"
+    "obra/superpowers-marketplace"
   )
   # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
   # MARKETPLACES+=(
-  #   "ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill"
-  #   "google-labs-code-stitch-skills github:google-labs-code/stitch-skills"
-  #   "exa-skills github:benjaminjackson/exa-skills"
-  #   "Claudest github:gupsammy/claudest"
-  #   "ecc github:affaan-m/everything-claude-code"
-  #   "agent-browser github:vercel-labs/agent-browser"
-  #   "claude-for-financial-services github:anthropics/financial-services"
+  #   "nextlevelbuilder/ui-ux-pro-max-skill"
+  #   "google-labs-code/stitch-skills"
+  #   "benjaminjackson/exa-skills"
+  #   "gupsammy/claudest"
+  #   "affaan-m/everything-claude-code"
+  #   "vercel-labs/agent-browser"
+  #   "anthropics/financial-services"
   # )
-  for entry in "${MARKETPLACES[@]}"; do
-    id="${entry%% *}"
-    src="${entry#* }"
-    claude plugin marketplace add "$id" "$src" 2>/dev/null && echo "  ✓ $id" || echo "  - $id (이미 등록됨)"
+  for src in "${MARKETPLACES[@]}"; do
+    if claude plugin marketplace add "$src" >/dev/null 2>&1; then
+      echo "  ✓ $src"
+    else
+      echo "  - $src (이미 등록됐거나 실패 — claude plugin marketplace list 로 확인)"
+    fi
   done
 
   echo "[5/5] 플러그인 설치..."

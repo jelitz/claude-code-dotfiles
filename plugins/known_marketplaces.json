@@ -6,7 +6,7 @@
       "source": "github",
       "repo": "anthropics/claude-plugins-official",
       "usage": "active",
-      "description": "Anthropic 공식 마켓플레이스 (CC 기본 등록, 별도 add 불필요)"
+      "description": "Anthropic 공식 마켓플레이스 — Claude Code를 처음 실행하기 전에는 등록돼 있지 않아 setup이 명시적으로 추가"
     },
     {
       "id": "anthropic-agent-skills",

@@ -105,29 +105,33 @@ if (-not $claudeCmd) {
     exit 1
 }
 
-# 실사용 마켓플레이스 (claude-plugins-official·anthropic-plugin-directory 는 기본 등록)
+# 실사용 마켓플레이스 — `claude plugin marketplace add <source>` (인자 하나)
+# anthropic-plugin-directory 는 내장. claude-plugins-official 은 Claude Code를
+# 한 번도 실행하지 않은 상태에서는 등록돼 있지 않으므로 명시적으로 추가한다.
 $marketplaces = @(
-    @{ id = "anthropic-agent-skills";  arg = "github:anthropics/skills" },
-    @{ id = "openai-codex";            arg = "github:openai/codex-plugin-cc" },
-    @{ id = "gptaku-plugins";          arg = "https://github.com/fivetaku/gptaku_plugins.git" },
-    @{ id = "superpowers-marketplace"; arg = "github:obra/superpowers-marketplace" }
+    "anthropics/claude-plugins-official",
+    "anthropics/skills",
+    "openai/codex-plugin-cc",
+    "https://github.com/fivetaku/gptaku_plugins.git",
+    "obra/superpowers-marketplace"
 )
 # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
 # $marketplaces += @(
-#     @{ id = "ui-ux-pro-max-skill";            arg = "github:nextlevelbuilder/ui-ux-pro-max-skill" },
-#     @{ id = "google-labs-code-stitch-skills"; arg = "github:google-labs-code/stitch-skills" },
-#     @{ id = "exa-skills";                    arg = "github:benjaminjackson/exa-skills" },
-#     @{ id = "Claudest";                      arg = "github:gupsammy/claudest" },
-#     @{ id = "ecc";                           arg = "github:affaan-m/everything-claude-code" },
-#     @{ id = "agent-browser";                 arg = "github:vercel-labs/agent-browser" },
-#     @{ id = "claude-for-financial-services"; arg = "github:anthropics/financial-services" }
+#     "nextlevelbuilder/ui-ux-pro-max-skill",
+#     "google-labs-code/stitch-skills",
+#     "benjaminjackson/exa-skills",
+#     "gupsammy/claudest",
+#     "affaan-m/everything-claude-code",
+#     "vercel-labs/agent-browser",
+#     "anthropics/financial-services"
 # )
-foreach ($mp in $marketplaces) {
-    try {
-        claude plugin marketplace add $mp.id $mp.arg 2>$null
-        Write-Host "  ✓ $($mp.id)" -ForegroundColor Green
-    } catch {
-        Write-Host "  - $($mp.id) (이미 등록됨)"
+# 외부 명령은 실패해도 예외를 던지지 않으므로 $LASTEXITCODE 로 판정한다
+foreach ($src in $marketplaces) {
+    claude plugin marketplace add $src *> $null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  ✓ $src" -ForegroundColor Green
+    } else {
+        Write-Host "  - $src (이미 등록됐거나 실패 — claude plugin marketplace list 로 확인)"
     }
 }
 
@@ -149,10 +153,10 @@ $plugins = @(
     "superpowers@superpowers-marketplace"
 )
 foreach ($plugin in $plugins) {
-    try {
-        claude plugin install $plugin 2>$null
+    claude plugin install $plugin *> $null
+    if ($LASTEXITCODE -eq 0) {
         Write-Host "  ✓ $plugin" -ForegroundColor Green
-    } catch {
+    } else {
         Write-Host "  - $plugin (이미 설치됨 또는 오류)"
     }
 }
