@@ -1,0 +1,38 @@
+# v* 태그를 push하면 RELEASE-NOTES.md 의 해당 절로 GitHub Release 를 만든다.
+# 태그가 VERSION 파일·README 배지와 다르거나 릴리스 노트 절이 없으면 실패한다.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check tag matches VERSION and README badge
+        run: |
+          tag="$GITHUB_REF_NAME"
+          version="v$(tr -d '[:space:]' < VERSION)"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::tag $tag does not match VERSION ($version)"
+            exit 1
+          fi
+          if ! grep -qF "badge/version-$tag-" README.md; then
+            echo "::error::README version badge is not $tag"
+            exit 1
+          fi
+
+      - name: Extract release notes
+        run: bash scripts/release-notes.sh "$GITHUB_REF_NAME" > "$RUNNER_TEMP/notes.md"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag

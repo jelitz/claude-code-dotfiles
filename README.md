@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-![snapshot](https://img.shields.io/badge/snapshot-2026--10--11-blue)
+[![version](https://img.shields.io/badge/version-v2026.10.11-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -14,6 +14,7 @@
 
 - [동작 방식](#동작-방식)
 - [빠른 시작](#빠른-시작)
+- [버전과 릴리스](#버전과-릴리스)
 - [자세히 보기](#자세히-보기) — 파일 구조 · pup · 플러그인 · 스킬 · MCP · Statusline · 설정값 · 수동 설치
 
 ---
@@ -114,6 +115,35 @@ setup 스크립트가 수행하는 일 (5단계):
 
 ---
 
+## 버전과 릴리스
+
+버전은 스냅샷 날짜(`vYYYY.MM.DD`)입니다. 같은 날 두 번째 릴리스부터는 `.2`, `.3`을 붙입니다. 버전마다 바뀐 내용과 복원할 때 할 일은 [`RELEASE-NOTES.md`](RELEASE-NOTES.md)와 [Releases](https://github.com/jelitz/claude-code-dotfiles/releases)에 있습니다.
+
+특정 버전으로 복원하려면 태그를 체크아웃한 뒤 setup 스크립트를 실행합니다.
+
+```bash
+git checkout v2026.10.11
+bash scripts/setup.sh        # Windows: .\scripts\setup.ps1
+```
+
+<details>
+<summary><b>릴리스 절차 (저장소 관리용)</b></summary>
+
+1. `RELEASE-NOTES.md` 맨 위에 `## vYYYY.MM.DD (YYYY-MM-DD)` 절을 추가합니다.
+2. `VERSION` 파일과 README 상단의 version 배지를 같은 버전으로 바꿉니다.
+3. 커밋하고 태그를 push합니다.
+
+   ```bash
+   git tag v2026.10.11
+   git push origin master v2026.10.11
+   ```
+
+태그를 push하면 GitHub Actions(`.github/workflows/release.yml`)가 `scripts/release-notes.sh`로 해당 절을 뽑아 Release를 만듭니다. 태그가 `VERSION` 파일이나 배지와 다르거나 절이 없으면 워크플로가 실패하고 Release는 만들어지지 않습니다.
+
+</details>
+
+---
+
 ## 자세히 보기
 
 <details>
@@ -147,9 +177,13 @@ claude-code-dotfiles/
 │   └── known_marketplaces.json          #   마켓플레이스 목록 (실사용/등록만 구분)
 ├── examples/
 │   └── project-permissions.example.json # 프로젝트 종속 권한 예시 (Railway 등)
-└── scripts/
-    ├── setup.sh                         # 복원 스크립트 (Git Bash/macOS/Linux/WSL)
-    └── setup.ps1                        # 복원 스크립트 (Windows PowerShell)
+├── scripts/
+│   ├── setup.sh                         # 복원 스크립트 (Git Bash/macOS/Linux/WSL)
+│   ├── setup.ps1                        # 복원 스크립트 (Windows PowerShell)
+│   └── release-notes.sh                 # RELEASE-NOTES.md 에서 한 버전 절을 추출 (릴리스 워크플로용)
+├── .github/workflows/release.yml        # v* 태그 push 시 GitHub Release 생성
+├── RELEASE-NOTES.md                     # 버전별 변경 이력
+└── VERSION                              # 현재 버전 (태그·README 배지와 일치)
 ```
 
 </details>
