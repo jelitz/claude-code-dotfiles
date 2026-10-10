@@ -1,7 +1,7 @@
 # claude-code-dotfiles
 
-![snapshot](https://img.shields.io/badge/snapshot-2026--09--17-blue)
-![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.225-d97757)
+![snapshot](https://img.shields.io/badge/snapshot-2026--10--11-blue)
+![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
@@ -53,6 +53,8 @@ flowchart LR
 
 **Node.js v20+** (옵션) — `@playwright/mcp` 등 npx 기반 MCP 서버 사용 시에만 필요.
 
+**Firecrawl CLI** (옵션) — `web-research` 스킬이 JS 렌더링·차단 페이지를 맡길 때 사용. `npm install -g firecrawl-cli` 후 `firecrawl login --browser` 로 로그인.
+
 ### 2. OS별 설치
 
 <details>
@@ -103,10 +105,10 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (5단계):
 
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 스킬 24종(직접 관리 12종 + pup 제공 dd-* 11종 + Aside 자동설치 1종) → `~/.claude/skills/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
+2. `config/skills/` 의 스킬 19종(직접 관리 7종 + pup 제공 dd-* 11종 + Aside 자동설치 1종)과 `config/agents/` 의 에이전트 49종(직접 관리 1종 + pup 제공 48종) → `~/.claude/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
-4. 커스텀 마켓플레이스 4곳(+옵션 5곳) 등록
-5. 활성 플러그인 11종 설치
+4. 커스텀 마켓플레이스 4곳(+옵션 7곳) 등록
+5. 활성 플러그인 12종 설치
 
 나머지 세부 — 파일 구조, pup 내부 동작, 플러그인·스킬·MCP·Statusline·설정값 전체 목록, 스크립트 없이 수동 설치하는 법은 아래 [자세히 보기](#자세히-보기)에 접어두었습니다.
 
@@ -124,18 +126,14 @@ claude-code-dotfiles/
 │   ├── settings.local.json.template     #   머신별 로컬 설정 템플릿
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
-│   ├── skills/                          #   스킬 24종 (직접 관리 12 + pup dd-* 11 + Aside 1)
+│   ├── agents/                          #   서브에이전트 49종 (직접 관리 adversarial-reviewer 1 + pup Datadog 48)
+│   ├── skills/                          #   스킬 19종 (직접 관리 7 + pup dd-* 11 + Aside 1)
 │   │   ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
 │   │   ├── browser-automation/
 │   │   ├── code-search-exa/
 │   │   ├── company-research/
 │   │   ├── dadeumi/                     #   남이 읽을 글(문서·메시지) 작성 흐름 — im-not-ai 발췌 포함
-│   │   ├── design-taste-frontend/
-│   │   ├── designing-premium-web-ui/
-│   │   ├── high-end-visual-design/
-│   │   ├── redesign-existing-projects/
-│   │   ├── stitch-design-taste/
-│   │   ├── web-research/
+│   │   ├── web-research/                #   웹 검색·fetch 도구 선택표
 │   │   ├── web-search-advanced-research-paper/
 │   │   ├── web-ux-sweep/                #   실행 중인 웹 앱을 눌러 보며 UX·동작 결함을 찾는 읽기 전용 감사
 │   │   └── dd-*/                        #   pup 제공, 11종 (구성 요소 상세 참고)
@@ -194,7 +192,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 </details>
 
 <details open>
-<summary><b>🔌 플러그인 — 활성 11종 / 비활성 6종</b></summary>
+<summary><b>🔌 플러그인 — 활성 12종 / 비활성 11종</b></summary>
 
 #### 활성 (`enabled: true`)
 
@@ -204,33 +202,37 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | [`context7`](https://github.com/upstash/context7) | claude-plugins-official | 라이브러리/프레임워크 최신 문서 실시간 조회 (MCP, by Upstash) |
 | [`playwright`](https://github.com/microsoft/playwright-mcp) | claude-plugins-official | Playwright 브라우저 자동화 — claude-in-chrome 과 병행 상시 활성화 |
 | [`document-skills`](https://github.com/anthropics/skills) | anthropic-agent-skills | Anthropic 공식 문서 작업 (PDF·DOCX·XLSX·PPTX·frontend-design 등) |
-| [`example-skills`](https://github.com/anthropics/skills) | anthropic-agent-skills | Anthropic 예제 스킬 모음 |
 | [`cloudflare`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | Cloudflare 리소스 관리 (Workers, D1, R2, KV 등) |
-| [`security-guidance`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | 보안 가이드라인·시큐어 코딩 체크 |
 | [`insane-search`](https://github.com/fivetaku/insane-search) | gptaku-plugins | 차단된 사이트(X/Reddit/StackOverflow/네이버/쿠팡/LinkedIn 등) 접근용 적응형 웹 검색 — API 키 불필요. SessionStart 훅으로 마켓플레이스 업데이트 알림을 플러그인이 자체 배포(수동 동기화 대상 아님) |
-| [`code-simplifier`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | 최근 변경 코드 단순화·정리 |
-| [`pr-review-toolkit`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | PR 리뷰용 서브에이전트 모음 (code-reviewer, silent-failure-hunter, type-design-analyzer 등) |
 | [`claude-md-management`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | CLAUDE.md 작성·정리 헬퍼 |
+| [`sentry`](https://github.com/getsentry/sentry-for-ai) | claude-plugins-official | Sentry 이슈 조회·디버깅 스킬과 MCP |
+| [`typescript-lsp`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | TypeScript 언어 서버(LSP) 연동 — 정의 이동·진단 |
+| [`pyright-lsp`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | Python(pyright) 언어 서버(LSP) 연동 — 정의 이동·타입 진단 |
+| [`firecrawl`](https://docs.firecrawl.dev/sdks/cli) | anthropic-plugin-directory | Firecrawl CLI 기반 스크랩·크롤·검색 스킬. `web-research` 스킬에서 JS 렌더링·차단 페이지를 맡는 2순위 도구. Firecrawl CLI 설치와 로그인이 필요(전제 조건 참고) |
+| [`superpowers`](https://github.com/obra/superpowers) | superpowers-marketplace | 브레인스토밍·계획·TDD·디버깅·코드 리뷰 개발 워크플로 스킬. 이 스킬들과 CLAUDE.md가 어긋나면 CLAUDE.md의 "하네스 우선순위" 절을 따름 |
 
 #### 설치되어 있지만 비활성 (`enabled: false`)
 
 | 플러그인 | 마켓플레이스 | 비활성 사유 |
 |---|---|---|
-| [`superpowers`](https://github.com/obra/superpowers) | claude-plugins-official | 브레인스토밍·플래닝·TDD·디버깅·코드리뷰 스킬 모음 — 현재 꺼둠 |
 | [`ralph-loop`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | Ralph Loop 반복 실행 워크플로 — 현재 꺼둠 |
 | [`frontend-design`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | document-skills의 frontend-design과 중복 |
-| [`ui-ux-pro-max`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | ui-ux-pro-max-skill | 프로젝트 스코프 설치, 현재 미활성 |
-| [`sentry`](https://github.com/getsentry/sentry-for-ai) | claude-plugins-official | 특정 프로젝트 스코프로만 설치 (전역 미사용) |
-| [`notion`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | 특정 프로젝트 스코프로만 설치 (전역 미사용) |
+| [`example-skills`](https://github.com/anthropics/skills) | anthropic-agent-skills | Anthropic 예제 스킬 모음 — 현재 꺼둠 |
+| [`security-guidance`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | 보안 가이드라인·시큐어 코딩 체크 — 현재 꺼둠 |
+| [`code-simplifier`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | 최근 변경 코드 단순화·정리 — 현재 꺼둠 |
+| [`pr-review-toolkit`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | PR 리뷰용 서브에이전트 모음 — 현재 꺼둠 |
+| [`code-review`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | PR 코드 리뷰 명령 — 현재 꺼둠 |
+| [`skill-creator`](https://github.com/anthropics/claude-plugins-official) | claude-plugins-official | 스킬 작성·평가 헬퍼 — 현재 꺼둠 |
+| [`stitch-build`·`stitch-design`·`stitch-utilities`](https://github.com/google-labs-code/stitch-skills) | google-labs-code-stitch-skills | Google Stitch 디자인 스킬 3종 — 현재 꺼둠 |
 
-> 이전 스냅샷에 있던 `pyright-lsp`, `claude-code-setup`, `playground`, `exa-core` 는 완전히 제거되었습니다 (더 이상 사용하지 않음).
+> `superpowers`는 claude-plugins-official 판에서 superpowers-marketplace 판으로 바꿔 설치했습니다. 이전 스냅샷에 있던 `ui-ux-pro-max`, `notion`, `claude-code-setup`, `playground`, `exa-core` 는 현재 설치되어 있지 않습니다. 로컬 폴더를 마켓플레이스로 쓰는 플러그인과 claude.ai에서 동기화되는 플러그인은 이 머신에서만 의미가 있어 기록하지 않습니다.
 
-마켓플레이스는 `plugins/known_marketplaces.json` 에 **실사용(active) / 등록만(registered-only)** 으로 구분 기록되어 있습니다. 등록만 해둔 곳(exa-skills, Claudest, ecc, agent-browser, claude-for-financial-services)은 setup 스크립트에서 주석 처리되어 있으며 필요 시 해제하면 됩니다.
+마켓플레이스는 `plugins/known_marketplaces.json` 에 **실사용(active) / 등록만(registered-only)** 으로 구분 기록되어 있습니다. 등록만 해둔 곳(ui-ux-pro-max-skill, google-labs-code-stitch-skills, exa-skills, Claudest, ecc, agent-browser, claude-for-financial-services)은 setup 스크립트에서 주석 처리되어 있으며 필요 시 해제하면 됩니다.
 
 </details>
 
 <details open>
-<summary><b>🧰 사용자 스킬 — 12종</b></summary>
+<summary><b>🧰 사용자 스킬 — 7종</b></summary>
 
 플러그인과 별개로 직접 관리하는 개인 스킬 (`config/skills/` → `~/.claude/skills/`).
 
@@ -239,17 +241,15 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `code-search-exa` | 코드 예제·API 문법·라이브러리 문서 검색 (GitHub/StackOverflow) — Exa 기반 |
 | `company-research` | 기업 정보·경쟁사·시장 리서치 — Exa 기반 |
 | `web-search-advanced-research-paper` | 학술 논문·arXiv 검색 (날짜·텍스트 필터 지원) — Exa 기반 |
-| `web-research` | 웹 검색·fetch 우선순위(Exa→Jina→insane-search)에 따른 도구별 세부 파라미터·폴백 참조 (CLAUDE.md에서 이관) |
+| `web-research` | 웹 검색·fetch 도구 선택표 — 상황별로 Exa·Firecrawl·WebSearch/WebFetch·insane-search 중 무엇을 쓸지와, 틀리기 쉬운 기본값(Exa fetch 3,000자 제한, Firecrawl 2일 캐시 등)만 담음. 명령 상세는 각 도구 스키마와 firecrawl 플러그인 스킬에 맡김 |
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
 | `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
 | `dadeumi` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `dadeumi-gate` 훅과 짝을 이룸. 개인 설정을 뺀 공개판(훅 포함)은 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)에서 플러그인으로 배포 |
-| `designing-premium-web-ui` | 신규 사이트/랜딩페이지 제작·기존 UI 리디자인 시 고완성도 디자인 기준 |
-| `design-taste-frontend` | Anti-slop 프론트엔드 디자인 — 브리프를 읽고 방향을 추론해 템플릿처럼 안 보이는 UI 생성 |
-| `high-end-visual-design` | 고급 에이전시 스타일 폰트·간격·그림자·카드 구조·애니메이션 정의, 흔한 AI풍 디자인 차단 |
-| `redesign-existing-projects` | 기존 웹사이트/앱을 프리미엄 품질로 업그레이드 — 현재 디자인 감사 후 제네릭 패턴 제거 |
-| `stitch-design-taste` | Google Stitch용 시맨틱 디자인 시스템 — 타이포·색상·레이아웃·모션 기준을 담은 DESIGN.md 생성 |
+Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다. 현재는 `settings.json` 의 `skillOverrides` 로 세 스킬 모두 꺼 두었습니다.
 
-Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, **메인 컨텍스트 오염 방지를 위해 항상 Task agent 로 격리 실행**하도록 작성되어 있습니다.
+> 이전 스냅샷에 있던 디자인 스킬 5종(`designing-premium-web-ui`, `design-taste-frontend`, `high-end-visual-design`, `redesign-existing-projects`, `stitch-design-taste`)은 현재 PC 설정에 없어 저장소에서도 제거했습니다.
+
+직접 관리하는 서브에이전트는 `config/agents/adversarial-reviewer.md` 하나입니다. PR을 열기 전 diff를 새 컨텍스트에서 적대적으로 검토하며, 언제 쓰는지는 CLAUDE.md의 "서브에이전트 위임" 절에 있습니다.
 
 </details>
 
@@ -288,7 +288,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 </details>
 
 <details>
-<summary><b>🪝 훅 — PreToolUse·PostToolUse 3종</b></summary>
+<summary><b>🪝 훅 — PreToolUse·PostToolUse 5종</b></summary>
 
 `config/scripts/hooks/` (+ 공용 유틸 `config/scripts/lib/`) → `~/.claude/scripts/`. `settings.json`의 `hooks` 절이 이 스크립트를 가리키며, 명령이 없으면 조용히 넘어가는 게 아니라 훅 자체가 발동하지 않으므로 `scripts/hooks`와 `scripts/lib`는 항상 같이 복사합니다.
 
@@ -296,9 +296,11 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 |---|---|---|
 | `suggest-compact.js` | PreToolUse (`Edit`\|`Write`) | 컨텍스트 사용량·도구 호출 수를 추적해 압축 시점을 제안 (자동 압축 대신 전략적 지점에서) |
 | `reset-compact-counters.js` | PostCompact | 압축 직후 위 카운터를 리셋 |
-| `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, `gws`·`gh`의 쓰기 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌. `gh` PR·이슈는 스킬 없이 가벼운 체크리스트만 |
+| `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, `gws` 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌 |
+| `destructive-command-gate.js` | PreToolUse (`Bash`\|`PowerShell`) | git 명령의 `--no-verify` 는 거부하고, `rm -rf`·`git push --force`·`git reset --hard`·`git clean -f` 등은 auto 모드에서도 확인을 받게 함 |
+| `py-encoding-check.js` | PostToolUse (`Edit`\|`Write`) | `.py` 파일 저장 직후 `encoding=` 없는 텍스트 I/O 호출(`open()`·`read_text()` 등)을 찾아 Claude에게 알림 (차단하지 않음) |
 
-세 훅 모두 실패 시 조용히 통과(`exit 0`)하도록 작성되어 있습니다 — 품질 게이트이지 보안 경계가 아니므로, 훅이 고장 나도 정상 작업을 막지 않습니다.
+다섯 훅 모두 실패 시 조용히 통과(`exit 0`)하도록 작성되어 있습니다 — 품질 게이트이지 보안 경계가 아니므로, 훅이 고장 나도 정상 작업을 막지 않습니다.
 
 </details>
 
@@ -309,7 +311,8 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 |---|---|---|---|
 | `claude-in-chrome` | [claude.com/chrome](https://claude.com/chrome) | Chrome 확장에서 자동 | 브라우저 자동화 3수단(Aside CLI·claude-in-chrome·Playwright MCP) 중 하나 — 내 Chrome 탭을 보며 스텝별로 조작할 때. 선택 기준은 `browser-automation` 스킬 |
 | `context7` | [upstash/context7](https://github.com/upstash/context7) | 플러그인이 자동 등록 | `context7@claude-plugins-official` 활성 시 자동 |
-| Slack | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결) |
+| Slack · Exa | [claude.com/connectors](https://claude.com/connectors) | claude.ai 커넥터 | claude.ai 계정 연결로 제공 (이 저장소 설정과 무관, 계정에서 별도 연결). Exa 커넥터가 `web_fetch_exa` 를 제공 |
+| `exa` | [exa.ai](https://exa.ai/docs/get-started/exa-mcp) | `claude mcp add` (user 스코프) | 웹 검색 1순위. 필터 검색 도구 `web_search_advanced_exa` 는 기본 비활성이라 tools 파라미터로 켬: `claude mcp add --transport http -s user exa "https://mcp.exa.ai/mcp?tools=web_search_exa,web_search_advanced_exa"` |
 | `playwright` | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) | Claude Desktop (`desktop/claude_desktop_config.json`) | `npx @playwright/mcp@latest` — Desktop 전용 |
 
 </details>
@@ -356,8 +359,11 @@ ctx ████░░░░ 45% │ $0.23 │ 5h ██░░░░░░ 23% �
 | 키 | 값 | 설명 |
 |---|---|---|
 | `language` | `Korean` | 응답 언어 |
-| `model` | `sonnet` | 기본 모델 고정 (세션마다 `/model` 로 변경 가능) |
+| `model` | `opus` | 기본 모델 고정 (세션마다 `/model` 로 변경 가능) |
 | `effortLevel` | `high` | 기본 작업 노력 수준 (low/medium/high/xhigh/max) |
+| `modelSettings` | 모델별 effort | Opus·Fable 계열은 `xhigh`, Sonnet 계열은 `medium` |
+| `skillOverrides` | 스킬별 `off` | Exa 기반 사용자 스킬 3종을 끔 |
+| `promptSuggestionEnabled` | `false` | 프롬프트 제안 끔 |
 | `permissions.defaultMode` | `auto` | 안전한 작업은 자동 승인 |
 | `worktree.baseRef` | `fresh` | 워크트리 생성 시 기준 ref |
 | `autoDreamEnabled` | `true` | 세션 종료 시 자동 메모리 추출 |
@@ -370,6 +376,7 @@ ctx ████░░░░ 45% │ $0.23 │ 5h ██░░░░░░ 23% �
 | `env.CLAUDE_CODE_GIT_BASH_PATH` | Git Bash 경로 | Bash 도구용 (**Windows 전용** — macOS/Linux 설치 시 자동 제거) |
 | `env.ENABLE_TOOL_SEARCH` | `true` | 지연 로드 도구 검색 활성화 |
 | `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` | `1` | 멀티 에이전트 팀 기능 활성화 |
+| `env.PYTHONUTF8` / `env.PYTHONIOENCODING` | `1` / `utf-8` | Windows(cp949) 환경에서 Python 한글 입출력이 깨지지 않게 함 |
 
 #### 전역 권한 정책
 
@@ -387,6 +394,7 @@ cp config/settings.local.json.template ~/.claude/settings.local.json
 cp config/CLAUDE.md ~/.claude/
 cp config/statusline-bash.sh ~/.claude/ && chmod +x ~/.claude/statusline-bash.sh
 mkdir -p ~/.claude/skills && cp -r config/skills/* ~/.claude/skills/
+mkdir -p ~/.claude/agents && cp -r config/agents/* ~/.claude/agents/
 mkdir -p ~/.claude/scripts/hooks ~/.claude/scripts/lib
 cp -r config/scripts/hooks/* ~/.claude/scripts/hooks/ && cp -r config/scripts/lib/* ~/.claude/scripts/lib/
 
@@ -399,24 +407,28 @@ cp desktop/claude_desktop_config.json "$APPDATA/Claude/claude_desktop_config.jso
 cp desktop/claude_desktop_config.json "$HOME/Library/Application Support/Claude/claude_desktop_config.json"  # macOS
 cp desktop/claude_desktop_config.json "$HOME/.config/Claude/claude_desktop_config.json"                 # Linux
 
-# 3. 커스텀 마켓플레이스 등록 (claude-plugins-official 은 기본 등록)
+# 3. 커스텀 마켓플레이스 등록 (claude-plugins-official·anthropic-plugin-directory 는 기본 등록)
 claude plugin marketplace add anthropic-agent-skills github:anthropics/skills
 claude plugin marketplace add openai-codex github:openai/codex-plugin-cc
 claude plugin marketplace add gptaku-plugins https://github.com/fivetaku/gptaku_plugins.git
-claude plugin marketplace add ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill
+claude plugin marketplace add superpowers-marketplace github:obra/superpowers-marketplace
 
 # 4. 플러그인 설치 (활성화 대상)
 claude plugin install codex@openai-codex
 claude plugin install context7@claude-plugins-official
 claude plugin install playwright@claude-plugins-official
 claude plugin install document-skills@anthropic-agent-skills
-claude plugin install example-skills@anthropic-agent-skills
 claude plugin install cloudflare@claude-plugins-official
-claude plugin install security-guidance@claude-plugins-official
-claude plugin install code-simplifier@claude-plugins-official
-claude plugin install pr-review-toolkit@claude-plugins-official
 claude plugin install claude-md-management@claude-plugins-official
+claude plugin install sentry@claude-plugins-official
+claude plugin install typescript-lsp@claude-plugins-official
+claude plugin install pyright-lsp@claude-plugins-official
 claude plugin install insane-search@gptaku-plugins
+claude plugin install firecrawl@anthropic-plugin-directory
+claude plugin install superpowers@superpowers-marketplace
+
+# 5. Exa MCP (user 스코프) — web-research 스킬의 1순위 검색 도구
+claude mcp add --transport http -s user exa "https://mcp.exa.ai/mcp?tools=web_search_exa,web_search_advanced_exa"
 ```
 
 </details>

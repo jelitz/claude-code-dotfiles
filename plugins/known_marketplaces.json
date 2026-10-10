@@ -33,8 +33,8 @@
       "id": "ui-ux-pro-max-skill",
       "source": "github",
       "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
-      "usage": "active",
-      "description": "UI/UX Pro Max 스킬 마켓플레이스 (ui-ux-pro-max 프로젝트 스코프 설치)"
+      "usage": "registered-only",
+      "description": "UI/UX Pro Max 스킬 마켓플레이스 — 등록만 해둔 상태"
     },
     {
       "id": "Claudest",
@@ -70,6 +70,27 @@
       "repo": "https://github.com/fivetaku/gptaku_plugins.git",
       "usage": "active",
       "description": "fivetaku 개인 플러그인 마켓플레이스 (git 소스, GitHub App 마켓플레이스 아님) — insane-search 제공"
+    },
+    {
+      "id": "anthropic-plugin-directory",
+      "source": "builtin",
+      "repo": "",
+      "usage": "active",
+      "description": "Anthropic 플러그인 디렉터리 (CC 내장, 별도 add 불필요) — firecrawl 제공"
+    },
+    {
+      "id": "superpowers-marketplace",
+      "source": "github",
+      "repo": "obra/superpowers-marketplace",
+      "usage": "active",
+      "description": "superpowers 공식 마켓플레이스"
+    },
+    {
+      "id": "google-labs-code-stitch-skills",
+      "source": "github",
+      "repo": "google-labs-code/stitch-skills",
+      "usage": "registered-only",
+      "description": "Google Stitch 디자인 스킬 마켓플레이스 — 플러그인 3종 설치만 되어 있고 비활성"
     }
   ]
 }

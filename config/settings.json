@@ -3,7 +3,9 @@
   "env": {
     "CLAUDE_CODE_GIT_BASH_PATH": "C:\\Program Files\\Git\\bin\\bash.exe",
     "ENABLE_TOOL_SEARCH": "true",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8"
   },
   "permissions": {
     "allow": [
@@ -12,8 +14,92 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "sonnet",
-  "promptSuggestionEnabled": false,
+  "model": "opus",
+  "skillOverrides": {
+    "company-research": "off",
+    "web-search-advanced-research-paper": "off",
+    "code-search-exa": "off"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/destructive-command-gate.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/suggest-compact.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/suggest-compact.js"
+          }
+        ]
+      },
+      {
+        "matcher": "^mcp__mcp-atlassian__(confluence_(create_page|create_page_from_template|update_page|update_page_section|add_comment|add_inline_comment|reply_to_comment)|jira_(create_issue|batch_create_issues|update_issue|add_comment|edit_comment|create_customer_request|transition_issue))$|^mcp__claude_ai_Slack__slack_(send_message|send_message_draft|schedule_message|create_canvas|update_canvas)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
+            "if": "Bash(gws *)"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/py-encoding-check.js"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/scripts/hooks/reset-compact-counters.js"
+          }
+        ]
+      }
+    ]
+  },
   "worktree": {
     "baseRef": "fresh"
   },
@@ -23,18 +109,28 @@
   },
   "enabledPlugins": {
     "codex@openai-codex": true,
-    "superpowers@claude-plugins-official": false,
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
     "ralph-loop@claude-plugins-official": false,
     "cloudflare@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": false,
     "insane-search@gptaku-plugins": true,
-    "example-skills@anthropic-agent-skills": true,
-    "code-simplifier@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true
+    "example-skills@anthropic-agent-skills": false,
+    "code-simplifier@claude-plugins-official": false,
+    "pr-review-toolkit@claude-plugins-official": false,
+    "claude-md-management@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": false,
+    "code-review@claude-plugins-official": false,
+    "stitch-build@google-labs-code-stitch-skills": false,
+    "stitch-design@google-labs-code-stitch-skills": false,
+    "stitch-utilities@google-labs-code-stitch-skills": false,
+    "sentry@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "firecrawl@anthropic-plugin-directory": true,
+    "superpowers@superpowers-marketplace": true
   },
   "extraKnownMarketplaces": {
     "exa-skills": {
@@ -72,96 +168,47 @@
         "source": "git",
         "url": "https://github.com/fivetaku/gptaku_plugins.git"
       }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
     }
   },
   "language": "Korean",
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-fable-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-sonnet-5": {
+      "effortLevel": "medium"
+    },
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "xhigh"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "promptSuggestionEnabled": false,
   "autoUpdatesChannel": "latest",
   "tui": "default",
   "autoDreamEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "editorMode": "normal",
+  "switchModelsOnFlag": true,
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/suggest-compact.js"
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/suggest-compact.js"
-          }
-        ]
-      },
-      {
-        "matcher": "^mcp__mcp-atlassian__(confluence_(create_page|create_page_from_template|update_page|update_page_section|add_comment|add_inline_comment|reply_to_comment)|jira_(create_issue|batch_create_issues|update_issue|add_comment|edit_comment|create_customer_request|transition_issue))$|^mcp__claude_ai_Slack__slack_(send_message|send_message_draft|schedule_message|create_canvas|update_canvas)$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash|PowerShell",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
-            "if": "Bash(gws *)"
-          },
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
-            "if": "Bash(gh *)"
-          },
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
-            "if": "PowerShell(*gws *)"
-          },
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js",
-            "if": "PowerShell(*gh *)"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/dadeumi-gate.js"
-          }
-        ]
-      }
-    ],
-    "PostCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.claude/scripts/hooks/reset-compact-counters.js"
-          }
-        ]
-      }
-    ]
-  }
+  "skipAutoPermissionPrompt": true
 }

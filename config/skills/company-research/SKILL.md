@@ -6,25 +6,20 @@ context: fork
 
 # Company Research
 
-## Tool Restriction (Critical)
+## Tool Restriction
 
 ONLY use `web_search_advanced_exa`. Do NOT use `web_search_exa` or any other Exa tools.
 
-## Token Isolation (Critical)
+## Token Isolation
 
-Never run Exa searches in main context. Always spawn Task agents:
-- Agent runs Exa search internally
-- Agent processes results using LLM intelligence
-- Agent returns only distilled output (compact JSON or brief markdown)
-- Main context stays clean regardless of search volume
+This skill runs in a forked context (`context: fork`), so raw Exa results stay out of the main conversation. Run the searches here and return only distilled output (compact JSON or brief markdown).
 
 ## Dynamic Tuning
 
-No hardcoded numResults. Tune to user intent:
-- User says "a few" → 10-20
-- User says "comprehensive" → 50-100
-- User specifies number → match it
-- Ambiguous? Ask: "How many companies would you like?"
+This skill runs without the conversation history, so the arguments are the only view of the request:
+- Arguments give a number → match it
+- Arguments ask for comprehensive coverage → 50-100
+- Otherwise → 10-20
 
 ## Query Variation
 
@@ -81,7 +76,7 @@ web_search_advanced_exa {
 ### Deep dive: research a specific company
 ```
 web_search_advanced_exa {
-  "query": "Anthropic funding rounds valuation 2024",
+  "query": "Anthropic funding rounds valuation",
   "type": "deep",
   "numResults": 10,
   "includeDomains": ["techcrunch.com", "crunchbase.com", "bloomberg.com"]
@@ -94,7 +89,7 @@ web_search_advanced_exa {
   "query": "Anthropic AI safety",
   "category": "news",
   "numResults": 15,
-  "startPublishedDate": "2024-01-01"
+  "startPublishedDate": "<YYYY-MM-DD, relative to today>"
 }
 ```
 

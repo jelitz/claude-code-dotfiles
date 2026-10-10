@@ -66,11 +66,11 @@ if (-not (Test-Path "$ClaudeDir\CLAUDE.md")) {
 # ──────────────────────────────────────────────
 Write-Host "[2/5] 사용자 스킬 복사..." -ForegroundColor Yellow
 Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
-Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 12종 + Aside 1종 + pup 제공 dd-* 11종)" -ForegroundColor Green
+Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 7종 + Aside 1종 + pup 제공 dd-* 11종)" -ForegroundColor Green
 
 if (Test-Path "$ConfigDir\agents") {
     Copy-Item "$ConfigDir\agents\*" "$ClaudeDir\agents\" -Recurse -Force
-    Write-Host "  ✓ agents\ → $ClaudeDir\agents (pup 제공 Datadog 도메인 서브에이전트 48종)" -ForegroundColor Green
+    Write-Host "  ✓ agents\ → $ClaudeDir\agents (직접 관리 adversarial-reviewer 1종 + pup 제공 Datadog 도메인 48종)" -ForegroundColor Green
 }
 
 # hooks (config\scripts\hooks, config\scripts\lib → ~\.claude\scripts\)
@@ -105,15 +105,17 @@ if (-not $claudeCmd) {
     exit 1
 }
 
-# 실사용 마켓플레이스 (claude-plugins-official 은 기본 등록)
+# 실사용 마켓플레이스 (claude-plugins-official·anthropic-plugin-directory 는 기본 등록)
 $marketplaces = @(
-    @{ id = "anthropic-agent-skills"; arg = "github:anthropics/skills" },
-    @{ id = "openai-codex";           arg = "github:openai/codex-plugin-cc" },
-    @{ id = "gptaku-plugins";         arg = "https://github.com/fivetaku/gptaku_plugins.git" },
-    @{ id = "ui-ux-pro-max-skill";    arg = "github:nextlevelbuilder/ui-ux-pro-max-skill" }
+    @{ id = "anthropic-agent-skills";  arg = "github:anthropics/skills" },
+    @{ id = "openai-codex";            arg = "github:openai/codex-plugin-cc" },
+    @{ id = "gptaku-plugins";          arg = "https://github.com/fivetaku/gptaku_plugins.git" },
+    @{ id = "superpowers-marketplace"; arg = "github:obra/superpowers-marketplace" }
 )
 # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
 # $marketplaces += @(
+#     @{ id = "ui-ux-pro-max-skill";            arg = "github:nextlevelbuilder/ui-ux-pro-max-skill" },
+#     @{ id = "google-labs-code-stitch-skills"; arg = "github:google-labs-code/stitch-skills" },
 #     @{ id = "exa-skills";                    arg = "github:benjaminjackson/exa-skills" },
 #     @{ id = "Claudest";                      arg = "github:gupsammy/claudest" },
 #     @{ id = "ecc";                           arg = "github:affaan-m/everything-claude-code" },
@@ -131,18 +133,20 @@ foreach ($mp in $marketplaces) {
 
 Write-Host "[5/5] 플러그인 설치..." -ForegroundColor Yellow
 
+# 활성 플러그인만 설치 (비활성 기록은 plugins/installed_plugins.json 참고)
 $plugins = @(
     "codex@openai-codex",
     "context7@claude-plugins-official",
     "playwright@claude-plugins-official",
     "document-skills@anthropic-agent-skills",
-    "example-skills@anthropic-agent-skills",
     "cloudflare@claude-plugins-official",
-    "security-guidance@claude-plugins-official",
-    "code-simplifier@claude-plugins-official",
-    "pr-review-toolkit@claude-plugins-official",
     "claude-md-management@claude-plugins-official",
-    "insane-search@gptaku-plugins"
+    "sentry@claude-plugins-official",
+    "typescript-lsp@claude-plugins-official",
+    "pyright-lsp@claude-plugins-official",
+    "insane-search@gptaku-plugins",
+    "firecrawl@anthropic-plugin-directory",
+    "superpowers@superpowers-marketplace"
 )
 foreach ($plugin in $plugins) {
     try {

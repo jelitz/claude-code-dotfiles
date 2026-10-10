@@ -6,7 +6,11 @@
 유지보수 메모 (이 주석은 컨텍스트에 주입되지 않음):
 - 200줄 이하 유지. 줄 추가 전 "이 줄을 지우면 Claude가 실수하는가?" 자문 — 아니면 넣지 않기
 - 강조어(IMPORTANT/YOU MUST/반드시)는 반복적으로 어겨지는 규칙 1–2개에만 선별 사용
-  (현재 예산: SDD 승인 게이트)
+  (현재 예산: 비어 있음 — 2026-10-11 SDD 게이트의 YOU MUST를 평서형으로 낮춤. 근거: Anthropic 프롬프트
+  지침 "CRITICAL: You MUST → Use this tool when"과 superpowers #2377 315세션 실측(강조어의 라우팅 효과 0))
+- "하네스 우선순위" 절은 superpowers 7.x brainstorming(quick/small/project 판정, 열린 질문 1개씩, 탐색 전 허락,
+  docs/superpowers/specs 기본 경로)과의 마찰을 정리한 것. 플러그인 메이저 업데이트 시 재대조. 게이트 수는
+  A안(3게이트 유지) 채택 — B(7.0.0의 2게이트)로 바꾸려면 넷째 줄과 SDD 절 첫 문장만 고친다
 - 넣지 말 것 (Claude 5 공식 가이드 근거):
   · 사고 과정을 응답에 전사·재현하라는 지시 — reasoning_extraction 거부 유발
   · budget_tokens·prefill 등 구세대 API 관행
@@ -15,16 +19,17 @@
   · "심각한 것만 보고하라"류 리뷰 필터 — 과소 보고 유발
 - 변경 검증: 새 세션에서 /context로 로드 확인, 며칠간 실제 행동 변화 관찰.
   규칙이 계속 어겨지면 추가가 아니라 가지치기 우선
+- 하네스 시스템 프롬프트가 이미 강제하는 원칙은 넣지 않기 — 멈춰 묻는 세 경우, 비가역 작업 확인,
+  질문이면 평가만, 턴 끝내기 전 약속 이행, 상태 변경 전 증거 확인, 결론 먼저, 압축 후 계속 작업
+  (2026-09-23 best-practices 문서 대조로 제거)
+- 권고 → 훅 전환 목록: dadeumi-gate(남이 읽을 글) · destructive-command-gate(파괴적 명령·--no-verify)
+  · py-encoding-check(Python encoding 누락). 규칙이 계속 새면 줄 추가 대신 훅 전환을 먼저 검토
 -->
 
 ## 자율성과 안전
 
-- 사용자에게 멈춰 묻는 경우는 세 가지: 파괴적·비가역 행동, 실질적 범위 변경, 사용자만 줄 수 있는 입력. 
-- 계획·질문·"~하겠습니다" 약속만 남기고 턴을 끝내지 않기 — 그 작업을 지금 수행
-- 되돌리기 어렵거나 외부에 보이는 작업은 실행 전 확인. 예시 : 파일 삭제(rm -rf), git push --force, git reset --hard, PR/이슈 코멘트, 메시지·이메일 발송
-- 장애물을 만나도 --no-verify 등 안전장치 우회 금지
-- 사용자가 문제를 설명하거나 질문 중일 뿐 변경을 요청한 게 아니면 산출물은 평가·보고 — 수정 적용은 요청받은 뒤
-- 시스템 상태를 바꾸는 명령(재시작·삭제·설정 변경) 전, 증거가 그 구체적 행동을 뒷받침하는지 확인 — 알려진 실패 패턴과 비슷한 신호도 원인이 다를 수 있음
+- 외부에 보이는 작업(PR/이슈 코멘트, 메시지·이메일 발송)은 실행 전 확인
+- 파괴적 명령(rm -rf, git push --force, git reset --hard, git clean -f)은 `destructive-command-gate` 훅이 확인 프롬프트를 강제하고 `--no-verify`는 차단한다 — 훅에 막히면 우회하지 말고 원인을 고칠 것
 
 ## 작업 흐름
 
@@ -40,16 +45,24 @@
 프로젝트 `./CLAUDE.md`가 자체 문서 컨벤션을 명시하면 그것을 따르고, 없으면 Kiro 스타일 SDD(steering/specs 분리)를 기본값으로 사용. 적용 시점은 위 "큰 기능" 기준과 동일 — 인터뷰 결과가 requirements.md의 출발점.
 
 - 전역 컨텍스트 `docs/steering/`: `product.md`(비전·타깃·핵심가치) · `tech.md`(스택·아키텍처 제약·의존성) · `structure.md`(디렉터리·네이밍·모듈 경계) — 프로젝트 전역 성격이 실제로 바뀔 때만 갱신, 기능 작업마다 재작성하지 않기
-- 기능 명세 `docs/specs/{feature-name}/`: `requirements.md`(요구사항·승인기준·검증 계획, 가능하면 EARS 표기: "WHEN ~ THEN 시스템은 ~해야 한다") · `design.md`(아키텍처·시퀀스·인터페이스) · `tasks.md`(체크리스트 ✅/⬜·의존관계)
+- 기능 명세 `docs/specs/{feature-name}/`: `requirements.md`(요구사항·승인기준·범위 외(out of scope)·E2E 검증 절차 — 통과/실패를 판정하는 명령까지 적는다, 가능하면 EARS 표기: "WHEN ~ THEN 시스템은 ~해야 한다") · `design.md`(아키텍처·시퀀스·인터페이스) · `tasks.md`(체크리스트 ✅/⬜·의존관계)
 - `implemented.md`: 설계 결정(명세가 모호해 내린 선택) · 의도적 편차와 이유 · 트레이드오프 · 미결 질문
 - 기능 2개 이상 동시 진행 시 문서 충돌 방지를 위해 `{feature-name}` 폴더로 분리
 
-**YOU MUST**: requirements → design → tasks 순서로 작성하고 각 단계 전환 전 사용자 승인을 받을 것(건너뛰고 구현 직행 금지). 코드 변경마다 `tasks.md`·`implemented.md` 동기화, PR 전 코드·테스트·문서 일치 확인(불일치 시 동일 PR 또는 별도 `docs:` 커밋).
+requirements → design → tasks 순서로 작성하고 각 단계 전환 전 사용자 승인을 받는다(건너뛰고 구현 직행 금지). 코드 변경마다 `tasks.md`·`implemented.md` 동기화, PR 전 코드·테스트·문서 일치 확인(불일치 시 동일 PR 또는 별도 `docs:` 커밋). `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — 사용자에게 `/clear` 후 스펙 경로로 재개를 제안(탐색·인터뷰 잔재로 오염된 컨텍스트를 피하기 위함이지 토큰 절약이 아님).
+
+## 하네스 우선순위 (superpowers 7.x)
+
+- 이 파일이 superpowers 스킬보다 우선한다(플러그인 자체 원칙). 어긋나면 이 파일을 따르고, 스킬은 실행 품질(TDD · systematic-debugging · verification-before-completion · worktrees · code-review)을 맡는다
+- brainstorming의 "quick, clear task" 판정은 위 "diff를 한 문장으로 설명할 수 있으면 계획 생략"과 같은 기준이다. 그 경우 질문 없이 바로 수행한다. "small change"는 채팅 설명 1회 승인으로 끝낸다 — 문서를 만들지 않는다
+- 큰 기능의 인터뷰는 brainstorming으로 하되 두 가지는 이 파일을 따른다. 질문은 내장 질문 도구(선택지 제시)로 묶어서 하고, 코드베이스 탐색은 허락을 구하지 않고 먼저 한다 — 탐색 결과가 질문의 질을 결정하기 때문
+- 설계 문서는 docs/superpowers/specs가 아니라 위 SDD 절의 `docs/specs/{feature-name}/requirements.md` → `design.md` 순서로 나눠 쓰고 각각 승인을 받는다. writing-plans 산출물은 같은 폴더의 `tasks.md`로 저장한다
+- brainstorming의 builder check가 돌았으면 requirements 교차 검토(adversarial-reviewer)는 생략한다 — 같은 검토를 두 번 하지 않기 위함
+- 서브에이전트에는 SessionStart 주입이 전달되지 않으므로 TDD · 검증 규율을 위임 프롬프트에 직접 쓴다
 
 ## 보고와 커뮤니케이션
 
 - 진행·완료 보고 전 각 주장을 이번 세션의 실제 도구 결과와 대조 — 증거를 가리킬 수 있는 것만 보고하고, 미검증·실패·건너뛴 단계는 사실대로 명시
-- 결론 먼저: 첫 문장이 "무슨 일이 있었는가"에 답할 것. 상세는 그 뒤에
 - 오래 지켜보지 않은 세션의 최종 보고는 재정립 방식으로: 작업 중 쓰던 속기·화살표 체인·임의 라벨을 버리고 완전한 문장으로, 식별자는 평이한 설명과 함께
 - 검증된 근거 기반 내용과 추측을 구분 표기 — 추측은 `[제안]` prefix, 근거는 출처 명시
 
@@ -61,7 +74,7 @@
 ## 서브에이전트 위임
 
 - 몇 번의 도구 호출로 끝나는 작업은 직접 수행
-- 자기 작업 재확인 용도의 서브에이전트 금지 — 검증은 메인 루프에서
+- 탐색·grep 결과를 재확인하려고 서브에이전트를 띄우지 않기 — 그 검증은 메인 루프에서. 단 PR 전 diff는 `adversarial-reviewer` 에이전트(또는 `/code-review`)로 새 컨텍스트에서 1회 적대적 리뷰: 계획·요구사항 대비 누락과 정확성 결함은 심각도와 무관하게 전부, 스타일·취향 지적은 제외
 - 병렬화가 이득이면 먼저 제안하고 동의를 받은 뒤 실행. 단발 조사는 Agent 1회, 주고받기가 필요하면 name 붙여 spawn 후 SendMessage, 단계가 고정된 fan-out은 Workflow(스크립트 작성 전 `workflow-authoring` 참조)
 - 병렬 리뷰·경쟁 가설은 겹치지 않는 렌즈로 나누고 적대적으로 배치, 팀원별 파일 소유 분리
 - Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델 유지
@@ -72,7 +85,7 @@
 
 ## Environment
 
-- Python + Windows 한글 처리: 파일·sqlite I/O·표준출력(print) 모두 encoding="utf-8" 명시 (또는 `PYTHONIOENCODING=utf-8`) — 기본 인코딩이 cp949라 한글이 깨짐. **이 머신은 2026-09-14부터 `PYTHONUTF8=1`+`PYTHONIOENCODING=utf-8`을 Claude Code `env`(`~/.claude/settings.json`)와 Windows User 환경변수 양쪽에 전역 고정**(open()도 기본 UTF-8로 확인됨) — 텍스트 규칙이 계속 새서 추가한 이중 안전망. 다만 이 조치는 이 머신에만 적용되고 팀원 PC·CI에는 없으므로, 커밋되는 코드에는 여전히 encoding="utf-8"을 명시할 것
+- Python + Windows 한글: 텍스트 I/O(open·read_text·write_text·sqlite)에 encoding="utf-8" 명시 — 팀원 PC·CI는 cp949 기본. 이 머신은 `PYTHONUTF8=1`+`PYTHONIOENCODING=utf-8`을 settings.json `env`와 Windows User 환경변수에 전역 고정(2026-09-14)했지만 커밋되는 코드에는 여전히 명시할 것. `py-encoding-check` 훅이 편집 직후 누락을 알려줌
 
 ## 도구
 
@@ -84,11 +97,13 @@
 - codex plugin: job은 `--background`로 실행하고 status 폴링으로 결과 수거 — foreground는 무한 hang 가능. hang 시 `--fresh` + 좁은 프롬프트로 새 Agent 실행, plugin 경로가 계속 실패하면 `codex exec --sandbox read-only ... | tee <log>`를 Bash `run_in_background`로 직접 호출
   <!-- 만료 조건: codex plugin이 foreground hang(타임아웃 부재)을 고치면 이 절 삭제 — v1.0.5 설치
        확인(2026-08-31), hang 자체 수정 여부는 미검증 -->
-- 웹 검색·fetch 우선순위: Exa MCP → Jina(`r.jina.ai/<URL>`, `s.jina.ai/<query>`) → insane-search 스킬(403/차단 시 공개 페이지 폴백) → 브라우저(위 규칙으로 선택). 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
+- 라이브러리·프레임워크의 API·버전별 문서는 context7 MCP(라이브러리 ID 조회 → 문서 조회) 먼저. 도구 목록에 인증 스텁만 보이면 미연결이니 `/mcp` 인증을 안내하고, 결과가 없으면 아래 웹 검색 체인으로
+- 웹 검색·fetch: Exa MCP → Firecrawl(JS·차단·사이트 단위) → insane-search → 브라우저. 도구 선택 세부는 `web-research` skill. 공식 SDK·프레임워크·플랫폼 조작은 해당 공식 CLI 우선
+  <!-- 근거: 2026-10-10~11 실측 + 공식 문서. Jina는 CAPTCHA·403에서 실패하고 검색은 키 필요해 체인에서 제외 -->
 - 최신성이 중요한 정보는 검색으로 확인하고 출처 링크·날짜와 함께 답변. 검색 파라미터 등 세부는 `web-research` skill 참조
 - 툴 호출 파라미터(JSON)의 한글 등 비ASCII 문자열은 항상 리터럴 UTF-8로 작성하고, \uXXXX 유니코드 이스케이프로 표기하지 않는다
 
 ## Compaction·긴 세션
 
 - 압축(Compaction) 시 수정된 파일 목록 전체와 테스트 명령어를 항상 보존
-- 컨텍스트는 자동 압축되어 계속 작업 가능 — 토큰 예산을 이유로 조기 중단·요약·새 세션 제안 금지. 대신 진행 상황을 파일·메모리에 저장
+- 긴 작업은 진행 상황을 파일·메모리에 저장해 압축·재개 후에도 이어갈 수 있게 함

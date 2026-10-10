@@ -6,22 +6,17 @@ context: fork
 
 # Code Context (Exa)
 
-## Tool Restriction (Critical)
+## Tool Restriction
 
 ONLY use `web_search_exa`. Do NOT use other Exa tools.
 
-## Token Isolation (Critical)
+## Token Isolation
 
-Never run Exa in main context. Always spawn Task agents:
-- Agent calls `web_search_exa`
-- Agent extracts the minimum viable snippet(s) + constraints
-- Agent deduplicates near-identical results (mirrors, forks, repeated StackOverflow answers) before presenting
-- Agent returns copyable snippets + brief explanation
-- Main context stays clean regardless of search volume
+This skill runs in a forked context (`context: fork`), so raw Exa results stay out of the main conversation. Call `web_search_exa` here, deduplicate near-identical results (mirrors, forks, repeated StackOverflow answers), and return only copyable snippets with their constraints and a brief explanation.
 
 ## When to Use
 
-Use this tool for ANY programming-related request:
+Use this when a task needs real snippets or docs from outside the repository:
 - API usage and syntax
 - SDK/library examples
 - config and setup patterns

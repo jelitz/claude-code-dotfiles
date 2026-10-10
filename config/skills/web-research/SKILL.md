@@ -1,35 +1,28 @@
 ---
 name: web-research
-description: Use when performing web search or URL fetch with Exa, Jina, or insane-search — choosing search parameters (numResults, type, maxAgeHours, maxCharacters), fetching full text, needing fresh/realtime results, or hitting 403/paywall/blocked pages
+description: Use when choosing between Exa, Firecrawl, WebSearch/WebFetch, or insane-search for a web search or URL fetch — including fresh/realtime needs, JS-rendered pages, or 403/CAPTCHA/blocked pages
 ---
 
 # Web Research
 
-웹 검색·fetch 도구별 세부 파라미터와 폴백 동작. 도구 우선순위 체인(Exa → Jina → insane-search → claude-in-chrome)은 글로벌 CLAUDE.md 참조.
+도구 선택만 다룬다. 명령·파라미터 상세는 각 도구 스키마와 `firecrawl:*` 스킬을 따른다.
 
-## Exa MCP
+## 고르는 법
 
-- 검색 `web_search_exa`, URL 본문 확인 `web_fetch_exa`. 코드 컨텍스트·회사·사람 검색 등 전용 도구가 있으면 그것을 우선
-- 기본 파라미터: 자연어 쿼리 · `type: auto` · `numResults: 5-10` · `contents.highlights: true`
-- full text가 필요할 때만 `maxCharacters` 명시 — 기본 highlights로 충분한 경우가 대부분
-- 실시간성이 꼭 필요할 때만 `contents.maxAgeHours: 0` — 캐시 우회는 느리고 비쌈
-
-## Jina (Exa로 부족할 때)
-
-- URL 접근: `https://r.jina.ai/<URL>`
-- 검색: `https://s.jina.ai/<query>`
-
-## insane-search (403/차단 폴백)
-
-- 공개 페이지 전용. 로그인·페이월은 뚫지 않고 "authentication required"로 종료
-- X/Twitter, Reddit, YouTube, Naver 등 WAF 보호 플랫폼 접근 시 사용
-
-## Quick Reference
-
-| 상황 | 설정 |
+| 상황 | 도구 |
 |---|---|
-| 일반 검색 | `type: auto`, `numResults: 5-10`, `contents.highlights: true` |
-| 전체 본문 필요 | `maxCharacters` 명시 |
-| 실시간·최신 데이터 필수 | `contents.maxAgeHours: 0` |
-| Exa 실패/부족 | `r.jina.ai/<URL>` 또는 `s.jina.ai/<query>` |
-| 403·차단·WAF | insane-search 스킬 (공개 페이지만) |
+| 일반·한국어·최신 뉴스 검색 | Exa `web_search_exa` |
+| 날짜·도메인·카테고리 필터 | `mcp__exa__web_search_advanced_exa` |
+| 영어 사실 교차검증 | WebSearch |
+| 정적 URL 본문 | Exa `web_fetch_exa` |
+| JS 렌더링·CAPTCHA·403·최신본 필요 | Firecrawl scrape |
+| 여러 페이지·사이트 구조·클릭·변경 감시 | Firecrawl (map·crawl·interact·monitor 스킬) |
+| 위 도구가 모두 실패 | insane-search → 브라우저 |
+
+## 함정 (틀리기 쉬운 기본값)
+
+- Exa `web_fetch_exa`는 기본 3,000자에서 자른다 → 긴 문서는 `maxCharacters` 지정
+- WebFetch는 원문이 아니라 작은 모델의 요약을 준다 → 수치·표·인용에는 쓰지 않는다
+- WebSearch는 제목·URL만 주고 한국어 질의에 약하다(US-only)
+- Firecrawl은 기본 2일 캐시 → 최신본은 `--max-age 0`, 메뉴·광고 제거는 `--only-main-content`
+- Firecrawl 무료 플랜은 동시 2개·분당 10회 → 병렬은 2개씩

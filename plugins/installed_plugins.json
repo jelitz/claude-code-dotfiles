@@ -30,11 +30,11 @@
       "description": "Anthropic 공식 문서 작업 스킬 (PDF, DOCX, XLSX, PPTX, frontend-design 등)"
     },
     {
-      "id": "example-skills@anthropic-agent-skills",
-      "marketplace": "anthropic-agent-skills",
-      "name": "example-skills",
-      "enabled": true,
-      "description": "Anthropic 예제 스킬 모음 (참고·실사용 겸용)"
+      "id": "ralph-loop@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "ralph-loop",
+      "enabled": false,
+      "description": "Ralph Loop 반복 실행 워크플로 (/ralph-loop) — 설치만 되어 있고 현재 비활성"
     },
     {
       "id": "cloudflare@claude-plugins-official",
@@ -47,8 +47,8 @@
       "id": "security-guidance@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "security-guidance",
-      "enabled": true,
-      "description": "보안 가이드라인·시큐어 코딩 체크 (Anthropic 공식)"
+      "enabled": false,
+      "description": "보안 가이드라인·시큐어 코딩 체크 (Anthropic 공식) — 설치만 되어 있고 현재 비활성"
     },
     {
       "id": "insane-search@gptaku-plugins",
@@ -58,18 +58,25 @@
       "description": "차단된 사이트(X/Reddit/StackOverflow/네이버/쿠팡/LinkedIn 등) 접근용 적응형 웹 검색 — curl_cffi TLS impersonation, API 키 불필요. SessionStart 훅으로 마켓플레이스 업데이트 알림을 자체 배포함(수동 동기화 대상 아님)"
     },
     {
+      "id": "example-skills@anthropic-agent-skills",
+      "marketplace": "anthropic-agent-skills",
+      "name": "example-skills",
+      "enabled": false,
+      "description": "Anthropic 예제 스킬 모음 (참고·실사용 겸용) — 설치만 되어 있고 현재 비활성"
+    },
+    {
       "id": "code-simplifier@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "code-simplifier",
-      "enabled": true,
-      "description": "최근 변경 코드 단순화·정리"
+      "enabled": false,
+      "description": "최근 변경 코드 단순화·정리 — 설치만 되어 있고 현재 비활성"
     },
     {
       "id": "pr-review-toolkit@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "pr-review-toolkit",
-      "enabled": true,
-      "description": "PR 리뷰용 서브에이전트 모음 (code-reviewer, silent-failure-hunter, type-design-analyzer, pr-test-analyzer, comment-analyzer)"
+      "enabled": false,
+      "description": "PR 리뷰용 서브에이전트 모음 (code-reviewer, silent-failure-hunter, type-design-analyzer, pr-test-analyzer, comment-analyzer) — 설치만 되어 있고 현재 비활성"
     },
     {
       "id": "claude-md-management@claude-plugins-official",
@@ -79,20 +86,6 @@
       "description": "CLAUDE.md 작성·정리 헬퍼"
     },
     {
-      "id": "superpowers@claude-plugins-official",
-      "marketplace": "claude-plugins-official",
-      "name": "superpowers",
-      "enabled": false,
-      "description": "브레인스토밍·플래닝·TDD·디버깅·코드리뷰 등 개발 워크플로 스킬 모음 — 설치만 되어 있고 현재 비활성"
-    },
-    {
-      "id": "ralph-loop@claude-plugins-official",
-      "marketplace": "claude-plugins-official",
-      "name": "ralph-loop",
-      "enabled": false,
-      "description": "Ralph Loop 반복 실행 워크플로 (/ralph-loop) — 설치만 되어 있고 현재 비활성"
-    },
-    {
       "id": "frontend-design@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "frontend-design",
@@ -100,28 +93,74 @@
       "description": "고품질 프론트엔드 UI 생성 스킬 (document-skills 와 중복되어 비활성)"
     },
     {
-      "id": "ui-ux-pro-max@ui-ux-pro-max-skill",
-      "marketplace": "ui-ux-pro-max-skill",
-      "name": "ui-ux-pro-max",
+      "id": "skill-creator@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "skill-creator",
       "enabled": false,
-      "scope": "project",
-      "description": "UI/UX 디자인 강화 스킬 — 프로젝트 스코프로 설치만 된 상태 (미활성)"
+      "description": "스킬 작성·평가 헬퍼 — 설치만 되어 있고 현재 비활성"
+    },
+    {
+      "id": "code-review@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "code-review",
+      "enabled": false,
+      "description": "PR 코드 리뷰 명령 — 설치만 되어 있고 현재 비활성"
+    },
+    {
+      "id": "stitch-build@google-labs-code-stitch-skills",
+      "marketplace": "google-labs-code-stitch-skills",
+      "name": "stitch-build",
+      "enabled": false,
+      "description": "Google Stitch 디자인 → 코드 빌드 스킬 — 설치만 되어 있고 현재 비활성"
+    },
+    {
+      "id": "stitch-design@google-labs-code-stitch-skills",
+      "marketplace": "google-labs-code-stitch-skills",
+      "name": "stitch-design",
+      "enabled": false,
+      "description": "Google Stitch 디자인 생성 스킬 — 설치만 되어 있고 현재 비활성"
+    },
+    {
+      "id": "stitch-utilities@google-labs-code-stitch-skills",
+      "marketplace": "google-labs-code-stitch-skills",
+      "name": "stitch-utilities",
+      "enabled": false,
+      "description": "Google Stitch 보조 스킬 — 설치만 되어 있고 현재 비활성"
     },
     {
       "id": "sentry@claude-plugins-official",
       "marketplace": "claude-plugins-official",
       "name": "sentry",
-      "enabled": false,
-      "scope": "project",
+      "enabled": true,
       "description": "Sentry 에러 모니터링 연동 — 특정 프로젝트 스코프로만 설치 (전역 미사용)"
     },
     {
-      "id": "notion@claude-plugins-official",
+      "id": "typescript-lsp@claude-plugins-official",
       "marketplace": "claude-plugins-official",
-      "name": "notion",
-      "enabled": false,
-      "scope": "project",
-      "description": "Notion 연동 — 특정 프로젝트 스코프로만 설치 (전역 미사용)"
+      "name": "typescript-lsp",
+      "enabled": true,
+      "description": "TypeScript 언어 서버(LSP) 연동 — 정의 이동·진단"
+    },
+    {
+      "id": "pyright-lsp@claude-plugins-official",
+      "marketplace": "claude-plugins-official",
+      "name": "pyright-lsp",
+      "enabled": true,
+      "description": "Python(pyright) 언어 서버(LSP) 연동 — 정의 이동·타입 진단"
+    },
+    {
+      "id": "firecrawl@anthropic-plugin-directory",
+      "marketplace": "anthropic-plugin-directory",
+      "name": "firecrawl",
+      "enabled": true,
+      "description": "Firecrawl CLI 기반 스크랩·크롤·검색 스킬 — JS 렌더링·차단 페이지 담당 (web-research 체인 2순위). firecrawl-cli 전역 설치와 로그인 필요"
+    },
+    {
+      "id": "superpowers@superpowers-marketplace",
+      "marketplace": "superpowers-marketplace",
+      "name": "superpowers",
+      "enabled": true,
+      "description": "브레인스토밍·계획·TDD·디버깅·코드 리뷰 개발 워크플로 스킬 — CLAUDE.md '하네스 우선순위' 절이 우선"
     }
   ]
 }

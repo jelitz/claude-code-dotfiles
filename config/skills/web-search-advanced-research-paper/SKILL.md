@@ -6,7 +6,7 @@ context: fork
 
 # Web Search Advanced - Research Paper Category
 
-## Tool Restriction (Critical)
+## Tool Restriction
 
 ONLY use `web_search_advanced_exa` with `category: "research paper"`. Do NOT use other categories or tools.
 
@@ -45,13 +45,9 @@ The `research paper` category supports ALL available parameters:
 - `maxAgeHours` / `livecrawlTimeout`
 - `subpages` / `subpageTarget`
 
-## Token Isolation (Critical)
+## Token Isolation
 
-Never run Exa searches in main context. Always spawn Task agents:
-- Agent calls `web_search_advanced_exa` with `category: "research paper"`
-- Agent merges + deduplicates results before presenting
-- Agent returns distilled output (brief markdown or compact JSON)
-- Main context stays clean regardless of search volume
+This skill runs in a forked context (`context: fork`), so raw Exa results stay out of the main conversation. Run the searches here, merge and deduplicate, and return only distilled output (brief markdown or compact JSON).
 
 ## When to Use
 
@@ -68,7 +64,7 @@ Recent papers on a topic:
 web_search_advanced_exa {
   "query": "transformer attention mechanisms efficiency",
   "category": "research paper",
-  "startPublishedDate": "2024-01-01",
+  "startPublishedDate": "<YYYY-MM-DD, relative to today>",
   "numResults": 15,
   "type": "auto"
 }

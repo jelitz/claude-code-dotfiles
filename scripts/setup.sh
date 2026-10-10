@@ -95,11 +95,11 @@ fi
 # ──────────────────────────────────────────────
 echo "[2/5] 사용자 스킬 복사..."
 cp -r "$CONFIG_DIR/skills/"* "$CLAUDE_DIR/skills/"
-echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 12종 + Aside 1종 + pup 제공 dd-* 11종)"
+echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 7종 + Aside 1종 + pup 제공 dd-* 11종)"
 
 if [ -d "$CONFIG_DIR/agents" ]; then
   cp -r "$CONFIG_DIR/agents/"* "$CLAUDE_DIR/agents/"
-  echo "  ✓ agents/ → $CLAUDE_DIR/agents (pup 제공 Datadog 도메인 서브에이전트 48종)"
+  echo "  ✓ agents/ → $CLAUDE_DIR/agents (직접 관리 adversarial-reviewer 1종 + pup 제공 Datadog 도메인 48종)"
 fi
 
 # hooks (config/scripts/hooks, config/scripts/lib → ~/.claude/scripts/)
@@ -146,15 +146,17 @@ if ! command -v claude &>/dev/null; then
 fi
 
 if [ -z "$SKIP_PLUGINS" ]; then
-  # 실사용 마켓플레이스 (claude-plugins-official 은 기본 등록)
+  # 실사용 마켓플레이스 (claude-plugins-official·anthropic-plugin-directory 는 기본 등록)
   MARKETPLACES=(
     "anthropic-agent-skills github:anthropics/skills"
     "openai-codex github:openai/codex-plugin-cc"
     "gptaku-plugins https://github.com/fivetaku/gptaku_plugins.git"
-    "ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill"
+    "superpowers-marketplace github:obra/superpowers-marketplace"
   )
   # 등록만 해둔 옵션 마켓플레이스 (필요 시 주석 해제)
   # MARKETPLACES+=(
+  #   "ui-ux-pro-max-skill github:nextlevelbuilder/ui-ux-pro-max-skill"
+  #   "google-labs-code-stitch-skills github:google-labs-code/stitch-skills"
   #   "exa-skills github:benjaminjackson/exa-skills"
   #   "Claudest github:gupsammy/claudest"
   #   "ecc github:affaan-m/everything-claude-code"
@@ -169,18 +171,20 @@ if [ -z "$SKIP_PLUGINS" ]; then
 
   echo "[5/5] 플러그인 설치..."
 
+  # 활성 플러그인만 설치 (비활성 기록은 plugins/installed_plugins.json 참고)
   PLUGINS=(
     "codex@openai-codex"
     "context7@claude-plugins-official"
     "playwright@claude-plugins-official"
     "document-skills@anthropic-agent-skills"
-    "example-skills@anthropic-agent-skills"
     "cloudflare@claude-plugins-official"
-    "security-guidance@claude-plugins-official"
-    "code-simplifier@claude-plugins-official"
-    "pr-review-toolkit@claude-plugins-official"
     "claude-md-management@claude-plugins-official"
+    "sentry@claude-plugins-official"
+    "typescript-lsp@claude-plugins-official"
+    "pyright-lsp@claude-plugins-official"
     "insane-search@gptaku-plugins"
+    "firecrawl@anthropic-plugin-directory"
+    "superpowers@superpowers-marketplace"
   )
 
   for plugin in "${PLUGINS[@]}"; do
