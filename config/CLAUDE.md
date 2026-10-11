@@ -18,21 +18,15 @@
 
 ## 기획 문서 (SDD)
 
-프로젝트 `./CLAUDE.md`가 자체 문서 컨벤션을 명시하면 그것을 따르고, 없으면 Kiro 스타일 SDD(steering/specs 분리)를 기본값으로 사용. 적용 시점은 위 "큰 기능" 기준과 동일 — 인터뷰 결과가 requirements.md의 출발점.
-
-- 전역 컨텍스트 `docs/steering/`: `product.md`(비전·타깃·핵심가치) · `tech.md`(스택·아키텍처 제약·의존성) · `structure.md`(디렉터리·네이밍·모듈 경계) — 프로젝트 전역 성격이 실제로 바뀔 때만 갱신, 기능 작업마다 재작성하지 않기
-- 기능 명세 `docs/specs/{feature-name}/`: `requirements.md`(요구사항·승인기준·범위 외(out of scope)·E2E 검증 절차 — 통과/실패를 판정하는 명령까지 적는다, 가능하면 EARS 표기: "WHEN ~ THEN 시스템은 ~해야 한다") · `design.md`(아키텍처·시퀀스·인터페이스) · `tasks.md`(체크리스트 ✅/⬜·의존관계)
-- `implemented.md`: 설계 결정(명세가 모호해 내린 선택) · 의도적 편차와 이유 · 트레이드오프 · 미결 질문
-- 기능 2개 이상 동시 진행 시 문서 충돌 방지를 위해 `{feature-name}` 폴더로 분리
-
-requirements → design → tasks 순서로 작성하고 각 단계 전환 전 사용자 승인을 받는다. 코드 변경마다 `tasks.md`·`implemented.md` 동기화, PR 전 코드·테스트·문서 일치 확인(불일치 시 동일 PR 또는 별도 `docs:` 커밋). `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — 사용자에게 `/clear` 후 스펙 경로로 재개를 제안(탐색·인터뷰 잔재로 오염된 컨텍스트를 피하기 위함이지 토큰 절약이 아님).
+- 큰 기능(위 인터뷰 기준)은 `sdd` 스킬을 호출해 `docs/specs/{feature-name}/`에 requirements → design → tasks를 쓰고 각 단계 전환 전 사용자 승인을 받는다. 프로젝트 `./CLAUDE.md`가 자체 문서 컨벤션을 명시하면 그것이 우선
+- `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — `/clear` 후 스펙 경로로 재개를 제안. 코드 변경마다 `tasks.md`·`implemented.md` 동기화
 
 ## 하네스 우선순위 (superpowers 7.x)
 
 - 이 파일이 superpowers 스킬보다 우선한다(플러그인 자체 원칙). 어긋나면 이 파일을 따르고, 스킬은 실행 품질(TDD · systematic-debugging · verification-before-completion · worktrees · code-review)을 맡는다
 - brainstorming의 "quick, clear task" 판정은 위 "diff를 한 문장으로 설명할 수 있으면 계획 생략"과 같은 기준이다. 그 경우 질문 없이 바로 수행한다. "small change"는 채팅 설명 1회 승인으로 끝낸다 — 문서를 만들지 않는다
 - 큰 기능의 인터뷰는 brainstorming으로 하되 두 가지는 이 파일을 따른다. 질문은 내장 질문 도구(선택지 제시)로 묶어서 하고, 코드베이스 탐색은 허락을 구하지 않고 먼저 한다 — 탐색 결과가 질문의 질을 결정하기 때문
-- 설계 문서는 docs/superpowers/specs가 아니라 위 SDD 절의 `docs/specs/{feature-name}/requirements.md` → `design.md` 순서로 나눠 쓰고 각각 승인을 받는다. writing-plans 산출물은 같은 폴더의 `tasks.md`로 저장한다
+- 설계 문서는 docs/superpowers/specs가 아니라 `sdd` 스킬의 `docs/specs/{feature-name}/requirements.md` → `design.md` 순서로 나눠 쓰고 각각 승인을 받는다. writing-plans 산출물은 같은 폴더의 `tasks.md`로 저장한다
 - brainstorming의 builder check가 돌았으면 requirements 교차 검토(adversarial-reviewer)는 생략한다 — 같은 검토를 두 번 하지 않기 위함
 - 서브에이전트에는 SessionStart 주입이 전달되지 않으므로 TDD · 검증 규율을 위임 프롬프트에 직접 쓴다
 

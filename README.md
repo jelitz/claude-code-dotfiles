@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.11.3-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.11.4-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -106,7 +106,7 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (5단계):
 
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 스킬 19종(직접 관리 7종 + pup 제공 dd-* 11종 + Aside 자동설치 1종)과 `config/agents/` 의 에이전트 49종(직접 관리 1종 + pup 제공 48종) → `~/.claude/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
+2. `config/skills/` 의 스킬 20종(직접 관리 8종 + pup 제공 dd-* 11종 + Aside 자동설치 1종)과 `config/agents/` 의 에이전트 49종(직접 관리 1종 + pup 제공 48종) → `~/.claude/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 마켓플레이스 5곳(+옵션 7곳) 등록
 5. 활성 플러그인 12종 설치
@@ -158,7 +158,7 @@ claude-code-dotfiles/
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
 │   ├── agents/                          #   서브에이전트 49종 (직접 관리 adversarial-reviewer 1 + pup Datadog 48)
-│   ├── skills/                          #   스킬 19종 (직접 관리 7 + pup dd-* 11 + Aside 1)
+│   ├── skills/                          #   스킬 20종 (직접 관리 8 + pup dd-* 11 + Aside 1)
 │   │   ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
 │   │   ├── browser-automation/
 │   │   ├── code-search-exa/
@@ -281,6 +281,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
 | `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
 | `dadeumi` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `dadeumi-gate` 훅과 짝을 이룸. 개인 설정을 뺀 공개판(훅 포함)은 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)에서 플러그인으로 배포 |
+| `sdd` | 큰 기능의 기획 문서 레이아웃(Kiro 스타일 SDD) — `docs/steering/` 3개와 `docs/specs/{feature}/`의 requirements → design → tasks → implemented, EARS 승인기준, 단계별 승인 게이트, superpowers brainstorming·writing-plans 산출물과의 대응표. 글로벌 CLAUDE.md의 SDD 절을 스킬로 옮긴 것(v2026.10.11.4) |
 Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, 메인 컨텍스트 오염을 막기 위해 frontmatter의 `context: fork` 로 분리된 컨텍스트에서 실행됩니다. 현재는 `settings.json` 의 `skillOverrides` 로 세 스킬 모두 꺼 두었습니다.
 
 > 이전 스냅샷에 있던 디자인 스킬 5종(`designing-premium-web-ui`, `design-taste-frontend`, `high-end-visual-design`, `redesign-existing-projects`, `stitch-design-taste`)은 현재 PC 설정에 없어 저장소에서도 제거했습니다.

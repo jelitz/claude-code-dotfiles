@@ -2,6 +2,18 @@
 
 버전은 스냅샷 날짜(`vYYYY.MM.DD`)입니다. 같은 날 두 번째 릴리스부터는 `.2`, `.3`을 붙입니다.
 
+## v2026.10.11.4 (2026-10-11)
+
+글로벌 `CLAUDE.md`의 "기획 문서 (SDD)" 절을 새 스킬 `sdd`로 옮겼습니다. 공식 지침("절차는 스킬에, 규칙은 CLAUDE.md에")에 따라 파일 레이아웃·EARS 표기·superpowers 대응표 같은 절차는 스킬이 맡고, "큰 기능이면 `sdd` 호출, 단계마다 승인, tasks 승인 뒤 `/clear`"라는 규칙만 CLAUDE.md에 남겼습니다. CLAUDE.md는 81줄에서 75줄이 됐습니다. 복원할 때는 `config/skills/sdd/`가 `~/.claude/skills/`에 함께 복사되는지만 확인하면 됩니다.
+
+### 스킬
+
+- **`sdd` 스킬을 추가했습니다.** `docs/steering/`(product·tech·structure)와 `docs/specs/{feature-name}/`(requirements·design·tasks·implemented) 레이아웃, EARS 승인기준과 검증 명령 규칙, requirements → design → tasks 각 승인 게이트, `/clear` 뒤 재시작, superpowers brainstorming 설계 문서를 requirements+design으로 나누고 writing-plans 계획을 tasks.md로 저장하는 대응표, builder check가 돌았으면 adversarial-reviewer를 생략하는 규칙을 담았습니다. description은 큰 기능의 스펙 작성·갱신과 superpowers 산출물 저장 시점에 트리거되도록 썼습니다.
+
+### CLAUDE.md
+
+- **SDD 절 10줄을 2줄로 줄였습니다.** 스킬 호출 조건과 승인 게이트, 프로젝트 CLAUDE.md 컨벤션 우선, `/clear` 재시작, tasks·implemented 동기화만 남았습니다. 하네스 우선순위 절의 "위 SDD 절의" 참조는 "`sdd` 스킬의"로 바꿨습니다.
+
 ## v2026.10.11.3 (2026-10-11)
 
 전역 `CLAUDE.md`만 바뀐 버전입니다. superpowers 7.0.0과의 우선순위를 정하는 절을 넣었고, `/claude-api prompt-audit`로 Claude Fable 5.1 기준의 낡은 문구를 걷어냈으며, 상단 유지보수 메모와 인라인 주석을 모두 지웠습니다. 109줄에서 81줄이 됐습니다. 복원할 때 따로 할 일은 없습니다.
