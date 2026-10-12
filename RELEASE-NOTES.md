@@ -2,6 +2,25 @@
 
 버전은 스냅샷 날짜(`vYYYY.MM.DD`)입니다. 같은 날 두 번째 릴리스부터는 `.2`, `.3`을 붙입니다.
 
+## v2026.10.12 (2026-10-12)
+
+[github/spec-kit](https://github.com/github/spec-kit) v1.1.3을 읽고 superpowers 7.0.0과 겹치지 않는 장치만 `sdd` 스킬과 adversarial-reviewer 에이전트에 넣었습니다. spec-kit의 절차 자체(단일 9단계, 긴 명령 스크립트, 프로젝트별 설치, constitution)는 가져오지 않았습니다. 복원할 때 따로 할 일은 없습니다.
+
+### 스킬
+
+- **`sdd`에 에픽 분할(roadmap) 절을 추가했습니다.** 한 사이클에 담기지 않는 기능은 `docs/specs/{epic}/roadmap.md`에 독립적으로 테스트 가능한 조각으로 나누고, 조각 스펙은 첫 줄에서 로드맵 ID를 역참조합니다. 과제 수 제한이나 서브에이전트 위임으로 풀리면 만들지 않습니다.
+- **`requirements.md`에 Assumptions 절, `design.md`에 Complexity Tracking 표를 정의했습니다.** 사용자가 정하지 않아 기본값으로 채운 항목과 `[미확정: 질문]`은 Assumptions에, 단순한 길을 벗어난 결정은 "결정 · 왜 필요 · 더 단순한 대안을 버린 이유" 표에 적습니다. brainstorming builder check의 "내 판단" 더미가 Assumptions로 들어가는 대응도 적었습니다.
+- **`tasks.md`를 추가 전용으로 선언하고 유지 모델을 flow-back으로 명시했습니다.** 완료된 과제는 고치지 않고 남은 일은 끝에 덧붙입니다.
+- **superpowers 대응표에 두 줄을 더했습니다.** writing-plans Self-Review가 tasks 승인 전 정합성 점검을 대신하고, subagent-driven-development의 최종 코드 리뷰가 PR 전 적대적 리뷰를 대신합니다.
+
+### 에이전트
+
+- **`adversarial-reviewer`가 요청되지 않은 코드(unrequested)와 기준에 어긋나는 코드(contradicts)도 보고하고, `tasks.md`가 기준에 있으면 남은 일을 추가 전용 과제 줄로 정리해 줍니다.** 파일에 쓰는 것은 위임자가 합니다.
+
+### CLAUDE.md
+
+- **리뷰 중복 방지 한 줄.** subagent-driven-development의 최종 코드 리뷰가 돌았으면 PR 전 adversarial-reviewer를 생략합니다. builder check와 requirements 교차 검토 사이에 있던 같은 규칙을 PR 단계로 확장한 것입니다.
+
 ## v2026.10.11.4 (2026-10-11)
 
 글로벌 `CLAUDE.md`의 "기획 문서 (SDD)" 절을 새 스킬 `sdd`로 옮겼습니다. 공식 지침("절차는 스킬에, 규칙은 CLAUDE.md에")에 따라 파일 레이아웃·EARS 표기·superpowers 대응표 같은 절차는 스킬이 맡고, "큰 기능이면 `sdd` 호출, 단계마다 승인, tasks 승인 뒤 `/clear`"라는 규칙만 CLAUDE.md에 남겼습니다. CLAUDE.md는 81줄에서 75줄이 됐습니다. 복원할 때는 `config/skills/sdd/`가 `~/.claude/skills/`에 함께 복사되는지만 확인하면 됩니다.

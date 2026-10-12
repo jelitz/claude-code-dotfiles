@@ -27,7 +27,7 @@
 - brainstorming의 "quick, clear task" 판정은 위 "diff를 한 문장으로 설명할 수 있으면 계획 생략"과 같은 기준이다. 그 경우 질문 없이 바로 수행한다. "small change"는 채팅 설명 1회 승인으로 끝낸다 — 문서를 만들지 않는다
 - 큰 기능의 인터뷰는 brainstorming으로 하되 두 가지는 이 파일을 따른다. 질문은 내장 질문 도구(선택지 제시)로 묶어서 하고, 코드베이스 탐색은 허락을 구하지 않고 먼저 한다 — 탐색 결과가 질문의 질을 결정하기 때문
 - 설계 문서는 docs/superpowers/specs가 아니라 `sdd` 스킬의 `docs/specs/{feature-name}/requirements.md` → `design.md` 순서로 나눠 쓰고 각각 승인을 받는다. writing-plans 산출물은 같은 폴더의 `tasks.md`로 저장한다
-- brainstorming의 builder check가 돌았으면 requirements 교차 검토(adversarial-reviewer)는 생략한다 — 같은 검토를 두 번 하지 않기 위함
+- brainstorming의 builder check가 돌았으면 requirements 교차 검토(adversarial-reviewer)는 생략하고, subagent-driven-development의 최종 코드 리뷰가 돌았으면 PR 전 adversarial-reviewer도 생략한다 — 같은 검토를 두 번 하지 않기 위함
 - 서브에이전트에는 SessionStart 주입이 전달되지 않으므로 TDD · 검증 규율을 위임 프롬프트에 직접 쓴다
 
 ## 보고와 커뮤니케이션
