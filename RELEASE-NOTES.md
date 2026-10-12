@@ -4,11 +4,12 @@
 
 ## v2026.10.12 (2026-10-12)
 
-[github/spec-kit](https://github.com/github/spec-kit) v1.1.3을 읽고 superpowers 7.0.0과 겹치지 않는 장치만 `sdd` 스킬과 adversarial-reviewer 에이전트에 넣었습니다. spec-kit의 절차 자체(단일 9단계, 긴 명령 스크립트, 프로젝트별 설치, constitution)는 가져오지 않았습니다. 복원할 때 따로 할 일은 없습니다.
+`sdd` 스킬의 이름을 `writing-sdd-blueprints`로 바꿨고, [github/spec-kit](https://github.com/github/spec-kit) v1.1.3을 읽고 superpowers 7.0.0과 겹치지 않는 장치만 이 스킬과 adversarial-reviewer 에이전트에 넣었습니다. spec-kit의 절차 자체(단일 9단계, 긴 명령 스크립트, 프로젝트별 설치, constitution)는 가져오지 않았습니다. 복원할 때는 `~/.claude/skills/sdd/`가 남아 있으면 지우고 `config/skills/writing-sdd-blueprints/`를 복사하면 됩니다.
 
 ### 스킬
 
-- **`sdd`에 에픽 분할(roadmap) 절을 추가했습니다.** 한 사이클에 담기지 않는 기능은 `docs/specs/{epic}/roadmap.md`에 독립적으로 테스트 가능한 조각으로 나누고, 조각 스펙은 첫 줄에서 로드맵 ID를 역참조합니다. 과제 수 제한이나 서브에이전트 위임으로 풀리면 만들지 않습니다.
+- **`sdd` → `writing-sdd-blueprints`로 이름을 바꿨습니다.** "blueprints"가 steering과 specs를 함께 가리키고 "sdd"가 방법론을 알려 줍니다. superpowers `writing-plans`와 같은 동사형이라 둘을 나란히 두면 순서가 읽힙니다. "spec-kit"은 GitHub 도구 이름이라 피했습니다. CLAUDE.md의 참조 두 줄도 새 이름으로 바꿨습니다.
+- **`writing-sdd-blueprints`에 에픽 분할(roadmap) 절을 추가했습니다.** 한 사이클에 담기지 않는 기능은 `docs/specs/{epic}/roadmap.md`에 독립적으로 테스트 가능한 조각으로 나누고, 조각 스펙은 첫 줄에서 로드맵 ID를 역참조합니다. 과제 수 제한이나 서브에이전트 위임으로 풀리면 만들지 않습니다.
 - **`requirements.md`에 Assumptions 절, `design.md`에 Complexity Tracking 표를 정의했습니다.** 사용자가 정하지 않아 기본값으로 채운 항목과 `[미확정: 질문]`은 Assumptions에, 단순한 길을 벗어난 결정은 "결정 · 왜 필요 · 더 단순한 대안을 버린 이유" 표에 적습니다. brainstorming builder check의 "내 판단" 더미가 Assumptions로 들어가는 대응도 적었습니다.
 - **`tasks.md`를 추가 전용으로 선언하고 유지 모델을 flow-back으로 명시했습니다.** 완료된 과제는 고치지 않고 남은 일은 끝에 덧붙입니다.
 - **superpowers 대응표에 두 줄을 더했습니다.** writing-plans Self-Review가 tasks 승인 전 정합성 점검을 대신하고, subagent-driven-development의 최종 코드 리뷰가 PR 전 적대적 리뷰를 대신합니다.

@@ -1,5 +1,5 @@
 ---
-name: sdd
+name: writing-sdd-blueprints
 description: Use when a feature is big enough to need a spec before code — writing or updating requirements.md, design.md, tasks.md, implemented.md under docs/specs/{feature}/, or docs/steering/ context files (Kiro-style spec-driven development). Also use when superpowers brainstorming or writing-plans produces a design document or plan and it has to be saved in this layout.
 ---
 
