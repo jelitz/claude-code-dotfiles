@@ -5,7 +5,8 @@
     "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "PYTHONUTF8": "1",
-    "PYTHONIOENCODING": "utf-8"
+    "PYTHONIOENCODING": "utf-8",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
   },
   "permissions": {
     "allow": [

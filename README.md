@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.12-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.13-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -417,6 +417,7 @@ ctx ████░░░░ 45% │ $0.23 │ 5h ██░░░░░░ 23% �
 | `env.ENABLE_TOOL_SEARCH` | `true` | 지연 로드 도구 검색 활성화 |
 | `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` | `1` | 멀티 에이전트 팀 기능 활성화 |
 | `env.PYTHONUTF8` / `env.PYTHONIOENCODING` | `1` / `utf-8` | Windows(cp949) 환경에서 Python 한글 입출력이 깨지지 않게 함 |
+| `env.CLAUDE_CODE_SUBAGENT_MODEL` | `sonnet` | `model`을 지정하지 않은 서브에이전트의 기본 모델. frontmatter·호출 파라미터가 우선하고 내장 Explore·Plan은 영향 없음 |
 
 #### 전역 권한 정책
 

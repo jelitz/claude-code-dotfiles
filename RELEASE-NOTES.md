@@ -2,6 +2,18 @@
 
 버전은 스냅샷 날짜(`vYYYY.MM.DD`)입니다. 같은 날 두 번째 릴리스부터는 `.2`, `.3`을 붙입니다.
 
+## v2026.10.13 (2026-10-13)
+
+서브에이전트의 기본 모델을 `sonnet`으로 정했습니다. 지금까지는 `model`을 지정하지 않은 서브에이전트(pup Datadog 에이전트 48종, `general-purpose`, Workflow `agent()`)가 모두 세션 모델을 상속했습니다. 세션이 Fable 5.1이면 grep·목록 추출 같은 기계적 작업도 Haiku 5.5의 100배 단가로 돌았습니다. `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수는 기본값일 뿐 강제가 아니라서 frontmatter `model`과 호출 시 `model` 파라미터가 이깁니다. 내장 `Explore`·`Plan`과 `model: inherit`인 `adversarial-reviewer`는 바뀌지 않습니다. 복원할 때 따로 할 일은 없습니다. 환경변수라 새 세션부터 적용됩니다.
+
+### 설정
+
+- **`settings.json` `env`에 `CLAUDE_CODE_SUBAGENT_MODEL: "sonnet"`을 추가했습니다.** 모델 결정 순서는 호출 시 `model` 파라미터 → 정의 frontmatter `model` → 이 환경변수 → 메인 모델입니다(공식 sub-agents 문서, 2026-10-13 확인). `_FORCE`는 켜지 않았습니다. 켜면 frontmatter를 무시해서 `adversarial-reviewer`까지 sonnet으로 내려갑니다. pup 에이전트는 `pup skills install claude`로 재생성해도 frontmatter에 `model`이 없으므로 이 기본값이 계속 적용됩니다.
+
+### CLAUDE.md
+
+- **서브에이전트 위임 절의 모델 선택 규칙에 한 구절을 더했습니다.** `model`을 생략하면 세션 모델이 아니라 sonnet이 적용되므로 최종 판정·적대적 검증·설계 종합처럼 세션 모델이 필요한 단계는 `model`을 명시합니다. frontmatter가 `inherit`인 `adversarial-reviewer`는 예외입니다.
+
 ## v2026.10.12 (2026-10-12)
 
 `sdd` 스킬의 이름을 `writing-sdd-blueprints`로 바꿨고, [github/spec-kit](https://github.com/github/spec-kit) v1.1.3을 읽고 superpowers 7.0.0과 겹치지 않는 장치만 이 스킬과 adversarial-reviewer 에이전트에 넣었습니다. spec-kit의 절차 자체(단일 9단계, 긴 명령 스크립트, 프로젝트별 설치, constitution)는 가져오지 않았습니다. 복원할 때는 `~/.claude/skills/sdd/`가 남아 있으면 지우고 `config/skills/writing-sdd-blueprints/`를 복사하면 됩니다.

@@ -47,7 +47,7 @@
 - 탐색·grep 결과를 재확인하려고 서브에이전트를 띄우지 않기 — 그 검증은 메인 루프에서. 단 PR 전 diff는 `adversarial-reviewer` 에이전트(또는 `/code-review`)로 새 컨텍스트에서 1회 적대적 리뷰: 계획·요구사항 대비 누락과 정확성 결함은 심각도와 무관하게 전부, 스타일·취향 지적은 제외
 - 독립적인 하위 작업은 서브에이전트에 맡기고 기다리지 않고 계속 진행한다. 단발 조사는 Agent 1회, 주고받기가 필요하면 name 붙여 spawn 후 SendMessage. 단계가 고정된 fan-out은 Workflow — 하네스가 사용자 옵트인을 요구하므로 먼저 제안한다
 - 병렬 리뷰·경쟁 가설은 겹치지 않는 렌즈로 나누고 적대적으로 배치, 팀원별 파일 소유 분리
-- Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델 유지
+- Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델. 단 `model` 생략 시 세션 모델이 아니라 `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`(settings.json `env`)이 적용되므로 세션 모델이 필요한 단계는 `model`을 명시한다 — frontmatter `model: inherit`인 `adversarial-reviewer`는 생략해도 세션 모델
 
 ## 지식 관리
 
