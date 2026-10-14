@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.14.2-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.14.3-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -106,7 +106,7 @@ bash scripts/setup.sh
 setup 스크립트가 수행하는 일 (5단계):
 
 1. `config/` 의 설정 파일 4종 → `~/.claude/` 복사 (플레이스홀더 치환 + OS 보정)
-2. `config/skills/` 의 스킬 20종(직접 관리 8종 + pup 제공 dd-* 11종 + Aside 자동설치 1종)과 `config/agents/` 의 에이전트 49종(직접 관리 1종 + pup 제공 48종) → `~/.claude/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
+2. `config/skills/` 의 스킬 19종(직접 관리 7종 + pup 제공 dd-* 11종 + Aside 자동설치 1종)과 `config/agents/` 의 에이전트 49종(직접 관리 1종 + pup 제공 48종) → `~/.claude/`, `config/scripts/hooks`·`config/scripts/lib` → `~/.claude/scripts/`
 3. `desktop/claude_desktop_config.json` → OS별 Claude Desktop 경로
 4. 마켓플레이스 5곳(+옵션 7곳) 등록
 5. 활성 플러그인 12종 설치
@@ -227,12 +227,13 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 </details>
 
 <details open>
-<summary><b>🔌 플러그인 — 활성 12종 / 비활성 11종</b></summary>
+<summary><b>🔌 플러그인 — 활성 13종 / 비활성 11종</b></summary>
 
 #### 활성 (`enabled: true`)
 
 | 플러그인 | 마켓플레이스 | 설명 |
 |---|---|---|
+| [`dadeumi`](https://github.com/jelitz/dadeumi-korean-writing) | dadeumi | 남이 읽을 글을 쓰기 전에 거치는 흐름(문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기). setup의 설치 명령이 아니라 `settings.json`의 `extraKnownMarketplaces`(autoUpdate)로 새 세션에서 설치됨. 스킬 이름 `dadeumi:dadeumi` |
 | [`codex`](https://github.com/openai/codex-plugin-cc) | openai-codex | OpenAI Codex 서브에이전트 (rescue, setup). **job은 항상 `--background` 로 실행** (CLAUDE.md 참고) |
 | [`context7`](https://github.com/upstash/context7) | claude-plugins-official | 라이브러리/프레임워크 최신 문서 실시간 조회 (MCP, by Upstash) |
 | [`playwright`](https://github.com/microsoft/playwright-mcp) | claude-plugins-official | Playwright 브라우저 자동화 — claude-in-chrome 과 병행 상시 활성화 |
