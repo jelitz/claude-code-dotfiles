@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.14.3-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.14.4-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -233,7 +233,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 
 | 플러그인 | 마켓플레이스 | 설명 |
 |---|---|---|
-| [`dadeumi`](https://github.com/jelitz/dadeumi-korean-writing) | dadeumi | 남이 읽을 글을 쓰기 전에 거치는 흐름(문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기). setup의 설치 명령이 아니라 `settings.json`의 `extraKnownMarketplaces`(autoUpdate)로 새 세션에서 설치됨. 스킬 이름 `dadeumi:dadeumi` |
+| [`dadeumi`](https://github.com/jelitz/dadeumi-korean-writing) | dadeumi | 남이 읽을 글을 쓰기 전에 거치는 흐름(문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기). setup의 설치 명령이 아니라 `settings.json`의 `extraKnownMarketplaces`(autoUpdate)로 세션 시작 시 설치됨(새 PC는 셋째 세션부터 사용 가능). 스킬 이름 `dadeumi:dadeumi` |
 | [`codex`](https://github.com/openai/codex-plugin-cc) | openai-codex | OpenAI Codex 서브에이전트 (rescue, setup). **job은 항상 `--background` 로 실행** (CLAUDE.md 참고) |
 | [`context7`](https://github.com/upstash/context7) | claude-plugins-official | 라이브러리/프레임워크 최신 문서 실시간 조회 (MCP, by Upstash) |
 | [`playwright`](https://github.com/microsoft/playwright-mcp) | claude-plugins-official | Playwright 브라우저 자동화 — claude-in-chrome 과 병행 상시 활성화 |
@@ -282,7 +282,7 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
 | `writing-sdd-blueprints` | 큰 기능의 기획 문서 레이아웃(Kiro 스타일 SDD) — `docs/steering/` 3개와 `docs/specs/{feature}/`의 requirements → design → tasks → implemented, EARS 승인기준, 단계별 승인 게이트, superpowers brainstorming·writing-plans·subagent-driven-development 산출물과의 대응표, 에픽 분할용 roadmap.md 관례. 글로벌 CLAUDE.md의 SDD 절을 `sdd` 스킬로 옮긴 것(v2026.10.11.4)을 v2026.10.12에서 이 이름으로 바꾸고 github/spec-kit 비교로 Assumptions·Complexity Tracking·추가 전용 tasks·roadmap을 보강 |
 
-`dadeumi`(남이 읽을 글을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기)는 v2026.10.14부터 이 목록에 없습니다. 플러그인 `dadeumi@dadeumi`로 설치합니다. 마켓플레이스 [jelitz/dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)이 `settings.json`의 `extraKnownMarketplaces`에 `autoUpdate: true`로 등록돼 있어 새 세션에서 자동으로 받습니다. 스킬 이름은 `dadeumi:dadeumi`가 되고 `dadeumi-gate` 훅은 이 이름도 인식합니다. 예전 setup이 복사해 둔 `~/.claude/skills/dadeumi/`가 남아 있으면 스킬이 두 벌로 잡히므로 setup 스크립트가 그 경로 하나만 지우고 지운 경로를 출력합니다. setup 스크립트가 파일을 지우는 단계는 이것 하나뿐입니다.
+`dadeumi`(남이 읽을 글을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기)는 v2026.10.14부터 이 목록에 없습니다. 플러그인 `dadeumi@dadeumi`로 설치합니다. 마켓플레이스 [jelitz/dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)이 `settings.json`의 `extraKnownMarketplaces`에 `autoUpdate: true`로 등록돼 있어 세션을 시작할 때 자동으로 받습니다. 새 PC에서는 첫 세션이 마켓플레이스를 등록하고 둘째 세션이 플러그인을 설치하므로 셋째 세션부터 쓸 수 있습니다(2026-10-14 headless 세션으로 확인). 스킬 이름은 `dadeumi:dadeumi`가 되고 `dadeumi-gate` 훅은 이 이름도 인식합니다. 예전 setup이 복사해 둔 `~/.claude/skills/dadeumi/`가 남아 있으면 스킬이 두 벌로 잡히므로 setup 스크립트가 그 경로 하나만 지우고 지운 경로를 출력합니다. setup 스크립트가 파일을 지우는 단계는 이것 하나뿐입니다.
 
 Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, 메인 컨텍스트 오염을 막기 위해 frontmatter의 `context: fork` 로 분리된 컨텍스트에서 실행됩니다. 현재는 `settings.json` 의 `skillOverrides` 로 세 스킬 모두 꺼 두었습니다.
 
