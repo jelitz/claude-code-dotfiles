@@ -1,5 +1,5 @@
-// upstream: https://github.com/jelitz/dadeumi-korean-writing/blob/v1.1.0/hooks/dadeumi-gate.js — 여기서 고치지 말 것. 상류에서 고친 뒤 이 사본과 위 태그를 함께 갱신한다 (CI가 첫 줄을 뺀 나머지를 그 태그의 상류 파일과 diff).
 #!/usr/bin/env node
+// upstream: https://github.com/jelitz/dadeumi-korean-writing/blob/v1.1.0/hooks/dadeumi-gate.js — 여기서 고치지 말 것. 상류에서 고친 뒤 이 사본과 이 줄의 태그를 함께 갱신한다 (CI가 이 줄을 뺀 나머지를 그 태그의 상류 파일과 diff).
 /**
  * dadeumi gate
  *

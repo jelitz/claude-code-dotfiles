@@ -1,5 +1,6 @@
-# push·PR 마다 config/scripts/hooks/dadeumi-gate.js 사본이 첫 줄 주석에 적힌 상류 태그의 파일과 같은지 확인한다.
-# 사본을 여기서 고치면 실패한다. 상류 릴리스를 반영할 때는 사본과 첫 줄의 태그를 함께 갱신한다.
+# push·PR 마다 config/scripts/hooks/dadeumi-gate.js 사본의 구문을 검사하고, 둘째 줄 주석에 적힌 상류 태그의 파일과 같은지 확인한다.
+# 둘째 줄인 이유: 첫 줄은 shebang(#!/usr/bin/env node)이어야 Node가 읽는다.
+# 사본을 여기서 고치면 실패한다. 상류 릴리스를 반영할 때는 사본과 둘째 줄의 태그를 함께 갱신한다.
 name: CI
 
 on:
@@ -12,11 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Check the dadeumi-gate copy parses
+        run: node --check config/scripts/hooks/dadeumi-gate.js
+
       - name: Compare the dadeumi-gate copy with its upstream tag
         run: |
           file=config/scripts/hooks/dadeumi-gate.js
-          url=$(head -n 1 "$file" | grep -oE 'https://github\.com/[^ ]+')
+          url=$(sed -n 2p "$file" | grep -oE 'https://github\.com/[^ ]+')
           raw=$(printf '%s' "$url" | sed -E 's#^https://github\.com/([^/]+)/([^/]+)/blob/#https://raw.githubusercontent.com/\1/\2/#')
           echo "upstream: $raw"
           curl -fsSL "$raw" -o "$RUNNER_TEMP/upstream.js"
-          tail -n +2 "$file" | diff - "$RUNNER_TEMP/upstream.js"
+          sed 2d "$file" | diff - "$RUNNER_TEMP/upstream.js"
