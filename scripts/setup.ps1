@@ -68,6 +68,13 @@ Write-Host "[2/5] 사용자 스킬 복사..." -ForegroundColor Yellow
 Copy-Item "$ConfigDir\skills\*" "$ClaudeDir\skills\" -Recurse -Force
 Write-Host "  ✓ skills\ → $ClaudeDir\skills (직접 관리 7종 + Aside 1종 + pup 제공 dd-* 11종)" -ForegroundColor Green
 
+# 구 사본 정리 (1회성): dadeumi 는 v2026.10.14 부터 플러그인(dadeumi@dadeumi)으로 설치한다.
+# 예전 setup 이 복사해 둔 사본이 남아 있으면 스킬이 두 벌(dadeumi, dadeumi:dadeumi)로 잡히므로 그 경로 하나만 지운다.
+if (Test-Path "$ClaudeDir\skills\dadeumi") {
+    Remove-Item "$ClaudeDir\skills\dadeumi" -Recurse -Force
+    Write-Host "  ✓ 구 사본 삭제: $ClaudeDir\skills\dadeumi (이제 플러그인 dadeumi@dadeumi 로 설치)" -ForegroundColor Green
+}
+
 if (Test-Path "$ConfigDir\agents") {
     Copy-Item "$ConfigDir\agents\*" "$ClaudeDir\agents\" -Recurse -Force
     Write-Host "  ✓ agents\ → $ClaudeDir\agents (직접 관리 adversarial-reviewer 1종 + pup 제공 Datadog 도메인 48종)" -ForegroundColor Green

@@ -1,22 +1,23 @@
+// upstream: https://github.com/jelitz/dadeumi-korean-writing/blob/v1.1.0/hooks/dadeumi-gate.js — 여기서 고치지 말 것. 상류에서 고친 뒤 이 사본과 위 태그를 함께 갱신한다 (CI가 첫 줄을 뺀 나머지를 그 태그의 상류 파일과 diff).
 #!/usr/bin/env node
 /**
- * Public Writing Gate
+ * dadeumi gate
  *
- * Cross-platform (Windows, macOS, Linux)
+ * Standalone (Node.js 14+, no dependencies; Windows, macOS, Linux).
  *
- * Makes sure text goes through the `dadeumi` skill before it is posted
- * where other people read it. One script, two events:
+ * Makes sure text goes through the `dadeumi` skill before it is posted where
+ * other people read it. One script, two events:
  *
- * - PostToolUse (matcher "Skill"): when the invoked skill is dadeumi,
- *   stamp a per-session marker file.
- * - PreToolUse (matchers in ~/.claude/settings.json): decide per call.
- *     - Confluence / Jira / Slack MCP posting tools and `gws` write commands
- *       need a skill marker younger than MARKER_TTL_MS. Otherwise the call is
- *       denied and the reason tells the model to invoke the skill and retry.
+ * - PostToolUse (matcher "Skill"): when the invoked skill is dadeumi (bare
+ *   name or "<plugin>:dadeumi"), stamp a per-session marker file.
+ * - PreToolUse (matchers in your settings.json, see hooks/settings.example.json):
+ *     - MCP posting tools (Confluence, Jira, Slack, ...) and `gws` write
+ *       commands need a skill marker younger than MARKER_TTL_MS. Otherwise the
+ *       call is denied and the reason tells the model to invoke the skill and
+ *       retry.
  *     - `gh` PR / issue / release text only gets a light screening: the first
  *       call in a session is denied once with a four-item checklist, the
- *       retry and every later call in that session pass. No TTL here: the
- *       nudge is meant to be seen once, not once per PR. No skill invocation
+ *       retry and every later call in that session pass. No skill invocation
  *       needed.
  *
  * Command text is scanned with quoted segments removed, so a command that
@@ -28,17 +29,15 @@
  * Fail-open by design: this is a writing-quality gate, not a security boundary.
  * Any unexpected error exits 0 without output so posting is never blocked by a
  * broken hook.
+ *
+ * Which tools get checked is decided by the matchers in settings.json. Any
+ * non-Bash tool that reaches this script is treated as a posting tool, except
+ * the two Jira calls handled in carriesProse().
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
-const {
-  getTempDir,
-  writeFile,
-  readStdinJson,
-  log,
-  output
-} = require('../lib/utils');
 
 const SKILL_NAME = 'dadeumi';
 const MARKER_FILE_PREFIX = 'claude-dadeumi-';
@@ -75,6 +74,33 @@ const GWS_WRITE_PATTERNS = [
 const GH_WRITE_RE = /\bgh\s+(?:(?:pr|issue)\s+(?:create|comment|review)|release\s+create)\b/;
 const GH_EDIT_RE = /\bgh\s+(?:pr|issue)\s+edit\b/;
 const GH_EDIT_TEXT_FLAG_RE = /(?:^|\s)(?:--title|--body|--body-file|-t|-b|-F)(?:\s|=|$)/;
+
+function writeMarker(file) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, new Date().toISOString(), 'utf8');
+}
+
+function readStdinJson(timeoutMs) {
+  return new Promise(resolve => {
+    let data = '';
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      try {
+        resolve(JSON.parse(data) || {});
+      } catch {
+        resolve({});
+      }
+    };
+    const timer = setTimeout(finish, timeoutMs);
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('data', chunk => { data += chunk; });
+    process.stdin.on('end', finish);
+    process.stdin.on('error', finish);
+  });
+}
 
 /**
  * Drop single- and double-quoted segments so that text carried as an
@@ -139,24 +165,24 @@ function isFresh(markerFile) {
 }
 
 function deny(reason) {
-  output({
+  console.log(JSON.stringify({
     hookSpecificOutput: {
       hookEventName: 'PreToolUse',
       permissionDecision: 'deny',
       permissionDecisionReason: reason
     }
-  });
+  }));
 }
 
 async function main() {
-  const input = await readStdinJson({ timeoutMs: 1000 });
+  const input = await readStdinJson(1000);
 
-  const rawSessionId = (input && typeof input.session_id === 'string' && input.session_id)
+  const rawSessionId = (typeof input.session_id === 'string' && input.session_id)
     ? input.session_id
     : (process.env.CLAUDE_SESSION_ID || 'default');
   const sessionId = rawSessionId.replace(/[^a-zA-Z0-9_-]/g, '') || 'default';
-  const markerFile = path.join(getTempDir(), `${MARKER_FILE_PREFIX}${sessionId}`);
-  const screenMarkerFile = path.join(getTempDir(), `${SCREEN_MARKER_FILE_PREFIX}${sessionId}`);
+  const markerFile = path.join(os.tmpdir(), `${MARKER_FILE_PREFIX}${sessionId}`);
+  const screenMarkerFile = path.join(os.tmpdir(), `${SCREEN_MARKER_FILE_PREFIX}${sessionId}`);
 
   const toolName = typeof input.tool_name === 'string' ? input.tool_name : '';
   const toolInput = (input.tool_input && typeof input.tool_input === 'object') ? input.tool_input : {};
@@ -165,7 +191,7 @@ async function main() {
     // Plugin skills arrive as "plugin:skill"; a user skill is the bare name.
     const skill = typeof toolInput.skill === 'string' ? toolInput.skill : '';
     if (toolName === 'Skill' && (skill === SKILL_NAME || skill.endsWith(`:${SKILL_NAME}`))) {
-      writeFile(markerFile, new Date().toISOString());
+      writeMarker(markerFile);
     }
     process.exit(0);
   }
@@ -173,13 +199,13 @@ async function main() {
   if (input.hook_event_name === 'PreToolUse' && !isFresh(markerFile)) {
     const check = requiredCheck(toolName, toolInput);
     if (check === 'skill') {
-      log(`[DadeumiGate] Denied ${toolName}: no fresh ${SKILL_NAME} marker for session ${sessionId}`);
+      console.error(`[DadeumiGate] Denied ${toolName}: no fresh ${SKILL_NAME} marker for session ${sessionId}`);
       deny(SKILL_DENY_REASON);
     } else if (check === 'screen' && !fs.existsSync(screenMarkerFile)) {
       // Once per session, no TTL. Stamp before denying so the retry passes:
       // this is a nudge, not a review.
-      writeFile(screenMarkerFile, new Date().toISOString());
-      log(`[DadeumiGate] Screening checklist shown for ${toolName} in session ${sessionId}`);
+      writeMarker(screenMarkerFile);
+      console.error(`[DadeumiGate] Screening checklist shown for ${toolName} in session ${sessionId}`);
       deny(SCREEN_DENY_REASON);
     }
   }

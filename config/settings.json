@@ -124,6 +124,7 @@
     "command": "/c/Users/YOUR_USERNAME/.claude/statusline-bash.sh"
   },
   "enabledPlugins": {
+    "dadeumi@dadeumi": true,
     "codex@openai-codex": true,
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
@@ -149,6 +150,13 @@
     "superpowers@superpowers-marketplace": true
   },
   "extraKnownMarketplaces": {
+    "dadeumi": {
+      "source": {
+        "source": "github",
+        "repo": "jelitz/dadeumi-korean-writing"
+      },
+      "autoUpdate": true
+    },
     "exa-skills": {
       "source": {
         "source": "github",

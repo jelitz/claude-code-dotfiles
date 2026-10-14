@@ -1,0 +1,22 @@
+# push·PR 마다 config/scripts/hooks/dadeumi-gate.js 사본이 첫 줄 주석에 적힌 상류 태그의 파일과 같은지 확인한다.
+# 사본을 여기서 고치면 실패한다. 상류 릴리스를 반영할 때는 사본과 첫 줄의 태그를 함께 갱신한다.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dadeumi-gate-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Compare the dadeumi-gate copy with its upstream tag
+        run: |
+          file=config/scripts/hooks/dadeumi-gate.js
+          url=$(head -n 1 "$file" | grep -oE 'https://github\.com/[^ ]+')
+          raw=$(printf '%s' "$url" | sed -E 's#^https://github\.com/([^/]+)/([^/]+)/blob/#https://raw.githubusercontent.com/\1/\2/#')
+          echo "upstream: $raw"
+          curl -fsSL "$raw" -o "$RUNNER_TEMP/upstream.js"
+          tail -n +2 "$file" | diff - "$RUNNER_TEMP/upstream.js"

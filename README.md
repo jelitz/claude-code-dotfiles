@@ -1,6 +1,6 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.13-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+[![version](https://img.shields.io/badge/version-v2026.10.14-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -158,12 +158,11 @@ claude-code-dotfiles/
 │   ├── CLAUDE.md                        #   전역 AI 지시사항
 │   ├── statusline-bash.sh               #   커스텀 2줄 statusline
 │   ├── agents/                          #   서브에이전트 49종 (직접 관리 adversarial-reviewer 1 + pup Datadog 48)
-│   ├── skills/                          #   스킬 20종 (직접 관리 8 + pup dd-* 11 + Aside 1)
+│   ├── skills/                          #   스킬 19종 (직접 관리 7 + pup dd-* 11 + Aside 1)
 │   │   ├── aside-browser/               #   Aside CLI 설치 시 자동 생성 (벤더 파일)
 │   │   ├── browser-automation/
 │   │   ├── code-search-exa/
 │   │   ├── company-research/
-│   │   ├── dadeumi/                     #   남이 읽을 글(문서·메시지) 작성 흐름 — im-not-ai 발췌 포함
 │   │   ├── web-research/                #   웹 검색·fetch 도구 선택표
 │   │   ├── web-search-advanced-research-paper/
 │   │   ├── web-ux-sweep/                #   실행 중인 웹 앱을 눌러 보며 UX·동작 결함을 찾는 읽기 전용 감사
@@ -280,8 +279,10 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 | `web-research` | 웹 검색·fetch 도구 선택표 — 상황별로 Exa·Firecrawl·WebSearch/WebFetch·insane-search 중 무엇을 쓸지와, 틀리기 쉬운 기본값(Exa fetch 3,000자 제한, Firecrawl 2일 캐시 등)만 담음. 명령 상세는 각 도구 스키마와 firecrawl 플러그인 스킬에 맡김 |
 | `browser-automation` | 브라우저 자동화 도구 3종(Aside CLI·claude-in-chrome·Playwright MCP) 선택 기준과 도구별 함정·우회법, 실측 근거는 `evidence.md` (CLAUDE.md에서 이관). Aside 설치 시 자동 생성되는 `aside-browser` 스킬과 함께 동작 |
 | `web-ux-sweep` | 실행 중인 웹 앱을 직접 눌러 보며 UX·동작 결함(누른 항목과 열린 화면이 다름, 화면마다 값이 다름, 새로고침하면 선택이 사라짐 등)을 찾는 읽기 전용 감사. 결함 렌즈·제외 목록·증거 규칙만 더하고, `dogfood`(agent-browser)나 `ux-audit`(jezweb/claude-skills) 스킬이 설치돼 있으면 그쪽에 위임하며 없으면 `browser-automation` 기준으로 직접 수행한다. 코드 수정·자동 수정은 하지 않는다 |
-| `dadeumi` | 사용자 본인이 아닌 사람이 읽게 될 글(문서·메시지, 도구·경로 무관)을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기. AI 말투 제거 규칙은 [im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)에서 필요한 파일만 발췌해 `references/im-not-ai/`에 포함(출처·발췌 범위는 같은 폴더 `NOTICE.md`). `dadeumi-gate` 훅과 짝을 이룸. 개인 설정을 뺀 공개판(훅 포함)은 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)에서 플러그인으로 배포 |
 | `writing-sdd-blueprints` | 큰 기능의 기획 문서 레이아웃(Kiro 스타일 SDD) — `docs/steering/` 3개와 `docs/specs/{feature}/`의 requirements → design → tasks → implemented, EARS 승인기준, 단계별 승인 게이트, superpowers brainstorming·writing-plans·subagent-driven-development 산출물과의 대응표, 에픽 분할용 roadmap.md 관례. 글로벌 CLAUDE.md의 SDD 절을 `sdd` 스킬로 옮긴 것(v2026.10.11.4)을 v2026.10.12에서 이 이름으로 바꾸고 github/spec-kit 비교로 Assumptions·Complexity Tracking·추가 전용 tasks·roadmap을 보강 |
+
+`dadeumi`(남이 읽을 글을 쓰기 전에 거치는 흐름 — 문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기)는 v2026.10.14부터 이 목록에 없습니다. 플러그인 `dadeumi@dadeumi`로 설치합니다. 마켓플레이스 [jelitz/dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)이 `settings.json`의 `extraKnownMarketplaces`에 `autoUpdate: true`로 등록돼 있어 새 세션에서 자동으로 받습니다. 스킬 이름은 `dadeumi:dadeumi`가 되고 `dadeumi-gate` 훅은 이 이름도 인식합니다. 예전 setup이 복사해 둔 `~/.claude/skills/dadeumi/`가 남아 있으면 스킬이 두 벌로 잡히므로 setup 스크립트가 그 경로 하나만 지우고 지운 경로를 출력합니다. setup 스크립트가 파일을 지우는 단계는 이것 하나뿐입니다.
+
 Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용하며, 메인 컨텍스트 오염을 막기 위해 frontmatter의 `context: fork` 로 분리된 컨텍스트에서 실행됩니다. 현재는 `settings.json` 의 `skillOverrides` 로 세 스킬 모두 꺼 두었습니다.
 
 > 이전 스냅샷에 있던 디자인 스킬 5종(`designing-premium-web-ui`, `design-taste-frontend`, `high-end-visual-design`, `redesign-existing-projects`, `stitch-design-taste`)은 현재 PC 설정에 없어 저장소에서도 제거했습니다.
@@ -333,7 +334,7 @@ Exa 기반 3종은 [Exa](https://exa.ai) MCP(`https://mcp.exa.ai/mcp`)를 사용
 |---|---|---|
 | `suggest-compact.js` | PreToolUse (`Edit`\|`Write`) | 컨텍스트 사용량·도구 호출 수를 추적해 압축 시점을 제안 (자동 압축 대신 전략적 지점에서) |
 | `reset-compact-counters.js` | PostCompact | 압축 직후 위 카운터를 리셋 |
-| `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, Bash·PowerShell의 `gws`·`gh` 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌. `gh` PR·이슈·릴리스는 스킬 없이 가벼운 체크리스트만 (세션당 1회) |
+| `dadeumi-gate.js` | PreToolUse (Confluence·Jira·Slack 게시 도구, Bash·PowerShell의 `gws`·`gh` 명령) + PostToolUse (`Skill`) | 남이 읽을 글을 올리기 전 `dadeumi` 스킬을 거쳤는지 확인 — 안 거쳤으면 거부하고 사유를 돌려줌. `gh` PR·이슈·릴리스는 스킬 없이 가벼운 체크리스트만 (세션당 1회). 이 파일은 상류 [dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing) `hooks/dadeumi-gate.js` v1.1.0의 사본이며 첫 줄 주석에 그 태그가 적혀 있음. `ci.yml`이 push·PR마다 첫 줄을 뺀 나머지를 그 태그의 상류 파일과 `diff`하므로 여기서 고치지 않음. 상류에 새 릴리스가 나오면 사본과 첫 줄 태그를 함께 갱신 |
 | `destructive-command-gate.js` | PreToolUse (`Bash`\|`PowerShell`) | git 명령의 `--no-verify`(`git commit -n` 포함)는 거부하고, `rm -rf`·`git push --force`·`git reset --hard`·`git clean -f` 등은 auto 모드에서도 확인을 받게 함. 따옴표·heredoc 안의 글자는 명령으로 보지 않고, `bash -c "..."` 안의 명령은 다시 검사 |
 | `py-encoding-check.js` | PostToolUse (`Edit`\|`Write`) | `.py` 파일 저장 직후 `encoding=` 없는 텍스트 I/O 호출(`open()`·`read_text()` 등)을 찾아 Claude에게 알림 (차단하지 않음) |
 

@@ -2,6 +2,30 @@
 
 버전은 스냅샷 날짜(`vYYYY.MM.DD`)입니다. 같은 날 두 번째 릴리스부터는 `.2`, `.3`을 붙입니다.
 
+## v2026.10.14 (2026-10-14)
+
+`dadeumi` 스킬을 이 저장소에서 빼고 공개 저장소 [jelitz/dadeumi-korean-writing](https://github.com/jelitz/dadeumi-korean-writing)의 플러그인 `dadeumi@dadeumi`로 설치하도록 바꿨습니다. 지금까지는 같은 스킬을 두 저장소에서 따로 고쳐 왔습니다. 이제 원본은 공개 저장소 하나이고, 이 저장소에는 마켓플레이스 등록과 훅 사본만 남습니다. 공개판은 v1.1.0에서 비영리 조건(CC BY-NC-SA 4.0)이 붙은 배경 설명 파일을 지워 저장소 전체가 MIT가 됐습니다. 복원할 때는 setup 스크립트를 다시 실행하면 됩니다. 남아 있는 `~/.claude/skills/dadeumi/`를 지우고, 플러그인은 새 세션에서 자동으로 받습니다.
+
+### 스킬
+
+- **`config/skills/dadeumi/`를 지웠습니다.** 스킬 이름은 `dadeumi:dadeumi`가 됩니다. 직접 관리하는 스킬은 7종입니다.
+
+### 설정
+
+- **`settings.json`에 마켓플레이스와 플러그인을 등록했습니다.** `extraKnownMarketplaces.dadeumi`(GitHub `jelitz/dadeumi-korean-writing`, `autoUpdate: true`)와 `enabledPlugins`의 `"dadeumi@dadeumi": true`입니다. 새 세션에서 플러그인을 받고, 공개 저장소에 새 릴리스가 나오면 자동으로 갱신합니다.
+
+### 훅
+
+- **`config/scripts/hooks/dadeumi-gate.js`를 공개 저장소 v1.1.0의 `hooks/dadeumi-gate.js` 사본으로 바꿨습니다.** 첫 줄 주석에 상류 태그 URL을 적었고, 그 아래는 상류 파일과 같습니다. 동작은 같고 `../lib/utils` 대신 Node 기본 모듈만 씁니다. 이 파일은 여기서 고치지 않습니다. 상류를 고친 뒤 사본과 첫 줄의 태그를 함께 갱신합니다.
+
+### CI
+
+- **`.github/workflows/ci.yml`을 추가했습니다.** push·PR마다 훅 사본의 첫 줄을 뺀 나머지를 첫 줄에 적힌 태그의 상류 파일과 `diff`합니다.
+
+### setup 스크립트
+
+- **예전 사본 `~/.claude/skills/dadeumi/`를 한 번 지우는 단계를 넣었습니다.** 남아 있으면 스킬이 `dadeumi`와 `dadeumi:dadeumi` 두 벌로 잡히기 때문입니다. 지운 경로를 출력합니다. setup 스크립트가 파일을 지우는 단계는 이것 하나뿐입니다.
+
 ## v2026.10.13 (2026-10-13)
 
 서브에이전트의 기본 모델을 `sonnet`으로 정했습니다. 지금까지는 `model`을 지정하지 않은 서브에이전트(pup Datadog 에이전트 48종, `general-purpose`, Workflow `agent()`)가 모두 세션 모델을 상속했습니다. 세션이 Fable 5.1이면 grep·목록 추출 같은 기계적 작업도 Haiku 5.5의 100배 단가로 돌았습니다. `CLAUDE_CODE_SUBAGENT_MODEL` 환경변수는 기본값일 뿐 강제가 아니라서 frontmatter `model`과 호출 시 `model` 파라미터가 이깁니다. 내장 `Explore`·`Plan`과 `model: inherit`인 `adversarial-reviewer`는 바뀌지 않습니다. 복원할 때 따로 할 일은 없습니다. 환경변수라 새 세션부터 적용됩니다.

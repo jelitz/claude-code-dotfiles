@@ -97,6 +97,13 @@ echo "[2/5] 사용자 스킬 복사..."
 cp -r "$CONFIG_DIR/skills/"* "$CLAUDE_DIR/skills/"
 echo "  ✓ skills/ → $CLAUDE_DIR/skills (직접 관리 7종 + Aside 1종 + pup 제공 dd-* 11종)"
 
+# 구 사본 정리 (1회성): dadeumi 는 v2026.10.14 부터 플러그인(dadeumi@dadeumi)으로 설치한다.
+# 예전 setup 이 복사해 둔 사본이 남아 있으면 스킬이 두 벌(dadeumi, dadeumi:dadeumi)로 잡히므로 그 경로 하나만 지운다.
+if [ -d "$CLAUDE_DIR/skills/dadeumi" ]; then
+  rm -rf "$CLAUDE_DIR/skills/dadeumi"
+  echo "  ✓ 구 사본 삭제: $CLAUDE_DIR/skills/dadeumi (이제 플러그인 dadeumi@dadeumi 로 설치)"
+fi
+
 if [ -d "$CONFIG_DIR/agents" ]; then
   cp -r "$CONFIG_DIR/agents/"* "$CLAUDE_DIR/agents/"
   echo "  ✓ agents/ → $CLAUDE_DIR/agents (직접 관리 adversarial-reviewer 1종 + pup 제공 Datadog 도메인 48종)"
