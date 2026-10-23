@@ -43,7 +43,7 @@ ID는 스펙이 참조한 뒤로 바꾸지 않는다. 범위가 바뀌면 로드
 
 1. 인터뷰 결과가 `requirements.md`의 출발점이다. 인터뷰는 내장 질문 도구로 묶어서 하고, 코드베이스 탐색은 허락을 구하지 않고 먼저 한다.
 2. `requirements.md` → `design.md` → `tasks.md` 순서로 쓰고 각 단계 전환 전 사용자 승인을 받는다.
-3. `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — 사용자에게 `/clear` 후 스펙 경로로 재개를 제안한다. 탐색·인터뷰 잔재로 오염된 컨텍스트를 피하기 위함이지 토큰 절약이 아니다.
+3. `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — 사용자에게 `/clear` 후 스펙 경로로 재개를 제안한다. 탐색·인터뷰 잔재로 오염된 컨텍스트를 피하기 위함이지 토큰 절약이 아니다. 재개한 세션의 구현 경로는 글로벌 CLAUDE.md 「하네스 우선순위」의 구현 경로 규칙을 따른다.
 4. 코드 변경마다 `tasks.md`·`implemented.md`를 동기화한다. PR 전 코드·테스트·문서 일치를 확인하고, 불일치는 동일 PR 또는 별도 `docs:` 커밋으로 맞춘다.
 
 ## superpowers와의 대응
@@ -51,10 +51,11 @@ ID는 스펙이 참조한 뒤로 바꾸지 않는다. 범위가 바뀌면 로드
 | superpowers 산출물 | 이 레이아웃에서의 위치 |
 |---|---|
 | brainstorming 설계 문서(intent · goals/non-goals · constraints · 결정한 how) | `requirements.md`(intent · goals/non-goals · 승인기준)와 `design.md`(constraints · how)로 나눠 쓰고 각각 승인 |
-| writing-plans 계획 | 같은 폴더의 `tasks.md` |
+| writing-plans 계획 | 같은 폴더의 `tasks.md`. plan 머리의 "REQUIRED SUB-SKILL: subagent-driven-development / executing-plans" 줄은 쓰지 않고 "구현 경로: 글로벌 CLAUDE.md 「하네스 우선순위」 구현 경로 규칙" 한 줄로 바꾼다 |
 | brainstorming builder check | `requirements.md` 교차 검토를 대신한다 — adversarial-reviewer를 또 돌리지 않는다. builder check에서 "내 판단(Minor)"으로 정한 항목은 `requirements.md`의 Assumptions 절에, "사용자 몫(Theirs)"으로 남은 항목은 `[미확정: 질문]`으로 적는다 |
 | writing-plans Self-Review(스펙 커버리지 · 단계 스캔 · 타입 일관성 · Review Focus · 비율) | `tasks.md` 승인 전 정합성 점검을 대신한다 — 별도 analyze 단계를 두지 않는다 |
-| subagent-driven-development 최종 코드 리뷰 | PR 전 적대적 리뷰를 대신한다 — adversarial-reviewer를 또 돌리지 않는다. 인라인 실행(executing-plans)으로 구현했을 때만 adversarial-reviewer를 1회 돌린다 |
+| writing-plans Execution Handoff(Subagent-driven / Native 질문) | 하지 않는다 — `tasks.md` 승인만 받고 `/clear`를 제안한다. 구현 경로는 글로벌 CLAUDE.md 「하네스 우선순위」 구현 경로 규칙이 정한다 |
+| subagent-driven-development 최종 코드 리뷰 또는 Workflow의 최종 리뷰 단계(브랜치 전체 diff 대상 적대적 verify) | PR 전 적대적 리뷰를 대신한다 — adversarial-reviewer를 또 돌리지 않는다. 인라인 실행(executing-plans)으로 구현했을 때만 adversarial-reviewer를 1회 돌린다 |
 | `docs/superpowers/specs/`, `docs/superpowers/plans/` 기본 경로 | 쓰지 않는다. 위 `docs/specs/{feature-name}/`가 사용자 선호 경로다 |
 
 ## 예시 (requirements.md 승인기준 한 줄)

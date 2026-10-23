@@ -1,7 +1,7 @@
 # claude-code-dotfiles
 
-[![version](https://img.shields.io/badge/version-v2026.10.14.4-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
-![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.296-d97757)
+[![version](https://img.shields.io/badge/version-v2026.10.23-blue)](https://github.com/jelitz/claude-code-dotfiles/releases)
+![Claude Code](https://img.shields.io/badge/Claude_Code-2.1.309-d97757)
 ![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20WSL-555)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
@@ -413,6 +413,7 @@ ctx ████░░░░ 45% │ $0.23 │ 5h ██░░░░░░ 23% �
 | `skillListingBudgetFraction` | `0.05` | 스킬 목록이 차지하는 컨텍스트 비율 상한 |
 | `autoUpdatesChannel` | `latest` | 최신 채널로 자동 업데이트 |
 | `skipWorkflowUsageWarning` | `true` | 워크플로 사용 경고(비용 안내 등) 생략 |
+| `ultracode` | `true` | 새 세션을 Ultracode(동적 워크플로) 켜진 상태로 시작 — Workflow 도구가 요구하는 옵트인을 상시 충족. 한 세션만 끄려면 `/effort ultracode off` |
 | `remoteControlAtStartup` | `true` | 시작 시 원격 제어 활성화 |
 | `inputNeededNotifEnabled` / `agentPushNotifEnabled` | `true` | 입력 필요·에이전트 완료 푸시 알림 |
 | `env.CLAUDE_CODE_GIT_BASH_PATH` | Git Bash 경로 | Bash 도구용 (**Windows 전용** — macOS/Linux 설치 시 자동 제거) |

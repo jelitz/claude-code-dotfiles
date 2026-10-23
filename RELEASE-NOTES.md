@@ -2,6 +2,32 @@
 
 버전은 스냅샷 날짜(`vYYYY.MM.DD`)입니다. 같은 날 두 번째 릴리스부터는 `.2`, `.3`을 붙입니다.
 
+## v2026.10.23 (2026-10-23)
+
+독립 작업이 여럿일 때 Workflow 도구가 쓰이지 않던 문제를 고쳤습니다. 세션 110개를 조사해 보니 Workflow는 5개 세션에서만 돌았고 그중 2개는 사용자가 직접 지시한 경우였습니다. 계획에 독립 task가 많은 세션일수록 `subagent-driven-development`가 발동해 Agent를 한 번에 하나씩 수십 번 돌렸습니다. 한 응답에 Agent를 둘 이상 띄운 세션은 없었습니다. 원인은 셋입니다. Workflow 도구는 사용자 옵트인(`ultracode`) 없이는 호출할 수 없습니다. superpowers의 `dispatching-parallel-agents`·`subagent-driven-development`가 "독립 task 여럿"이라는 조건을 먼저 받아 Agent로 보냅니다. `writing-plans`의 실행 방식 질문(Subagent-driven / Native)에는 Workflow가 없습니다. CLAUDE.md의 Workflow 조항은 "제안한다"는 약한 규칙이었습니다. 수정안은 Workflow로 검증 에이전트 4개를 돌려 적대적으로 검토했고 must-fix 6건을 반영했습니다. `ultracode` 키는 Claude Code 2.1.309에서 확인했고 새 세션부터 적용되므로 복원할 때 따로 할 일은 없습니다.
+
+### 설정
+
+- **`settings.json`에 `ultracode: true`를 추가했습니다.** 새 세션이 Ultracode(동적 워크플로)가 켜진 상태로 시작해 Workflow 도구의 옵트인 조건을 상시 충족합니다. 2.1.284부터는 effort를 xhigh로 강제하지 않습니다. 한 세션만 끄려면 `/effort ultracode off`를 씁니다.
+
+### CLAUDE.md
+
+- **「서브에이전트 위임」 절의 Workflow 조항을 개수 기준으로 바꿨습니다.** 독립 작업(서로 의존하지 않고 수정 파일이 겹치지 않는 작업)이 3개 이상이거나, 같은 변경을 3개 이상 대상에 반복하되 대상마다 독자적인 판단·검증이 필요하면 Workflow를 띄웁니다. 이때 `dispatching-parallel-agents`·`subagent-driven-development`·`executing-plans`는 호출하지 않고 Agent 다중 호출로 대신하지 않습니다. ultracode가 켜진 세션에서는 제안 없이 바로 띄웁니다. 세션에서 껐다는 reminder가 있으면 비용을 적어 제안만 합니다. 동일한 한 줄 수정의 반복은 직접 하거나 Agent 1회에 묶습니다.
+- **구현 경로 규칙을 「하네스 우선순위」 절에 넣었습니다.** `tasks.md`의 task가 위 기준에 해당하면 superpowers 구현 스킬 대신 Workflow로 구현합니다. 이 기준은 Workflow를 반드시 쓰는 하한이지 상한이 아닙니다. 기준 미만이라도 ultracode가 켜진 세션이면 `workflow-authoring`의 기본값을 따릅니다. superpowers 경로는 ultracode가 꺼진 세션의 기준 미만 작업에만 씁니다. Workflow 스크립트에는 SDD의 task 리뷰와 최종 리뷰(브랜치 전체 diff 대상 적대적 verify)에 해당하는 단계를 넣습니다.
+- **`writing-plans`의 실행 방식 질문을 하지 않고 plan 머리의 `REQUIRED SUB-SKILL` 줄을 바꿉니다.** 질문의 선택지가 Subagent-driven / Native 둘뿐이라 Workflow가 빠집니다. plan 첫 줄의 `REQUIRED SUB-SKILL: subagent-driven-development` 지시가 `tasks.md`에 그대로 남아 재개 세션을 SDD로 이끌었습니다. `tasks.md` 승인만 받고 `/clear`를 제안합니다. 그 줄은 "구현 경로: 글로벌 CLAUDE.md 「하네스 우선순위」 구현 경로 규칙"으로 바꿉니다.
+- **SDD 절에서 `tasks.md`로 재개한 세션이 위 구현 경로 규칙을 따르도록 참조를 달았습니다.**
+- **리뷰 중복 제거 규칙에 Workflow의 최종 리뷰 단계를 추가했습니다.** SDD 최종 리뷰와 같이 Workflow 안에서 브랜치 전체 diff를 적대적으로 검증했으면 PR 전 adversarial-reviewer를 생략합니다. 「서브에이전트 위임」의 PR 전 리뷰 규칙에는 생략 조건의 위치를 적었습니다.
+- **모델 배정 규칙에 Workflow 구현 단계 기준을 더했습니다.** 1~2파일에 완전한 스펙이면 sonnet, 설계 판단이 필요하면 세션 모델입니다.
+- **Environment 절에 `python -I` 함정을 적었습니다.** `-I`는 PYTHON* 환경변수를 모두 무시해 전역 UTF-8 설정이 꺼지고 cp949로 돌아갑니다. encoding을 지정하지 않은 `open()`은 UTF-8 파일에서 UnicodeDecodeError가 납니다. stdout의 한글은 깨져 돌아오며 이모지나 — 같은 문자는 UnicodeEncodeError가 납니다. `-I`가 필요하면 `python -I -X utf8`로 호출합니다. 이 머신(Python 3.9.13)에서 재현했습니다.
+
+### 스킬
+
+- **`writing-sdd-blueprints`의 superpowers 대응표를 새 구현 경로에 맞췄습니다.** `writing-plans` 계획 행에 `REQUIRED SUB-SKILL` 줄 치환을, 최종 리뷰 행에 Workflow의 최종 리뷰 단계를 넣었습니다. Execution Handoff 질문을 하지 않는다는 행을 추가했습니다. 절차 3번에 재개 세션의 구현 경로 참조를 달았습니다.
+
+### README
+
+- **버전 배지를 v2026.10.23으로, Claude Code 배지를 2.1.309로 올리고 설정 표에 `ultracode` 행을 추가했습니다.**
+
 ## v2026.10.14.4 (2026-10-14)
 
 새 PC에서 `dadeumi` 플러그인이 언제 쓸 수 있게 되는지 README에 적었습니다. 설정과 파일은 바뀌지 않았으므로 복원할 때 따로 할 일은 없습니다.

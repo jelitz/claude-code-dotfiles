@@ -19,15 +19,16 @@
 ## 기획 문서 (SDD)
 
 - 큰 기능(위 인터뷰 기준)은 `writing-sdd-blueprints` 스킬을 호출해 `docs/specs/{feature-name}/`에 requirements → design → tasks를 쓰고 각 단계 전환 전 사용자 승인을 받는다. 프로젝트 `./CLAUDE.md`가 자체 문서 컨벤션을 명시하면 그것이 우선
-- `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — `/clear` 후 스펙 경로로 재개를 제안. 코드 변경마다 `tasks.md`·`implemented.md` 동기화
+- `tasks.md` 승인 뒤 구현은 새 컨텍스트에서 시작한다 — `/clear` 후 스펙 경로로 재개를 제안. 재개한 세션의 구현 경로는 「하네스 우선순위」의 구현 경로 규칙을 따른다. 코드 변경마다 `tasks.md`·`implemented.md` 동기화
 
 ## 하네스 우선순위 (superpowers 7.x)
 
 - 이 파일이 superpowers 스킬보다 우선한다(플러그인 자체 원칙). 어긋나면 이 파일을 따르고, 스킬은 실행 품질(TDD · systematic-debugging · verification-before-completion · worktrees · code-review)을 맡는다
 - brainstorming의 "quick, clear task" 판정은 위 "diff를 한 문장으로 설명할 수 있으면 계획 생략"과 같은 기준이다. 그 경우 질문 없이 바로 수행한다. "small change"는 채팅 설명 1회 승인으로 끝낸다 — 문서를 만들지 않는다
 - 큰 기능의 인터뷰는 brainstorming으로 하되 두 가지는 이 파일을 따른다. 질문은 내장 질문 도구(선택지 제시)로 묶어서 하고, 코드베이스 탐색은 허락을 구하지 않고 먼저 한다 — 탐색 결과가 질문의 질을 결정하기 때문
-- 설계 문서는 docs/superpowers/specs가 아니라 `writing-sdd-blueprints` 스킬의 `docs/specs/{feature-name}/requirements.md` → `design.md` 순서로 나눠 쓰고 각각 승인을 받는다. writing-plans 산출물은 같은 폴더의 `tasks.md`로 저장한다
-- brainstorming의 builder check가 돌았으면 requirements 교차 검토(adversarial-reviewer)는 생략하고, subagent-driven-development의 최종 코드 리뷰가 돌았으면 PR 전 adversarial-reviewer도 생략한다 — 같은 검토를 두 번 하지 않기 위함
+- 설계 문서는 docs/superpowers/specs가 아니라 `writing-sdd-blueprints` 스킬의 `docs/specs/{feature-name}/requirements.md` → `design.md` 순서로 나눠 쓰고 각각 승인을 받는다. writing-plans 산출물은 같은 폴더의 `tasks.md`로 저장한다. writing-plans의 Execution Handoff(Subagent-driven / Native 선택 질문)는 하지 않는다 — `tasks.md` 승인만 받고 `/clear`를 제안하며 구현 경로는 아래 구현 경로 규칙이 정한다. plan 머리의 "REQUIRED SUB-SKILL: subagent-driven-development / executing-plans" 줄은 `tasks.md`에 쓰지 않고 "구현 경로: 글로벌 CLAUDE.md 「하네스 우선순위」 구현 경로 규칙" 한 줄로 바꾼다
+- 구현 경로: 「서브에이전트 위임」의 Workflow 기준(독립 작업 3개 이상, 또는 같은 변경을 3개 이상 대상에 반복하되 대상마다 독자적 판단·검증이 필요 — `tasks.md`의 task도 같은 셈)에 해당하면 subagent-driven-development · dispatching-parallel-agents · executing-plans(사용자가 inline 실행을 지정한 경우 제외)를 호출하지 않고 Workflow로 구현한다. dispatching-parallel-agents · subagent-driven-development의 description("2+ independent tasks", "plans with independent tasks")이 이 상황과 글자 그대로 겹치지만 Workflow를 쓴다 — subagent-driven-development는 병렬 dispatch를 금지하는 순차 루프이고, dispatching-parallel-agents는 Agent 다중 호출이라 pipeline·구조화 출력·재개가 없다. Workflow 스크립트에는 SDD의 task 리뷰와 최종 리뷰(브랜치 전체 diff 대상 적대적 verify)에 해당하는 단계를 넣는다. 이 기준은 Workflow를 반드시 쓰는 하한이지 상한이 아니다 — 기준 미만이라도 ultracode가 켜진 세션이면 `workflow-authoring`의 기본값(사소한 편집·대화만 solo)을 따르고, superpowers 구현 경로는 ultracode가 꺼진 세션의 기준 미만 작업에만 쓴다
+- brainstorming의 builder check가 돌았으면 requirements 교차 검토(adversarial-reviewer)는 생략하고, subagent-driven-development의 최종 코드 리뷰 또는 Workflow의 최종 리뷰 단계(브랜치 전체 diff 대상 적대적 verify)가 돌았으면 PR 전 adversarial-reviewer도 생략한다 — 같은 검토를 두 번 하지 않기 위함
 - 서브에이전트에는 SessionStart 주입이 전달되지 않으므로 TDD · 검증 규율을 위임 프롬프트에 직접 쓴다
 
 ## 보고와 커뮤니케이션
@@ -44,10 +45,10 @@
 ## 서브에이전트 위임
 
 - 몇 번의 도구 호출로 끝나는 작업은 직접 수행
-- 탐색·grep 결과를 재확인하려고 서브에이전트를 띄우지 않기 — 그 검증은 메인 루프에서. 단 PR 전 diff는 `adversarial-reviewer` 에이전트(또는 `/code-review`)로 새 컨텍스트에서 1회 적대적 리뷰: 계획·요구사항 대비 누락과 정확성 결함은 심각도와 무관하게 전부, 스타일·취향 지적은 제외
-- 독립적인 하위 작업은 서브에이전트에 맡기고 기다리지 않고 계속 진행한다. 단발 조사는 Agent 1회, 주고받기가 필요하면 name 붙여 spawn 후 SendMessage. 단계가 고정된 fan-out은 Workflow — 하네스가 사용자 옵트인을 요구하므로 먼저 제안한다
+- 탐색·grep 결과를 재확인하려고 서브에이전트를 띄우지 않기 — 그 검증은 메인 루프에서. 단 PR 전 diff는 `adversarial-reviewer` 에이전트(또는 `/code-review`)로 새 컨텍스트에서 1회 적대적 리뷰: 계획·요구사항 대비 누락과 정확성 결함은 심각도와 무관하게 전부, 스타일·취향 지적은 제외 — 생략 조건은 「하네스 우선순위」
+- 독립적인 하위 작업은 서브에이전트에 맡기고 기다리지 않고 계속 진행한다. 단발 조사는 Agent 1회, 주고받기가 필요하면 name 붙여 spawn 후 SendMessage. 독립 작업(서로 의존하지 않고 수정 파일이 겹치지 않는 작업 — 의존 사슬로 묶인 task는 하나로 센다)이 3개 이상이거나, 같은 변경을 3개 이상 대상에 반복하되 대상마다 독자적인 판단·테스트·검증이 필요하면 Workflow. 이때 dispatching-parallel-agents · subagent-driven-development · executing-plans는 호출하지 않고, Agent를 여러 번 호출하는 방식으로 대신하지 않는다. ultracode가 켜진 세션(settings.json `ultracode: true`로 새 세션마다 켜지고 system-reminder로 확인)에서는 제안 없이 바로 띄운다. 세션에서 ultracode를 껐다는 reminder가 있으면 하네스 옵트인 규칙으로 돌아가 에이전트 수와 대략 비용을 적어 제안만 한다 — 이 파일은 옵트인 근거가 아니다. 동일한 한 줄 수정의 반복은 첫 줄대로 직접 하거나 Agent 1회에 묶는다. "단계가 고정된 fan-out인가"라는 형태 판단이 아니라 이 기준으로 결정한다
 - 병렬 리뷰·경쟁 가설은 겹치지 않는 렌즈로 나누고 적대적으로 배치, 팀원별 파일 소유 분리
-- Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델. 단 `model` 생략 시 세션 모델이 아니라 `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`(settings.json `env`)이 적용되므로 세션 모델이 필요한 단계는 `model`을 명시한다 — frontmatter `model: inherit`인 `adversarial-reviewer`는 생략해도 세션 모델
+- Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델. 단 `model` 생략 시 세션 모델이 아니라 `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`(settings.json `env`)이 적용되므로 세션 모델이 필요한 단계는 `model`을 명시한다 — frontmatter `model: inherit`인 `adversarial-reviewer`는 생략해도 세션 모델. Workflow 구현 단계는 task 난이도로 고른다 — 1~2파일에 완전한 스펙이면 sonnet, 설계 판단이 필요하면 세션 모델
 
 ## 지식 관리
 
@@ -56,6 +57,7 @@
 ## Environment
 
 - Python + Windows 한글: 텍스트 I/O(open·read_text·write_text·sqlite)에 encoding="utf-8" 명시 — 팀원 PC·CI는 cp949 기본. 이 머신은 settings.json `env`와 Windows 사용자 환경변수로 UTF-8이 전역 설정돼 있어 로컬 실행에서는 누락이 드러나지 않으므로, 커밋되는 코드에는 그대로 명시한다. `py-encoding-check` 훅이 편집 직후 누락을 알려줌
+- `python -I`(다운로드 파일 처리 시 하네스가 요구)는 PYTHON* 환경변수를 전부 무시해 위 전역 UTF-8 설정이 꺼지고 cp949로 돌아간다 — encoding 미지정 open()은 UTF-8 파일에서 UnicodeDecodeError, stdout의 한글은 깨져 돌아오고 KS X 1001 밖 문자(이모지·— 등)는 UnicodeEncodeError. `-I`를 쓸 때는 `python -I -X utf8`로 호출한다
 
 ## 도구
 
