@@ -147,7 +147,8 @@
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "firecrawl@anthropic-plugin-directory": true,
-    "superpowers@superpowers-marketplace": true
+    "superpowers@superpowers-marketplace": true,
+    "workflow-latency@workflow-latency": true
   },
   "extraKnownMarketplaces": {
     "dadeumi": {
@@ -198,6 +199,13 @@
         "source": "github",
         "repo": "obra/superpowers-marketplace"
       }
+    },
+    "workflow-latency": {
+      "source": {
+        "source": "github",
+        "repo": "jelitz/workflow-latency"
+      },
+      "autoUpdate": true
     }
   },
   "language": "Korean",

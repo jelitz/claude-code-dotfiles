@@ -227,13 +227,14 @@ pup 버전을 올린 뒤 같은 명령을 다시 실행하면 스킬·에이전�
 </details>
 
 <details open>
-<summary><b>🔌 플러그인 — 활성 13종 / 비활성 11종</b></summary>
+<summary><b>🔌 플러그인 — 활성 14종 / 비활성 11종</b></summary>
 
 #### 활성 (`enabled: true`)
 
 | 플러그인 | 마켓플레이스 | 설명 |
 |---|---|---|
 | [`dadeumi`](https://github.com/jelitz/dadeumi-korean-writing) | dadeumi | 남이 읽을 글을 쓰기 전에 거치는 흐름(문서 유형 → 정보 구조 → AI 말투 제거 → 문장 다듬기). setup의 설치 명령이 아니라 `settings.json`의 `extraKnownMarketplaces`(autoUpdate)로 세션 시작 시 설치됨(새 PC는 셋째 세션부터 사용 가능). 스킬 이름 `dadeumi:dadeumi` |
+| [`workflow-latency`](https://github.com/jelitz/workflow-latency) | workflow-latency | Workflow 스크립트를 쓰기 전에 보는 지연 방지 체크리스트(실행 방식·슬라이스·긴 명령·검증 루프). 글로벌 CLAUDE.md 「서브에이전트 위임」 끝 항목이 `workflow-authoring`과 함께 호출하도록 지시 |
 | [`codex`](https://github.com/openai/codex-plugin-cc) | openai-codex | OpenAI Codex 서브에이전트 (rescue, setup). **job은 항상 `--background` 로 실행** (CLAUDE.md 참고) |
 | [`context7`](https://github.com/upstash/context7) | claude-plugins-official | 라이브러리/프레임워크 최신 문서 실시간 조회 (MCP, by Upstash) |
 | [`playwright`](https://github.com/microsoft/playwright-mcp) | claude-plugins-official | Playwright 브라우저 자동화 — claude-in-chrome 과 병행 상시 활성화 |

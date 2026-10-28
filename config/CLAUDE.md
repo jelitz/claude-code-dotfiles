@@ -49,6 +49,12 @@
 - 독립적인 하위 작업은 서브에이전트에 맡기고 기다리지 않고 계속 진행한다. 단발 조사는 Agent 1회, 주고받기가 필요하면 name 붙여 spawn 후 SendMessage. 독립 작업(서로 의존하지 않고 수정 파일이 겹치지 않는 작업 — 의존 사슬로 묶인 task는 하나로 센다)이 3개 이상이거나, 같은 변경을 3개 이상 대상에 반복하되 대상마다 독자적인 판단·테스트·검증이 필요하면 Workflow. 이때 dispatching-parallel-agents · subagent-driven-development · executing-plans는 호출하지 않고, Agent를 여러 번 호출하는 방식으로 대신하지 않는다. ultracode가 켜진 세션(settings.json `ultracode: true`로 새 세션마다 켜지고 system-reminder로 확인)에서는 제안 없이 바로 띄운다. 세션에서 ultracode를 껐다는 reminder가 있으면 하네스 옵트인 규칙으로 돌아가 에이전트 수와 대략 비용을 적어 제안만 한다 — 이 파일은 옵트인 근거가 아니다. 동일한 한 줄 수정의 반복은 첫 줄대로 직접 하거나 Agent 1회에 묶는다. "단계가 고정된 fan-out인가"라는 형태 판단이 아니라 이 기준으로 결정한다
 - 병렬 리뷰·경쟁 가설은 겹치지 않는 렌즈로 나누고 적대적으로 배치, 팀원별 파일 소유 분리
 - Workflow `agent()`·Agent 도구는 세션 모델·effort를 그대로 상속하지 않고 단계 난이도에 맞춰 고른다 — `workflow-authoring`의 "model 생략" 기본값보다 이 규칙 우선. effort로 먼저 조절하고, 토큰 단가 차이가 큰 기계적 단계(grep·목록·추출·분류)만 `haiku`/`sonnet` + `effort: 'low'`로 내리며, 최종 판정·적대적 검증·설계 종합은 세션 모델. 단 `model` 생략 시 세션 모델이 아니라 `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`(settings.json `env`)이 적용되므로 세션 모델이 필요한 단계는 `model`을 명시한다 — frontmatter `model: inherit`인 `adversarial-reviewer`는 생략해도 세션 모델. Workflow 구현 단계는 task 난이도로 고른다 — 1~2파일에 완전한 스펙이면 sonnet, 설계 판단이 필요하면 세션 모델
+- Workflow·Agent 위임 프롬프트에는 실행 방식을 직접 쓴다 — 파일 읽기·검색은 Read·Grep·Glob으로, Bash는 실행이 필요할 때만, for 루프로 외부 명령을 반복하지 않고 python 한 번으로 묶기 (이 PC는 Bash 호출 중앙값이 약 17초, Read는 0.3초 — 2026-10-27 오늘 워크플로 178개 에이전트 측정)
+- 120초를 넘길 수 있는 명령(전체 테스트·playwright·SSH 로그 스캔·대용량 zgrep)은 처음부터 `run_in_background` + Monitor로 돌리고, 타임아웃 뒤 sleep 폴링 Bash를 쓰지 않는다
+- 서브에이전트가 읽을 자료는 Read 한두 번으로 끝나는 크기의 항목별 파일로 미리 나눠 준다 — 수백 KB 이상의 단일 파일을 sed·grep으로 줄 단위 조회하게 하지 않는다. 300초 제한이 있는 쿼리는 날짜·경로로 미리 분할해 과업에 적는다
+- Workflow 슬라이스는 열거된 목록(파일·테이블·항목)으로만 정의한다 — "그 외 전부" 슬라이스는 한 에이전트가 단계 전체를 붙잡는다. 필요하면 먼저 싼 에이전트로 목록을 만들고 그 목록으로 쪼갠다
+- 검증→수정→재검증 루프는 blocker·major가 남아 있을 때만 반복하고 minor만 남으면 끝낸다. fix 단계도 build 단계와 같은 파일 소유 분할로 fan-out하고, 재검증은 수정 범위와 회귀 표본으로 한정한다
+- Workflow 스크립트를 쓰기 직전에 `workflow-authoring`과 함께 `workflow-latency:workflow-latency` skill을 호출한다 — 위 다섯 항목의 코드 예시와 근거 수치가 거기 있다
 
 ## 지식 관리
 
