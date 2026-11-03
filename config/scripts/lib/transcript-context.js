@@ -36,7 +36,9 @@ const LARGE_WINDOW_MODEL_MARKER = '[1m]';
 // releases; the env override remains the escape hatch for unlisted models.
 const KNOWN_MODEL_WINDOW_TOKENS = [
   ['claude-fable-5', LARGE_CONTEXT_WINDOW_TOKENS],
+  ['claude-haiku-5', LARGE_CONTEXT_WINDOW_TOKENS],
   ['claude-mythos-5', LARGE_CONTEXT_WINDOW_TOKENS],
+  ['claude-opus-5', LARGE_CONTEXT_WINDOW_TOKENS],
   ['claude-sonnet-5', LARGE_CONTEXT_WINDOW_TOKENS]
 ];
 
