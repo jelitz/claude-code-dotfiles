@@ -210,7 +210,7 @@
   },
   "language": "Korean",
   "effortLevel": "high",
-  "ultracode": true,
+  "ultracode": false,
   "modelSettings": {
     "claude-fable-5": {
       "effortLevel": "xhigh"
